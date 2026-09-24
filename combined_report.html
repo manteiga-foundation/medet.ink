@@ -2050,7 +2050,7 @@
             border: 1px solid #E2E8F0;
             display: flex;
             flex-direction: column;
-            height: 520px; /* FIXED HEIGHT TO PREVENT COLLAPSE */
+            flex: 1; min-height: 450px;
             width: 100%;
         }
 
@@ -2075,7 +2075,6 @@
 
         /* 5x5 Matrix Layout */
         .matrix-container {
-            min-height: 420px;
             flex: 1;
             display: grid;
             /* Col 1: Y-axis arrow, Col 2: Y-axis labels, Col 3-5: Cells */
@@ -4980,8 +4979,18 @@
     }
     
     @media screen {
-        html, body { padding: 20px 0; }
-        .slide { margin: 0 auto 20px auto; box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15); }
+        html, body { padding: 20px 0; background: #64748B; }
+        .slide { 
+            margin: 0 auto 40px auto; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+            /* Force exact landscape paper size and constraints on screen so it matches print */
+            width: 11in !important;
+            height: 8.5in !important;
+            max-height: 8.5in !important;
+            overflow: hidden !important; 
+            display: flex;
+            flex-direction: column;
+        }
     }
     </style>
 </head>
