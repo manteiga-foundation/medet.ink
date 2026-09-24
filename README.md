@@ -1,41 +1,41 @@
-# 🛡️ Beautiful HTML Pentest Report Template
+# Beautiful HTML Penetration Testing Report Template
 
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
 ![Format](https://img.shields.io/badge/Format-HTML5%20%26%20CSS3-orange.svg)
 ![Print](https://img.shields.io/badge/Print-Perfect%20PDF-success.svg)
 
-Welcome to the **Beautiful HTML Pentest Report Template**! This project provides a stunning, highly professional, and easy-to-edit template for cybersecurity professionals, consultants, and agencies. 
+Beautiful, interactive HTML penetrations and professional report templates that prints to a perfect pixel PDF.
 
-Say goodbye to clunky Word documents and rigid design tools. With just HTML and CSS, you can create a gorgeous, interactive report that **prints perfectly to a 11x8.5in PDF**.
+This project provides a highly professional, easily modifiable deliverable format designed for cybersecurity consultancies, internal red teams, and enterprise security professionals. It replaces rigid legacy document formats with a modern, web-native approach that seamlessly exports to a flawless 11x8.5 landscape PDF.
 
-### 📸 See it in action
+## Visual Demonstration
+
 ![Report Demo](assets/demo.gif)
 
 ---
 
-## ✨ Features
+## Key Enterprise Features
 
-- **No Code Required:** If you can edit text in HTML, you can use this template! No complex build steps or dependencies.
-- **Perfect PDF Exports:** Painstakingly crafted `@media print` CSS ensures your report translates exactly 1:1 into a perfectly paginated, landscape PDF without broken margins or empty pages.
-- **13 Pre-designed Slides:** Includes layouts for Cover, Table of Contents, Executive Summary, Risk Matrix, Findings, Technical Details, Proof of Concept, and more.
-- **Interactive Charts:** Integrated lightweight scripts (Chart.js / Highcharts) for stunning visual data presentation.
-- **Modern Design:** Uses a sleek, slate-blue color palette, crisp Google Fonts (Montserrat & Fira Code), and polished drop shadows.
-
----
-
-## 🚀 How to Use It
-
-1. **Clone or Download** this repository.
-2. **Open `combined_report.html`** in your favorite text editor (like VS Code, Notepad++, or Sublime Text).
-3. **Replace the placeholder text** (like ACME Consulting, Global Finance Corp, and the dummy vulnerability data) with your actual assessment details.
-4. **Open in your Web Browser** to preview the interactive version.
-5. **Print to PDF** (Ctrl+P / Cmd+P) and save! It will automatically format itself into a perfect 13-page landscape document.
+- **Executive-Ready Presentation:** Designed to communicate complex security findings effectively to both technical stakeholders and executive leadership.
+- **Pixel-Perfect Export:** Engineered with rigorous `@media print` CSS directives ensuring a 1:1 translation from the browser to a perfectly paginated, landscape PDF without margin degradation or layout breaks.
+- **Comprehensive Template Suite:** Includes 13 pre-formatted layouts covering Executive Summaries, Risk Matrices, Detailed Findings, Proof of Concepts, and Capability Statements.
+- **Interactive Data Visualization:** Integrates industry-standard charting libraries (Chart.js / Highcharts) for dynamic presentation of metrics and maturity models.
+- **Zero-Friction Deployment:** Pure HTML and CSS architecture. Requires no complex build pipelines or proprietary software to edit and deploy.
 
 ---
 
-## 🎨 Gallery
+## Usage Instructions
 
-Here is a sneak peek at a few of the included page templates:
+1. **Clone the Repository:** Download the project files to your local environment.
+2. **Edit the Content:** Open `combined_report.html` in your preferred code or text editor to populate your specific assessment data, client branding, and vulnerability metrics.
+3. **Preview:** Open the file in a modern web browser to review the interactive layout.
+4. **Generate PDF:** Use the browser's native print function (Ctrl+P / Cmd+P) and save as PDF. The document will automatically format into a 13-page, landscape executive report.
+
+---
+
+## Template Gallery
+
+A selection of included page layouts:
 
 | Cover Page | Executive Summary | Risk Matrix |
 |:---:|:---:|:---:|
@@ -47,12 +47,6 @@ Here is a sneak peek at a few of the included page templates:
 
 ---
 
-## 🏷️ Tags & Categories
-This project is designed to help the community create better deliverables. 
+## Contributing
 
-**Topics:** `cybersecurity`, `penetration-testing`, `report-template`, `html-css`, `pdf-generation`, `infosec`, `consulting`, `design`, `print-css`, `vulnerability-assessment`
-
----
-
-## 🤝 Contributing
-Feel free to fork this project, submit pull requests, or open issues to suggest new slide templates or design improvements. Let's make security reporting beautiful!
+We welcome contributions from the cybersecurity community. Please submit pull requests or open issues to propose new layouts, design refinements, or reporting features.
