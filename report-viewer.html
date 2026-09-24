@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACME Consulting - Pentest Report Viewer</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #64748B; /* Matches the slate background of the slides */
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden; /* Prevents scrollbars on the main window */
+        }
+
+        /* The iframe that holds the actual slides */
+        #slide-viewer {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        /* Floating UI Controls */
+        .controls-container {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 37, 64, 0.95);
+            padding: 12px 24px;
+            border-radius: 50px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: opacity 0.3s ease;
+        }
+
+        /* Hides controls when mouse is not moving (optional, disabled by default) */
+        .controls-container:hover {
+            opacity: 1;
+        }
+
+        .btn {
+            background: #0A4B9F;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            outline: none;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn:hover:not(:disabled) {
+            background: #3B82F6;
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            background: #334155;
+            color: #64748B;
+            cursor: not-allowed;
+        }
+
+        .slide-selector {
+            background: #1E293B;
+            color: white;
+            border: 1px solid #475569;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            outline: none;
+            cursor: pointer;
+            min-width: 240px;
+        }
+
+        .slide-selector:focus {
+            border-color: #3B82F6;
+        }
+
+        .keyboard-hint {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            background: rgba(10, 37, 64, 0.8);
+            color: #94A3B8;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            pointer-events: none; /* Allows clicking through it */
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .keyboard-hint strong {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- On-screen hint for presentation mode -->
+    <div class="keyboard-hint">
+        Navigate with <strong>⟵ ⟶</strong> arrow keys
+    </div>
+
+    <!-- Slide Frame -->
+    <iframe id="slide-viewer" title="Presentation Viewer"></iframe>
+    
+    <!-- Navigation Bar -->
+    <div class="controls-container" id="controls">
+        <button class="btn" id="prevBtn" onclick="prevSlide()" title="Previous Slide">
+            ◀ Prev
+        </button>
+        
+        <select class="slide-selector" id="slideSelect" onchange="goToSlide(this.value)">
+            <!-- Options populated by JavaScript -->
+        </select>
+        
+        <button class="btn" id="nextBtn" onclick="nextSlide()" title="Next Slide">
+            Next ▶
+        </button>
+    </div>
+
+    <script>
+        // Array of all slide filenames in order
+        const slides = [
+            "01-Slide-Cover.html",
+            "02-Slide-Table-of-Content.html",
+            "03-Slide-Executive-Summary.html",
+            "04-Slide-Cybersecurity-Maturity.html",
+            "05-Slide-Scope.html",
+            "06-Slide-Risk-Matrix.html",
+            "07-Slide-Testing-Phases.html",
+            "08-Slide-Findings-Overview.html",
+            "09-Slide-Technical-Details.html",
+            "10-Slide-Proof-of-Concept.html",
+            "11-Slide-Team.html",
+            "12-Slide-Capability-Statement.html",
+            "13-Slide-Company-Overview.html"
+        ];
+        
+        let currentIndex = 0;
+        const viewer = document.getElementById('slide-viewer');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const select = document.getElementById('slideSelect');
+        
+        // Format filenames into clean titles for the dropdown menu
+        function formatTitle(filename) {
+            // Remove 'XX-Slide-' and '.html', then replace hyphens with spaces
+            return filename
+                .replace(/^\d+-Slide-/, '')
+                .replace('.html', '')
+                .replace(/-/g, ' ');
+        }
+
+        // Populate the dropdown selector
+        slides.forEach((slide, index) => {
+            const option = document.createElement('option');
+            option.value = index;
+            // E.g., "01. Cover"
+            option.textContent = `${String(index + 1).padStart(2, '0')}. ${formatTitle(slide)}`;
+            select.appendChild(option);
+        });
+        
+        // Core function to load a slide and update buttons
+        function updatePresentation() {
+            viewer.src = slides[currentIndex];
+            select.value = currentIndex;
+            
+            // Disable/Enable buttons at the ends of the presentation
+            prevBtn.disabled = (currentIndex === 0);
+            nextBtn.disabled = (currentIndex === slides.length - 1);
+            
+            // Force focus back to the main window so keyboard arrows keep working
+            // (If a user clicks inside the iframe, the iframe steals focus)
+            setTimeout(() => window.focus(), 50);
+        }
+        
+        // Navigation Functions
+        function prevSlide() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updatePresentation();
+            }
+        }
+        
+        function nextSlide() {
+            if (currentIndex < slides.length - 1) {
+                currentIndex++;
+                updatePresentation();
+            }
+        }
+        
+        function goToSlide(index) {
+            currentIndex = parseInt(index, 10);
+            updatePresentation();
+        }
+        
+        // Keyboard Event Listener for Arrow Keys and Spacebar
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                prevSlide();
+            }
+        });
+
+        // If the user clicks inside the iframe, the main window loses keyboard focus. 
+        // We capture clicks on the main body to restore focus.
+        document.body.addEventListener('click', () => {
+            window.focus();
+        });
+        
+        // Load the first slide on boot
+        updatePresentation();
+
+    </script>
+</body>
+</html>
