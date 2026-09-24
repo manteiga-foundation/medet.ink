@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ACME - Executive Summary</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+        
+        /* ============================================
+           SHARED SLIDE SETTINGS
+           ============================================ */
+        
+        @page {
+            size: 11in 8.5in;
+            margin: 0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        
+        html, body {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            background: white;
+            height: 100%;
+        }
+        
+        .slide {
+            width: 11in;
+            height: 8.5in;
+            position: relative;
+            overflow: hidden;
+            page-break-after: always;
+            page-break-inside: avoid;
+            background: linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 50%, #F1F5F9 100%);
+            color: #0A2540;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Accent Bar */
+        .slide::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(180deg, #0A4B9F 0%, #4781C3 35%, #D82018 100%);
+        }
+        
+        /* Subtle Grid */
+        .slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(10, 75, 159, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(10, 75, 159, 0.03) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+        }
+
+        /* ============================================
+           LAYOUT SECTIONS
+           ============================================ */
+
+        /* Header */
+        .header {
+            padding: 0.35in 0.8in 0.1in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo-placeholder-small {
+            width: 120px;
+            height: 32px;
+            background: #F1F5F9;
+            border: 1px dashed #94A3B8;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            color: #64748B;
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 0 0.8in;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .section-title {
+            font-size: 34px; 
+            font-weight: 300;
+            color: #0A2540;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+
+        .section-title strong {
+            font-weight: 900;
+        }
+
+        .divider {
+            width: 80px;
+            height: 5px;
+            background: linear-gradient(90deg, #D82018, #0A4B9F);
+            border-radius: 2.5px;
+            margin-bottom: 24px;
+        }
+
+        /* Executive Summary Text */
+        .exec-text {
+            font-size: 14px; 
+            line-height: 1.6;
+            color: #475569;
+            margin-bottom: 24px;
+        }
+
+        .exec-text p {
+            margin-bottom: 12px;
+        }
+
+        /* Rating Callout Card */
+        .rating-card {
+            background: white;
+            padding: 24px 50px; 
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.04);
+            border: 1px solid #E2E8F0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 50px;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rating-card::before {
+            content: '';
+            position: absolute;
+            right: -50px;
+            top: -50px;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(245, 158, 11, 0.05) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* Callout Text - Now Justified */
+        .rating-callout {
+            flex: 1;
+            font-size: 16px; 
+            font-weight: 700;
+            color: #475569;
+            line-height: 1.6;
+            text-align: justify; /* Added justified alignment */
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Donut Chart Container */
+        .rating-visual {
+            position: relative;
+            width: 140px; 
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            flex-shrink: 0;
+            z-index: 1;
+        }
+
+        .rating-visual svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        /* Scaled down inner text */
+        .rating-visual-text {
+            position: relative;
+            z-index: 1;
+            font-size: 10px; /* Reduced size */
+            font-weight: 800;
+            color: #F59E0B; 
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            line-height: 1.3;
+        }
+
+        .rating-label {
+            position: absolute;
+            bottom: -22px;
+            font-size: 10px;
+            color: #94A3B8;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* 3-Tier Legend */
+        .legend-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-top: auto; 
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            flex: 1;
+            background: #F8FAFC; 
+            padding: 16px 20px;
+            border-radius: 8px;
+            border: 1px solid #F1F5F9;
+        }
+
+        .legend-gauge {
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+            transform: rotate(-90deg);
+            margin-top: -2px;
+        }
+
+        .legend-content {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .legend-title {
+            font-size: 11px;
+            font-weight: 800;
+            color: #0A2540;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Legend descriptions - Increased font size */
+        .legend-desc {
+            font-size: 11px; /* Increased from 10px */
+            color: #64748B;
+            line-height: 1.4;
+        }
+
+        /* Footer - Removed top border */
+        .footer {
+            padding: 0.15in 0.8in 0.3in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            position: relative;
+            z-index: 1;
+            margin-top: 20px;
+            /* border-top: 1px solid #E2E8F0; (Removed) */
+        }
+        
+        .footer-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 700px;
+        }
+        
+        .confidential-block {
+            font-size: 9px;
+            color: #64748B;
+            line-height: 1.5;
+        }
+
+        .confidential-block strong {
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .footer-bottom-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .footer-line {
+            font-size: 10px;
+            color: #94A3B8;
+        }
+        
+        .footer-line strong {
+            font-weight: 600;
+            color: #0A4B9F;
+        }
+
+        .footer-tags {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tag {
+            font-size: 7px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 3px 6px;
+            border-radius: 3px;
+        }
+
+        .tag-draft {
+            background: rgba(100, 116, 139, 0.1);
+            color: #475569;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+        }
+
+        .tag-tlp {
+            background: rgba(217, 119, 6, 0.1);
+            color: #B45309;
+            border: 1px solid rgba(217, 119, 6, 0.2);
+        }
+        
+        .footer-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2px;
+        }
+        
+        .page-indicator {
+            font-size: 12px;
+            font-weight: 700;
+            color: #0A4B9F;
+        }
+        
+        .page-total {
+            font-size: 12px;
+            font-weight: 400;
+            color: #94A3B8;
+        }
+
+        /* ============================================
+           BROWSER PREVIEW
+           ============================================ */
+        
+        @media screen {
+            html { background: #64748B; height: auto; }
+            body { padding: 0.5in; background: #64748B; }
+            .slide {
+                margin: 0 auto;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- SLIDE 03: EXECUTIVE SUMMARY -->
+<div class="slide">
+    
+    <!-- Header -->
+    <div class="header">
+        <div class="logo-placeholder-small">
+            [ACME Logo]
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="content">
+        <h2 class="section-title">Executive <strong>Summary</strong></h2>
+        <div class="divider"></div>
+        
+        <!-- Text Paragraphs -->
+        <div class="exec-text">
+            <p>Global Finance Corp's external network infrastructure serves as the digital gateway for critical financial operations and customer interactions.</p>
+            <p>The current assessment reveals a network perimeter characterized by established patch management and security implementations. Notable findings include specific unpatched web servers and minor misconfigurations within the DMZ environment.</p>
+            <p>Despite the identified vulnerabilities, the external infrastructure continues to reliably support business operations with no evidence of active exploitation or immediate critical compromise paths.</p>
+        </div>
+
+        <!-- Shadow Card with Callout and Donut Chart -->
+        <div class="rating-card">
+            <div class="rating-callout">
+                The assessment findings reveal opportunities to strengthen the external security posture through improvements in service configurations. The identified configuration gaps impact overall security maturity, resulting in the following security rating:
+            </div>
+            
+            <div class="rating-visual">
+                <svg viewBox="0 0 140 140">
+                    <!-- Background Track -->
+                    <circle cx="70" cy="70" r="56" fill="none" stroke="#F1F5F9" stroke-width="14" />
+                    <!-- Foreground Progress (Amber) - 2/3 filled -->
+                    <!-- Circumference = 2 * pi * 56 = 351.86 -->
+                    <!-- 2/3 fill means 1/3 empty. 1/3 of 351.86 = 117.29 offset -->
+                    <circle cx="70" cy="70" r="56" fill="none" stroke="#F59E0B" stroke-width="14" 
+                            stroke-dasharray="351.86" stroke-dashoffset="117.29" stroke-linecap="round" />
+                </svg>
+                <div class="rating-visual-text">
+                    Needs<br>Improvement
+                </div>
+                <div class="rating-label">Risk Rating</div>
+            </div>
+        </div>
+
+        <!-- 3-Tier Legend (Soft Cards with Fractional Gauges) -->
+        <div class="legend-container">
+            
+            <!-- 3/3 Satisfactory -->
+            <div class="legend-item">
+                <svg class="legend-gauge" viewBox="0 0 40 40">
+                    <circle cx="20" cy="20" r="15" fill="none" stroke="#E2E8F0" stroke-width="6" />
+                    <!-- Circumference = 94.24, 3/3 fill = offset 0 -->
+                    <circle cx="20" cy="20" r="15" fill="none" stroke="#10B981" stroke-width="6" 
+                            stroke-dasharray="94.24" stroke-dashoffset="0" stroke-linecap="round" />
+                </svg>
+                <div class="legend-content">
+                    <div class="legend-title" style="color: #10B981;">Satisfactory</div>
+                    <div class="legend-desc">Security meets industry standards. Minimal to no actionable findings identified.</div>
+                </div>
+            </div>
+
+            <!-- 2/3 Needs Improvement -->
+            <div class="legend-item">
+                <svg class="legend-gauge" viewBox="0 0 40 40">
+                    <circle cx="20" cy="20" r="15" fill="none" stroke="#E2E8F0" stroke-width="6" />
+                    <!-- Circumference = 94.24, 2/3 fill = offset 31.41 -->
+                    <circle cx="20" cy="20" r="15" fill="none" stroke="#F59E0B" stroke-width="6" 
+                            stroke-dasharray="94.24" stroke-dashoffset="31.41" stroke-linecap="round" />
+                </svg>
+                <div class="legend-content">
+                    <div class="legend-title" style="color: #F59E0B;">Needs Improvement</div>
+                    <div class="legend-desc">Protects some areas, but moderate changes and configuration updates are required.</div>
+                </div>
+            </div>
+
+            <!-- 1/3 Non Satisfactory -->
+            <div class="legend-item">
+                <svg class="legend-gauge" viewBox="0 0 40 40">
+                    <circle cx="20" cy="20" r="15" fill="none" stroke="#E2E8F0" stroke-width="6" />
+                    <!-- Circumference = 94.24, 1/3 fill = offset 62.83 -->
+                    <circle cx="20" cy="20" r="15" fill="none" stroke="#EF4444" stroke-width="6" 
+                            stroke-dasharray="94.24" stroke-dashoffset="62.83" stroke-linecap="round" />
+                </svg>
+                <div class="legend-content">
+                    <div class="legend-title" style="color: #EF4444;">Non Satisfactory</div>
+                    <div class="legend-desc">Significant security deficiencies exist requiring immediate attention.</div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-info">
+            <div class="confidential-block">
+                <strong>Strictly Confidential</strong> — This document contains sensitive security and technical information. Reproduction, distribution, or disclosure to unauthorized parties without explicit written consent is strictly prohibited.
+            </div>
+            <div class="footer-bottom-row">
+                <div class="footer-line">
+                    <span>Property of &nbsp;<strong>ACME Consulting</strong> &nbsp;|&nbsp; acmecyber.com</span>
+                </div>
+                <div class="footer-tags">
+                    <span class="tag tag-draft">Draft</span>
+                    <span class="tag tag-tlp">TLP:AMBER</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-right">
+            <span class="page-indicator">03</span>
+            <span class="page-total">/ 32</span>
+        </div>
+    </div>
+    
+</div>
+
+</body>
+</html>

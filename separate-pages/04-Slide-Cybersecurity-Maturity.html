@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ACME - Cybersecurity Maturity Score</title>
+    <!-- Highcharts Dependencies -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/offline-exporting.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+        
+        /* ============================================
+           SHARED SLIDE SETTINGS
+           ============================================ */
+        
+        @page {
+            size: 11in 8.5in;
+            margin: 0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        
+        html, body {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            background: white;
+            height: 100%;
+        }
+        
+        .slide {
+            width: 11in;
+            height: 8.5in;
+            position: relative;
+            overflow: hidden;
+            page-break-after: always;
+            page-break-inside: avoid;
+            background: linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 50%, #F1F5F9 100%);
+            color: #0A2540;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Accent Bar */
+        .slide::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(180deg, #0A4B9F 0%, #4781C3 35%, #D82018 100%);
+        }
+        
+        /* Subtle Grid */
+        .slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(10, 75, 159, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(10, 75, 159, 0.03) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+        }
+
+        /* ============================================
+           LAYOUT SECTIONS
+           ============================================ */
+
+        /* Header */
+        .header {
+            padding: 0.35in 0.8in 0.1in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo-placeholder-small {
+            width: 120px;
+            height: 32px;
+            background: #F1F5F9;
+            border: 1px dashed #94A3B8;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            color: #64748B;
+            font-weight: 600;
+        }
+
+        /* Main Content Layout */
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 0 0.8in;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Top Level Titles */
+        .section-title {
+            font-size: 32px; 
+            font-weight: 300;
+            color: #0A2540;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+            line-height: 1.1;
+        }
+
+        .section-title strong {
+            font-weight: 900;
+        }
+
+        .divider {
+            width: 60px;
+            height: 5px;
+            background: linear-gradient(90deg, #D82018, #0A4B9F);
+            border-radius: 2.5px;
+            margin-bottom: 24px;
+        }
+
+        /* 2-Column Grid exactly matching heights */
+        .two-col-grid {
+            display: grid;
+            grid-template-columns: 4.5fr 5.5fr; /* 45% Left, 55% Right */
+            gap: 40px;
+            flex: 1;
+            align-items: stretch; /* Stretches both columns to the same height */
+            margin-bottom: 10px;
+        }
+
+        .left-col {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .right-col {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Executive Takeaway Box */
+        .exec-takeaway {
+            background: #F1F5F9;
+            border-left: 4px solid #0A4B9F;
+            padding: 16px 20px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 24px;
+        }
+
+        .exec-takeaway-label {
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #0A4B9F;
+            margin-bottom: 6px;
+        }
+
+        .exec-takeaway-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0A2540;
+            line-height: 1.5;
+        }
+
+        /* Paragraph Text */
+        .exec-text {
+            font-size: 12px; 
+            line-height: 1.6;
+            color: #475569;
+            margin-bottom: 24px;
+            text-align: justify;
+        }
+
+        /* Chart Explainer (Pushed to bottom of left column to match height) */
+        .chart-explainer {
+            background: white;
+            border: 1px dashed #CBD5E1;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: auto; 
+        }
+
+        .explainer-title {
+            font-size: 10px;
+            font-weight: 700;
+            color: #64748B;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .explainer-text {
+            font-size: 11px;
+            color: #475569;
+            line-height: 1.5;
+        }
+
+        /* Chart Card Container (Right Column) */
+        .chart-card {
+            background: white;
+            padding: 24px 20px 24px 24px; 
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.04);
+            border: 1px solid #E2E8F0;
+            display: flex;
+            flex-direction: column;
+            height: 100%; /* Force height to match left column */
+            width: 100%;
+        }
+
+        .chart-header {
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .chart-title {
+            color: #0A2540;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: -0.2px;
+            margin-bottom: 4px;
+        }
+
+        .chart-subtitle {
+            color: #64748B;
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        #chart-container {
+            width: 100%;
+            flex: 1; /* Flex-grow to fill remaining card height perfectly */
+            min-height: 250px;
+            position: relative;
+        }
+
+        /* Remove strokes from area series only */
+        .highcharts-area-series .highcharts-area {
+            stroke: none !important;
+            stroke-width: 0 !important;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 0.15in 0.8in 0.3in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .footer-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 700px;
+        }
+        
+        .confidential-block {
+            font-size: 9px;
+            color: #64748B;
+            line-height: 1.5;
+        }
+
+        .confidential-block strong {
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .footer-bottom-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .footer-line {
+            font-size: 10px;
+            color: #94A3B8;
+        }
+        
+        .footer-line strong {
+            font-weight: 600;
+            color: #0A4B9F;
+        }
+
+        .footer-tags {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tag {
+            font-size: 7px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 3px 6px;
+            border-radius: 3px;
+        }
+
+        .tag-draft {
+            background: rgba(100, 116, 139, 0.1);
+            color: #475569;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+        }
+
+        .tag-tlp {
+            background: rgba(217, 119, 6, 0.1);
+            color: #B45309;
+            border: 1px solid rgba(217, 119, 6, 0.2);
+        }
+        
+        .footer-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2px;
+        }
+        
+        .page-indicator {
+            font-size: 12px;
+            font-weight: 700;
+            color: #0A4B9F;
+        }
+        
+        .page-total {
+            font-size: 12px;
+            font-weight: 400;
+            color: #94A3B8;
+        }
+
+        /* ============================================
+           BROWSER PREVIEW
+           ============================================ */
+        
+        @media screen {
+            html { background: #64748B; height: auto; }
+            body { padding: 0.5in; background: #64748B; }
+            .slide {
+                margin: 0 auto;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- SLIDE 04: CYBERSECURITY MATURITY SCORE -->
+<div class="slide">
+    
+    <!-- Header -->
+    <div class="header">
+        <div class="logo-placeholder-small">
+            [ACME Logo]
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="content">
+        
+        <!-- Top Title and Divider (Full width over the grid) -->
+        <h2 class="section-title">Cybersecurity<br><strong>Maturity Score</strong></h2>
+        <div class="divider"></div>
+        
+        <div class="two-col-grid">
+            
+            <!-- LEFT COLUMN: Text & Explanations -->
+            <div class="left-col">
+                
+                <!-- Executive Sentence Callout -->
+                <div class="exec-takeaway">
+                    <div class="exec-takeaway-label">Executive Takeaway</div>
+                    <div class="exec-takeaway-text">
+                        Your external network security is fundamentally sound, placing you in the upper "Average" tier. With targeted remediation, achieving a "Good" rating is highly attainable.
+                    </div>
+                </div>
+
+                <!-- Text Paragraph -->
+                <div class="exec-text">
+                    Global Finance Corp's external network cybersecurity maturity places the organization in the upper range of the Average tier relative to its enterprise-size peers, positioned just below the threshold of the Good tier. This reflects a security posture that is consistent with industry norms for organizations of comparable scale, while highlighting a clear opportunity for advancement. By addressing the findings identified in this assessment, Global Finance Corp is well-positioned to close the remaining gap, strengthening its resilience against external threats.
+                </div>
+
+                <!-- Single Sentence Chart Explanation (Pushed to bottom) -->
+                <div class="chart-explainer">
+                    <div class="explainer-title">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                        Understanding This Chart
+                    </div>
+                    <div class="explainer-text">
+                        This chart compares cybersecurity maturity across varying company sizes, with the indicator dot marking your organization's exact position based on current assessment findings.
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: Chart -->
+            <div class="right-col">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-title">Maturity Scores by Company Size</div>
+                        <div class="chart-subtitle">2026 Assessment across organization sizes with Global Finance Corp positioning</div>
+                    </div>
+                    <!-- Highcharts Container -->
+                    <div id="chart-container"></div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-info">
+            <div class="confidential-block">
+                <strong>Strictly Confidential</strong> — This document contains sensitive security and technical information. Reproduction, distribution, or disclosure to unauthorized parties without explicit written consent is strictly prohibited.
+            </div>
+            <div class="footer-bottom-row">
+                <div class="footer-line">
+                    <span>Property of &nbsp;<strong>ACME Consulting</strong> &nbsp;|&nbsp; acmecyber.com</span>
+                </div>
+                <div class="footer-tags">
+                    <span class="tag tag-draft">Draft</span>
+                    <span class="tag tag-tlp">TLP:AMBER</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-right">
+            <span class="page-indicator">04</span>
+            <span class="page-total">/ 32</span>
+        </div>
+    </div>
+    
+</div>
+
+<!-- Highcharts Implementation Script -->
+<script>
+    const chartData = {
+        categories: ['Startups', 'Small Biz', 'Mid-Market', 'Enterprise', 'Large Ent.', 'Fortune 500'],
+        series: {
+            poor: [20, 15, 8, 5, 2, 0],
+            belowAverage: [35, 30, 22, 15, 8, 3],
+            average: [30, 35, 35, 30, 25, 15],
+            good: [12, 15, 25, 35, 40, 42],
+            excellent: [3, 5, 10, 15, 25, 40]
+        }
+    };
+
+        Highcharts.chart('chart-container', {
+        chart: {
+            type: 'area',
+            backgroundColor: 'transparent',
+            style: {
+                fontFamily: 'Montserrat, sans-serif'
+            },
+            // Change margins to 0 to stretch to the container edges
+            marginLeft: 0,
+            marginRight: 0, 
+            marginTop: 10,
+            marginBottom: 50 
+        },
+        title: {
+            text: null
+        },
+        credits: {
+            enabled: false
+        },
+        xAxis: {
+            categories: chartData.categories,
+            // Add these three lines to remove the default gaps on the left/right
+            tickmarkPlacement: 'on',
+            minPadding: 0,
+            maxPadding: 0,
+            labels: {
+                style: {
+                    fontSize: '9px',
+                    color: '#64748B',
+                    fontWeight: '600'
+                }
+            },
+            lineWidth: 0,
+            tickWidth: 0
+
+        },
+        yAxis: {
+            title: {
+                text: null
+            },
+            min: 0,
+            max: 100,
+            gridLineWidth: 0,
+            labels: {
+                enabled: false
+            }
+        },
+        tooltip: {
+            enabled: false
+        },
+        legend: {
+            align: 'center',
+            verticalAlign: 'bottom',
+            layout: 'horizontal', /* Changed to horizontal layout at the bottom */
+            x: 0,
+            y: 15,
+            itemDistance: 12, /* Space between legend items */
+            itemStyle: {
+                fontSize: '9.5px',
+                color: '#475569',
+                fontWeight: '600'
+            },
+            symbolRadius: 3,
+            reversed: false
+        },
+        plotOptions: {
+            area: {
+                stacking: 'normal',
+                lineColor: 'transparent',
+                lineWidth: 0,
+                marker: {
+                    enabled: false
+                },
+                fillOpacity: 0.95,
+                states: {
+                    hover: {
+                        enabled: false
+                    }
+                }
+            }
+        },
+        series: [{
+            name: 'Poor',
+            data: chartData.series.excellent,
+            color: '#8B5CF6' 
+        }, {
+            name: 'Below Avg',
+            data: chartData.series.good,
+            color: '#EF4444' 
+        }, {
+            name: 'Average',
+            data: chartData.series.average,
+            color: '#F59E0B' 
+        }, {
+            name: 'Good',
+            data: chartData.series.belowAverage,
+            color: '#10B981' 
+        }, {
+            name: 'Excellent',
+            data: chartData.series.poor,
+            color: '#3B82F6' 
+        }],
+        exporting: {
+            enabled: false
+        }
+    }, function(chart) {
+        
+        // Position Marker between Enterprise and Large Enterprise (Index 3.5)
+        const xPos = chart.xAxis[0].toPixels(3.5);
+        
+        const fsrIndex = 3; 
+        const poorHeight = chartData.series.poor[fsrIndex];
+        const belowAvgHeight = chartData.series.belowAverage[fsrIndex];
+        const belowAvgTop = poorHeight + belowAvgHeight;
+        
+        // Place in the Average band
+        const fsrPosition = belowAvgTop + 16;
+        const logoY = chart.yAxis[0].toPixels(fsrPosition);
+        
+        // Marker Dot
+        chart.renderer.circle(xPos - 5, logoY - 5, 5)
+            .attr({
+                fill: '#0A2540',
+                stroke: '#FFFFFF',
+                'stroke-width': 2,
+                zIndex: 15
+            })
+            .add();
+            
+        // Text Label
+        chart.renderer.label('<strong>Global Finance Corp</strong><br/>Maturity Score', xPos + 6, logoY - 16)
+            .css({
+                fontSize: '9px',
+                color: '#0A2540',
+                lineHeight: '12px',
+                textAlign: 'left'
+            })
+            .attr({
+                fill: 'rgba(255, 255, 255, 0.95)',
+                padding: 5,
+                r: 4,
+                zIndex: 14,
+                stroke: '#E2E8F0',
+                'stroke-width': 1
+            })
+            .add();
+    });
+</script>
+
+</body>
+</html>

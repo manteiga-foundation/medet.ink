@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ACME - Technical Finding</title>
+    <!-- Chart.js Dependency -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+        
+        /* ============================================
+           SHARED SLIDE SETTINGS
+           ============================================ */
+        
+        @page {
+            size: 11in 8.5in;
+            margin: 0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        
+        html, body {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            background: white;
+            height: 100%;
+        }
+        
+        .slide {
+            width: 11in;
+            height: 8.5in;
+            position: relative;
+            overflow: hidden;
+            page-break-after: always;
+            page-break-inside: avoid;
+            background: linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 50%, #F1F5F9 100%);
+            color: #0A2540;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Accent Bar */
+        .slide::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(180deg, #0A4B9F 0%, #4781C3 35%, #D82018 100%);
+        }
+        
+        /* Subtle Grid */
+        .slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(10, 75, 159, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(10, 75, 159, 0.03) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+        }
+
+        /* Main Content Layout (No Header) */
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 0.4in 0.8in 0;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* ============================================
+           TOP SHADOW BOX (GRAPHICAL ELEMENTS)
+           ============================================ */
+        
+        .finding-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.04);
+            border: 1px solid #E2E8F0;
+            padding: 24px 32px;
+            margin-bottom: 24px;
+            margin-top: 12px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Floating ID Tab */
+        .finding-id-tab {
+            position: absolute;
+            top: -14px;
+            left: 32px;
+            background: #0A4B9F;
+            color: white;
+            font-size: 16px;
+            font-weight: 800;
+            padding: 6px 20px;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(10, 75, 159, 0.25);
+            letter-spacing: 0.5px;
+        }
+
+        .finding-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 800;
+            color: #0A2540;
+            margin-bottom: 16px;
+            letter-spacing: -0.2px;
+        }
+
+        /* 3-Column Grid inside the Top Card */
+        .finding-graphics-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 2.5fr 1fr; 
+            gap: 16px;
+            align-items: center;
+            min-height: 240px; /* Taller to accommodate larger side elements */
+        }
+
+        /* 1. Metadata Column (Enlarged Elements) */
+        .meta-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px; /* Increased gap */
+            padding-left: 8px;
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .meta-label {
+            font-size: 10px; /* Larger label */
+            color: #64748B;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .meta-value {
+            font-size: 14px; /* Larger value */
+            font-weight: 800;
+            color: #0A2540;
+            line-height: 1.2;
+        }
+
+        .meta-value.medium { 
+            color: #F59E0B; 
+            font-size: 15px;
+            background: rgba(245, 158, 11, 0.1);
+            padding: 4px 12px;
+            border-radius: 4px;
+            display: inline-block;
+            width: fit-content;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        /* New Compliance Pill */
+        .compliance-pill {
+            background: #F8FAFC;
+            border: 1px solid #CBD5E1;
+            color: #475569;
+            font-size: 11px;
+            font-family: monospace;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            width: fit-content;
+            margin-top: 2px;
+        }
+
+        /* 2. Chart.js Container */
+        .radar-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #chartContainer {
+            position: relative;
+            height: 100%;
+            width: 100%;
+            min-height: 240px;
+        }
+
+        /* 3. Risk Score Vertical Bar (TALLER & LARGER) */
+        .risk-score-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            height: 100%;
+            border-left: 1px dashed #E2E8F0;
+        }
+
+        .score-number {
+            font-size: 35px; /* Much Larger */
+            font-weight: 900;
+            color: #0A2540;
+            line-height: 1;
+            letter-spacing: 1px;
+
+
+        }
+
+        .score-gauge-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            height: 200px; /* Much Taller (0-10 scale representation) */
+        }
+
+        .score-bar-bg {
+            width: 38px; /* Wider */
+            height: 100%;
+            background: #F1F5F9;
+            border-radius: 19px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 3px 6px rgba(0,0,0,0.06);
+            border: 1px solid #E2E8F0;
+        }
+
+        .score-bar-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 59%; /* 5.9 score out of 10 */
+            background: linear-gradient(0deg, #D97706, #FBBF24);
+            border-radius: 19px;
+            box-shadow: 0 -2px 10px rgba(245, 158, 11, 0.4);
+        }
+
+        .score-label {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            font-size: 10px;
+            color: #94A3B8;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        /* ============================================
+           BOTTOM SECTION (2 COLUMNS)
+           ============================================ */
+        
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            flex: 1;
+        }
+
+        .col-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sub-heading {
+            font-size: 13px;
+            font-weight: 800;
+            color: #0A2540;
+            margin-bottom: 12px;
+            padding-bottom: 4px;
+            border-bottom: 2px solid #E2E8F0;
+            position: relative;
+        }
+
+        .sub-heading::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: #0A4B9F;
+        }
+
+        /* Affected Hosts - Inline Pills */
+        .host-pills {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .host-pill {
+            background: #F8FAFC;
+            border: 1px solid #CBD5E1;
+            color: #475569;
+            font-family: monospace;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+
+        .text-body {
+            font-size: 11.5px;
+            line-height: 1.6;
+            color: #475569;
+            text-align: justify;
+        }
+
+        .text-body p {
+            margin-bottom: 10px;
+        }
+
+        /* Remediation Steps Styling */
+        .remediation-step {
+            margin-bottom: 12px;
+            background: #F8FAFC;
+            padding: 5px 5px;
+            border-radius: 6px;
+            border-left: 3px solid #10B981;
+            font-size: 11px;
+            color: #475569;
+            line-height: 1.5;
+        }
+        
+        .remediation-step strong {
+            color: #0A2540;
+            display: block;
+            margin-bottom: 4px;
+            font-size: 11.5px;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 0.1in 0.8in 0.25in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            position: relative;
+            z-index: 1;
+            margin-top: auto;
+        }
+        
+        .footer-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 700px;
+        }
+        
+        .confidential-block {
+            font-size: 9px;
+            color: #64748B;
+            line-height: 1.5;
+        }
+
+        .confidential-block strong {
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .footer-bottom-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .footer-line {
+            font-size: 10px;
+            color: #94A3B8;
+        }
+        
+        .footer-line strong {
+            font-weight: 600;
+            color: #0A4B9F;
+        }
+
+        .footer-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2px;
+        }
+        
+        .page-indicator {
+            font-size: 12px;
+            font-weight: 700;
+            color: #0A4B9F;
+        }
+        
+        .page-total {
+            font-size: 12px;
+            font-weight: 400;
+            color: #94A3B8;
+        }
+
+        @media screen {
+            html { background: #64748B; height: auto; }
+            body { padding: 0.5in; background: #64748B; }
+            .slide {
+                margin: 0 auto;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- SLIDE 09: TECHNICAL FINDING -->
+<div class="slide">
+    
+    <!-- Main Content -->
+    <div class="content">
+        
+        <!-- TOP CARD: Dashboard -->
+        <div class="finding-card">
+            
+            <div class="finding-id-tab">FINDING 1</div>
+            <div class="finding-title">Nginx Buffer Overflow Vulnerability (CVE-2026-27654)</div>
+            
+            <div class="finding-graphics-grid">
+                
+                <!-- 1. Metadata Column (4 Elements) -->
+                <div class="meta-list">
+                    <div class="meta-item">
+                        <div class="meta-label">Risk Level</div>
+                        <div class="meta-value medium">Medium</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Affected Security Control</div>
+                        <div class="meta-value">Remote Access Management</div>
+                    </div>
+                    <!-- New Compliance Control -->
+                    <div class="meta-item">
+                        <div class="meta-label">Compliance Impact</div>
+                        <div class="compliance-pill">NIST CSF: PR.AC-3</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Total Affected Hosts</div>
+                        <div class="meta-value">2</div>
+                    </div>
+                </div>
+
+                <!-- 2. Chart.js Radar -->
+                <div class="radar-container">
+                    <div id="chartContainer">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- 3. Risk Score (Taller & Larger) -->
+                <div class="risk-score-wrapper">
+                    <div class="score-number">5.9</div>
+                    <div class="score-gauge-container">
+                        <div class="score-bar-bg">
+                            <div class="score-bar-fill"></div>
+                        </div>
+                        <div class="score-label">Risk Score</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- BOTTOM 2-COLUMN SECTION -->
+        <div class="details-grid">
+            
+            <!-- Left Column: Hosts & Description -->
+            <div class="col-section">
+                
+                <div class="sub-heading">Affected Hosts</div>
+                <div class="host-pills">
+                    <span class="host-pill">181.119.220.213</span>
+                    <span class="host-pill">181.119.220.228</span>
+                </div>
+
+                <div class="sub-heading">Vulnerability Description</div>
+                <div class="text-body">
+                    <p>ACME Security identified a heap-based buffer overflow vulnerability affecting the <code>ngx_http_dav_module</code> in NGINX Open Source and NGINX Plus. This vulnerability allows remote attackers to trigger a buffer overflow in the NGINX worker process, potentially resulting in worker process termination (denial of service) or unauthorized modification of source and destination file names outside the document root.</p>
+                    <p>The vulnerability is exploitable when specific configuration conditions are met: the NGINX configuration must use the DAV module's MOVE or COPY methods in combination with prefix location and alias directives. While the integrity impact is constrained, successful exploitation leads to service disruption.</p>
+                </div>
+            </div>
+
+            <!-- Right Column: Remediation & Solution -->
+            <div class="col-section">
+                
+                <div class="sub-heading">Remediation & Solution Strategy</div>
+                <div class="text-body" style="margin-bottom: 10px;">
+                    ACME Consulting recommends taking the following corrective actions in order of priority:
+                </div>
+                
+                <div class="remediation-step">
+                    <strong>1. Apply Vendor Patches</strong>
+                    Upgrade all affected NGINX instances to the latest stable release provided by F5/NGINX to address the CVE-2026-27654 advisory directly at the source.
+                </div>
+                
+                <div class="remediation-step">
+                    <strong>2. Configuration Mitigation (If patching is delayed)</strong>
+                    Temporarily mitigate the risk by modifying NGINX configurations. Disable the <code>ngx_http_dav_module</code> if it is not strictly required. If required, avoid using the <code>alias</code> directive in conjunction with DAV methods.
+                </div>
+
+                <div class="remediation-step">
+                    <strong>3. Web Application Firewall (WAF)</strong>
+                    Ensure your perimeter WAF is configured to inspect and strictly validate the format and length of HTTP headers associated with WebDAV COPY and MOVE methods, blocking malformed requests.
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-info">
+            <div class="confidential-block">
+                <strong>Strictly Confidential</strong> — This document contains sensitive security and technical information. Reproduction, distribution, or disclosure to unauthorized parties without explicit written consent is strictly prohibited.
+            </div>
+            <div class="footer-bottom-row">
+                <div class="footer-line">
+                    <span>Property of &nbsp;<strong>ACME Consulting</strong> &nbsp;|&nbsp; acmecyber.com</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-right">
+            <span class="page-indicator">09</span>
+            <span class="page-total">/ 32</span>
+        </div>
+    </div>
+    
+</div>
+
+<!-- Chart.js Implementation for the Medium Risk Radar -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const ctx = document.getElementById('radarChart').getContext('2d');
+        
+        // Medium Risk Gradient (Yellow/Amber)
+        const gradient = ctx.createLinearGradient(0, ctx.canvas.height, ctx.canvas.width, 0);
+        gradient.addColorStop(0, '#f57f17');
+        gradient.addColorStop(0.5, '#fbc02d');
+        gradient.addColorStop(1, '#ffeb3b');
+        
+        // Plugin to draw alternating hexagon backgrounds
+        const alternatingHexagonPlugin = {
+            id: 'alternatingHexagon',
+            beforeDraw: (chart) => {
+                const ctx = chart.ctx;
+                const scale = chart.scales.r;
+                ctx.save();
+                
+                for (let i = 1; i <= 4.5; i++) {
+                    if (i === 2 || i === 4) {
+                        const outerRadius = scale.getDistanceFromCenterForValue(i);
+                        const innerRadius = scale.getDistanceFromCenterForValue(i - 1);
+                        const angleStep = (2 * Math.PI) / 6;
+                        
+                        ctx.beginPath();
+                        for (let j = 0; j < 6; j++) {
+                            const angle = angleStep * j - Math.PI / 2;
+                            const x = scale.xCenter + outerRadius * Math.cos(angle);
+                            const y = scale.yCenter + outerRadius * Math.sin(angle);
+                            if (j === 0) ctx.moveTo(x, y);
+                            else ctx.lineTo(x, y);
+                        }
+                        ctx.closePath();
+                        
+                        ctx.moveTo(scale.xCenter + innerRadius * Math.cos(-Math.PI / 2), 
+                                   scale.yCenter + innerRadius * Math.sin(-Math.PI / 2));
+                        for (let j = 6; j >= 0; j--) {
+                            const angle = angleStep * j - Math.PI / 2;
+                            const x = scale.xCenter + innerRadius * Math.cos(angle);
+                            const y = scale.yCenter + innerRadius * Math.sin(angle);
+                            ctx.lineTo(x, y);
+                        }
+                        
+                        ctx.fillStyle = 'rgba(226, 232, 240, 0.4)';
+                        ctx.fill('evenodd');
+                    }
+                }
+                ctx.restore();
+            }
+        };
+        
+        // CUSTOM LABEL PLUGIN - Engineered to prevent overlap and bleeding
+        const customLabelsPlugin = {
+            id: 'customLabels',
+            afterDraw: (chart) => {
+                const ctx = chart.ctx;
+                const scale = chart.scales.r;
+                const angleStep = (2 * Math.PI) / 6;
+                
+                const titles = [
+                    'Business Impact',
+                    'Exploitation Prob.',
+                    'Attack Complexity',
+                    'Remediation Effort',
+                    'Integrity Impact',
+                    'Data Sensitivity'
+                ];
+
+                const subtitles = [
+                    'Revenue & ops at risk',
+                    'Likelihood to target',
+                    'Easier attacks score higher',
+                    'Effort to fix scores higher',
+                    'Damage to system trust',
+                    'Customer & compliance'
+                ];
+                
+                ctx.save();
+                
+                for (let i = 0; i < 6; i++) {
+                    const angle = angleStep * i - Math.PI / 2;
+                    
+                    const labelRadius = scale.getDistanceFromCenterForValue(scale.max) + 12; 
+                    const x = scale.xCenter + labelRadius * Math.cos(angle);
+                    const y = scale.yCenter + labelRadius * Math.sin(angle);
+                    
+                    ctx.textAlign = 'center';
+                    let titleY = y;
+                    let subY = y;
+
+                    // Dynamically shift baselines away from the hexagon center to prevent overlap
+                    if (i === 0) { // Top Label
+                        ctx.textBaseline = 'bottom';
+                        titleY = y - 10;
+                        subY = y;
+                    } else if (i === 3) { // Bottom Label
+                        ctx.textBaseline = 'top';
+                        titleY = y;
+                        subY = y + 10;
+                    } else { // Side Labels
+                        ctx.textAlign = (i === 1 || i === 2) ? 'left' : 'right';
+                        ctx.textBaseline = 'middle';
+                        titleY = y - 6;
+                        subY = y + 6;
+                    }
+
+                    // Draw Title
+                    ctx.font = '800 8.5px Montserrat, sans-serif';
+                    ctx.fillStyle = '#0A2540';
+                    ctx.fillText(titles[i], x, titleY);
+
+                    // Draw Subtitle
+                    ctx.font = '500 7px Montserrat, sans-serif';
+                    ctx.fillStyle = '#64748B';
+                    ctx.fillText(subtitles[i], x, subY);
+                }
+                
+                ctx.restore();
+            }
+        };
+        
+        Chart.register(alternatingHexagonPlugin, customLabelsPlugin);
+        
+        const config = {
+            type: 'radar',
+            data: {
+                labels: ['', '', '', '', '', ''],
+                datasets: [{
+                    data: [2.2, 1.0, 4.0, 1.5, 3.0, 2.0], // Medium Risk Data
+                    fill: true,
+                    backgroundColor: gradient,
+                    borderColor: 'transparent',
+                    borderWidth: 0,
+                    pointRadius: 0,
+                    pointHoverRadius: 0,
+                    tension: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                layout: {
+                    // Massive top and bottom padding guarantees the hexagon shrinks, giving the text plenty of room
+                    padding: { left: 90, right: 90, top: 45, bottom: 45 }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: false }
+                },
+                scales: {
+                    r: {
+                        min: 0,
+                        max: 4.5,
+                        ticks: { display: false },
+                        grid: {
+                            color: 'rgba(0,0,0,0.05)',
+                            lineWidth: 1,
+                            circular: false
+                        },
+                        angleLines: {
+                            color: 'rgba(0,0,0,0.05)',
+                            lineWidth: 1
+                        },
+                        pointLabels: {
+                            display: false 
+                        }
+                    }
+                }
+            }
+        };
+
+        new Chart(ctx, config);
+    });
+</script>
+
+</body>
+</html>

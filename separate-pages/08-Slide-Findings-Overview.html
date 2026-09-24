@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ACME - Findings Overview</title>
+    <!-- Highcharts Dependencies -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/offline-exporting.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+        
+        /* ============================================
+           SHARED SLIDE SETTINGS
+           ============================================ */
+        
+        @page {
+            size: 11in 8.5in;
+            margin: 0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        
+        html, body {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            background: white;
+            height: 100%;
+        }
+        
+        .slide {
+            width: 11in;
+            height: 8.5in;
+            position: relative;
+            overflow: hidden;
+            page-break-after: always;
+            page-break-inside: avoid;
+            background: linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 50%, #F1F5F9 100%);
+            color: #0A2540;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Accent Bar */
+        .slide::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(180deg, #0A4B9F 0%, #4781C3 35%, #D82018 100%);
+        }
+        
+        /* Subtle Grid */
+        .slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(10, 75, 159, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(10, 75, 159, 0.03) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+        }
+
+        /* ============================================
+           LAYOUT SECTIONS
+           ============================================ */
+
+        /* Header */
+        .header {
+            padding: 0.35in 0.8in 0.1in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo-placeholder-small {
+            width: 120px;
+            height: 32px;
+            background: #F1F5F9;
+            border: 1px dashed #94A3B8;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            color: #64748B;
+            font-weight: 600;
+        }
+
+        /* Main Content Layout - 2 Columns */
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 0 0.8in;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .section-title {
+            font-size: 32px; 
+            font-weight: 300;
+            color: #0A2540;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+            line-height: 1.1;
+        }
+
+        .section-title strong {
+            font-weight: 900;
+        }
+
+        .divider {
+            width: 60px;
+            height: 5px;
+            background: linear-gradient(90deg, #D82018, #0A4B9F);
+            border-radius: 2.5px;
+            margin-bottom: 24px;
+        }
+
+        .two-col-grid {
+            display: grid;
+            grid-template-columns: 4fr 6fr; /* 40% Left, 60% Right */
+            gap: 40px;
+            flex: 1;
+            align-items: stretch;
+            margin-bottom: 10px;
+        }
+
+        .left-col {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .right-col {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Summary Callout Box */
+        .summary-box {
+            background: #F1F5F9;
+            border-left: 4px solid #0A4B9F;
+            padding: 16px 20px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 24px;
+        }
+
+        .summary-label {
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #0A4B9F;
+            margin-bottom: 8px;
+        }
+
+        .summary-text {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #0A2540;
+            line-height: 1.5;
+        }
+
+        /* Paragraph Text */
+        .desc-text {
+            font-size: 12.5px; 
+            line-height: 1.6;
+            color: #475569;
+            text-align: justify;
+        }
+        
+        .desc-text p {
+            margin-bottom: 16px;
+        }
+
+        /* ============================================
+           CHART CARD & STATS
+           ============================================ */
+        
+        .chart-card {
+            background: white;
+            padding: 24px 32px; 
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.04);
+            border: 1px solid #E2E8F0;
+            display: flex;
+            flex-direction: column;
+            height: 100%; 
+            width: 100%;
+        }
+
+        .chart-header {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .chart-title {
+            color: #0A2540;
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: -0.2px;
+            margin-bottom: 2px;
+        }
+
+        #chart-container {
+            width: 100%;
+            flex: 1; /* Allows chart to fill available height */
+            min-height: 250px;
+            position: relative;
+        }
+
+        /* Bottom Stat Boxes */
+        .stats-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 16px;
+            padding-top: 20px;
+            border-top: 1px dashed #E2E8F0;
+        }
+        
+        .stat-item {
+            flex: 1;
+            text-align: center;
+            padding: 12px 8px;
+            background: #F8FAFC;
+            border-radius: 8px;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        
+        .stat-number {
+            font-size: 26px;
+            font-weight: 900;
+            margin-bottom: 2px;
+            line-height: 1;
+        }
+        
+        .stat-label {
+            font-size: 9px;
+            color: #64748B;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Specific Status Colors */
+        .color-critical { color: #DC2626; } /* Red */
+        .color-high { color: #F97316; }     /* Orange */
+        .color-medium { color: #FBBF24; }   /* Yellow/Amber */
+        .color-low { color: #10B981; }      /* Green */
+
+        /* Footer */
+        .footer {
+            padding: 0.15in 0.8in 0.3in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            position: relative;
+            z-index: 1;
+            margin-top: auto;
+        }
+        
+        .footer-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 700px;
+        }
+        
+        .confidential-block {
+            font-size: 9px;
+            color: #64748B;
+            line-height: 1.5;
+        }
+
+        .confidential-block strong {
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .footer-bottom-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .footer-line {
+            font-size: 10px;
+            color: #94A3B8;
+        }
+        
+        .footer-line strong {
+            font-weight: 600;
+            color: #0A4B9F;
+        }
+
+        .footer-tags {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tag {
+            font-size: 7px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 3px 6px;
+            border-radius: 3px;
+        }
+
+        .tag-draft {
+            background: rgba(100, 116, 139, 0.1);
+            color: #475569;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+        }
+
+        .tag-tlp {
+            background: rgba(217, 119, 6, 0.1);
+            color: #B45309;
+            border: 1px solid rgba(217, 119, 6, 0.2);
+        }
+        
+        .footer-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2px;
+        }
+        
+        .page-indicator {
+            font-size: 12px;
+            font-weight: 700;
+            color: #0A4B9F;
+        }
+        
+        .page-total {
+            font-size: 12px;
+            font-weight: 400;
+            color: #94A3B8;
+        }
+
+        /* ============================================
+           BROWSER PREVIEW
+           ============================================ */
+        
+        @media screen {
+            html { background: #64748B; height: auto; }
+            body { padding: 0.5in; background: #64748B; }
+            .slide {
+                margin: 0 auto;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- SLIDE 08: FINDINGS OVERVIEW -->
+<div class="slide">
+    
+    <!-- Header -->
+    <div class="header">
+        <div class="logo-placeholder-small">
+            [ACME Logo]
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="content">
+        
+        <!-- Top Title and Divider -->
+        <h2 class="section-title">Findings <strong>Overview</strong></h2>
+        <div class="divider"></div>
+        
+        <div class="two-col-grid">
+            
+            <!-- LEFT COLUMN: Text & Highlights -->
+            <div class="left-col">
+                
+                <!-- Strategy Callout -->
+                <div class="summary-box">
+                    <div class="summary-label">Risk Assessment Criteria</div>
+                    <div class="summary-text">
+                        Vulnerabilities are rigorously scored based on internet exposure, potential business impact, likelihood of exploitation, and ease of external access.
+                    </div>
+                </div>
+
+                <!-- Descriptive Text -->
+                <div class="desc-text">
+                    <p>The following section presents a comprehensive analysis of all security vulnerabilities identified during the external network penetration test. Each finding has been carefully evaluated and assigned a standardized risk rating to prioritize remediation efforts effectively across your internal teams.</p>
+                    <p>The assessment successfully identified <strong>12 distinct security findings</strong> across Global Finance Corp's external network infrastructure. The chart to the right provides a high-level breakdown of these vulnerabilities by their assigned severity level, serving as a roadmap for immediate technical action.</p>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN: Chart Card -->
+            <div class="right-col">
+                <div class="chart-card">
+                    
+                    <div class="chart-header">
+                        <div class="chart-title">Risk Rating Overview</div>
+                    </div>
+
+                    <!-- Highcharts Container -->
+                    <div id="chart-container"></div>
+
+                    <!-- Stat Boxes -->
+                    <div class="stats-container">
+                        <div class="stat-item">
+                            <div class="stat-number color-critical">0</div>
+                            <div class="stat-label">Critical</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number color-high">2</div>
+                            <div class="stat-label">High</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number color-medium">4</div>
+                            <div class="stat-label">Medium</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number color-low">6</div>
+                            <div class="stat-label">Low</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-info">
+            <div class="confidential-block">
+                <strong>Strictly Confidential</strong> — This document contains sensitive security and technical information. Reproduction, distribution, or disclosure to unauthorized parties without explicit written consent is strictly prohibited.
+            </div>
+            <div class="footer-bottom-row">
+                <div class="footer-line">
+                    <span>Property of &nbsp;<strong>ACME Consulting</strong> &nbsp;|&nbsp; acmecyber.com</span>
+                </div>
+                <div class="footer-tags">
+                    <span class="tag tag-draft">Draft</span>
+                    <span class="tag tag-tlp">TLP:AMBER</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-right">
+            <span class="page-indicator">08</span>
+            <span class="page-total">/ 32</span>
+        </div>
+    </div>
+    
+</div>
+
+<!-- Highcharts Implementation Script -->
+<script>
+    Highcharts.chart('chart-container', {
+        chart: {
+            type: 'pie',
+            backgroundColor: 'transparent',
+            style: {
+                fontFamily: 'Montserrat, sans-serif'
+            },
+            animation: false,
+            spacingTop: 0,
+            spacingBottom: 0
+        },
+        // Native Highcharts Centered Title
+        title: {
+            text: '<span style="font-size: 38px; font-weight: 900; color: #0A2540;">12</span><br><span style="font-size: 10px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 1px;">Total Findings</span>',
+            align: 'center',
+            verticalAlign: 'middle',
+            y: 10,
+            useHTML: true
+        },
+        credits: {
+            enabled: false
+        },
+        exporting: {
+            enabled: false
+        },
+        tooltip: {
+            enabled: false
+        },
+        plotOptions: {
+            pie: {
+                innerSize: '65%', // Creates the donut hole
+                depth: 45,
+                allowPointSelect: false,
+                cursor: 'default',
+                size: '95%',
+                states: {
+                    hover: {
+                        enabled: false
+                    }
+                },
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b><br>{point.y} ({point.percentage:.1f}%)',
+                    style: {
+                        fontSize: '11px',
+                        fontFamily: 'Montserrat, sans-serif',
+                        fontWeight: '700',
+                        textOutline: '2px white'
+                    },
+                    distance: 15,
+                    connectorWidth: 1.5,
+                    connectorPadding: 5
+                },
+                // Modern clean styling instead of broken slices
+                borderWidth: 4,
+                borderColor: '#ffffff',
+                shadow: false
+            }
+        },
+        series: [{
+            name: 'Vulnerabilities',
+            colorByPoint: true,
+            data: [{
+                name: 'Critical',
+                y: 0,
+                color: '#DC2626', // Modern Red
+                dataLabels: { color: '#DC2626' }
+            }, {
+                name: 'High',
+                y: 2,
+                color: '#F97316', // Modern Orange
+                dataLabels: { color: '#F97316' }
+            }, {
+                name: 'Medium',
+                y: 4,
+                color: '#FBBF24', // Modern Yellow/Amber
+                dataLabels: { color: '#D97706' } // Slightly darker text for readability
+            }, {
+                name: 'Low',
+                y: 6,
+                color: '#10B981', // Modern Green
+                dataLabels: { color: '#10B981' }
+            }]
+        }]
+    });
+</script>
+
+</body>
+</html>

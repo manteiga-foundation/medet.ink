@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ACME - External Network Penetration Testing Report</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+        
+        /* ============================================
+           US LETTER LANDSCAPE - PRINT PERFECT
+           11 inches × 8.5 inches
+           ============================================ */
+        
+        @page {
+            size: 11in 8.5in;
+            margin: 0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        
+        html, body {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            background: white;
+        }
+        
+        /* ============================================
+           SLIDE = ONE PAGE
+           ============================================ */
+        
+        .slide {
+            width: 11in;
+            height: 8.5in;
+            position: relative;
+            overflow: hidden;
+            page-break-after: always;
+            page-break-inside: avoid;
+        }
+        
+        .slide:last-child {
+            page-break-after: auto;
+        }
+        
+        /* ============================================
+           COVER SLIDE - LIGHT THEME
+           ============================================ */
+        
+        .cover {
+            background: linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 50%, #F1F5F9 100%);
+            color: #0A2540;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Accent Bar - Left Edge (Blue to Red) */
+        .cover::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(180deg, #0A4B9F 0%, #4781C3 35%, #D82018 100%);
+        }
+        
+        /* Subtle Grid Pattern */
+        .cover::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(10, 75, 159, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(10, 75, 159, 0.03) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+        }
+        
+        /* ============================================
+           SHARED ALIGNMENT (HEADER, CONTENT, FOOTER)
+           Padding-left and right are unified to 0.8in
+           ============================================ */
+
+        /* Header */
+        .cover-header {
+            padding: 0.5in 0.8in 0.2in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo-placeholder {
+            width: 160px;
+            height: 45px;
+            background: #F1F5F9;
+            border: 1px dashed #94A3B8;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #64748B;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Main Content */
+        .cover-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 0.8in;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .cover-label-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .cover-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #64748B;
+        }
+
+        .tag {
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+
+        .tag-draft {
+            background: rgba(100, 116, 139, 0.1);
+            color: #475569;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+        }
+
+        .tag-tlp {
+            background: rgba(217, 119, 6, 0.1);
+            color: #B45309;
+            border: 1px solid rgba(217, 119, 6, 0.2);
+        }
+        
+        .cover-title {
+            font-size: 44px;
+            font-weight: 300;
+            line-height: 1.1;
+            letter-spacing: -1px;
+            color: #64748B;
+            margin-bottom: 8px;
+        }
+        
+        .cover-title-accent {
+            display: block;
+            font-weight: 800;
+            font-size: 48px;
+            color: #0A2540;
+            letter-spacing: -1.5px;
+        }
+        
+        .cover-divider {
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, #0A4B9F, #D82018);
+            border-radius: 2px;
+            margin: 28px 0;
+        }
+        
+        /* Client Information Block */
+        .client-block {
+            margin-top: 10px;
+            margin-bottom: 40px;
+        }
+
+        .client-logo-placeholder {
+            width: 120px;
+            height: 40px;
+            background: white;
+            border: 1px dashed #CBD5E1;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            color: #94A3B8;
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+
+        .client-block-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #94A3B8;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .client-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0A4B9F;
+            margin-bottom: 2px;
+        }
+
+        .client-address {
+            font-size: 13px;
+            color: #475569;
+            font-weight: 400;
+        }
+        
+        /* Metadata Grid */
+        .cover-meta {
+            display: grid;
+            grid-template-columns: repeat(4, auto);
+            gap: 48px;
+            margin-top: 10px;
+            background: white;
+            padding: 20px 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            display: inline-grid;
+            border: 1px solid #E2E8F0;
+        }
+        
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .meta-label {
+            font-size: 9px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #94A3B8;
+        }
+        
+        .meta-value {
+            font-size: 13px;
+            font-weight: 700;
+            color: #0A2540;
+        }
+        
+        /* Footer */
+        .cover-footer {
+            padding: 0.2in 0.8in 0.45in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .footer-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 600px;
+        }
+        
+        .confidential-block {
+            font-size: 9px;
+            color: #64748B;
+            line-height: 1.5;
+        }
+
+        .confidential-block strong {
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .footer-line {
+            font-size: 10px;
+            color: #94A3B8;
+            display: flex;
+            align-items: center;
+        }
+        
+        .footer-line strong {
+            font-weight: 600;
+            color: #0A4B9F;
+        }
+        
+        .footer-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2px;
+        }
+        
+        .page-indicator {
+            font-size: 12px;
+            font-weight: 700;
+            color: #0A4B9F;
+        }
+        
+        .page-total {
+            font-size: 12px;
+            font-weight: 400;
+            color: #94A3B8;
+        }
+        
+        /* Decorative Elements - Shield SVG restored */
+        .cover-decoration {
+            position: absolute;
+            right: 0.6in;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 300px;
+            height: 300px;
+            z-index: 0;
+        }
+        
+        .cover-decoration svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* ============================================
+           BROWSER PREVIEW
+           ============================================ */
+        
+        @media screen {
+            html {
+                background: #64748B;
+            }
+            
+            body {
+                padding: 0.5in;
+                background: #64748B;
+            }
+            
+            .slide {
+                margin: 0 auto;
+                box-shadow: 
+                    0 4px 6px rgba(0,0,0,0.05),
+                    0 10px 40px rgba(0,0,0,0.15);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- SLIDE 01: COVER -->
+<div class="slide cover">
+    
+    <!-- Decorative Shield SVG -->
+    <div class="cover-decoration">
+        <svg viewBox="0 0 200 200" fill="none" stroke="#0A4B9F" stroke-width="1.5" opacity="0.08">
+            <path d="M100 10 L180 50 L180 110 C180 150 140 180 100 195 C60 180 20 150 20 110 L20 50 Z"/>
+            <path d="M100 30 L165 62 L165 108 C165 140 132 165 100 178 C68 165 35 140 35 108 L35 62 Z"/>
+            <path d="M100 50 L150 75 L150 105 C150 130 125 150 100 160 C75 150 50 130 50 105 L50 75 Z"/>
+            <circle cx="100" cy="105" r="20"/>
+            <path d="M92 105 L98 111 L110 99" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </div>
+    
+    <!-- Header -->
+    <div class="cover-header">
+        <div class="logo-placeholder">
+            [ACME Logo]
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="cover-content">
+        <div class="cover-label-group">
+            <span class="cover-label">Security Assessment Report</span>
+            <span class="tag tag-draft">Draft</span>
+            <span class="tag tag-tlp">TLP:AMBER</span>
+        </div>
+        
+        <h1 class="cover-title">
+            External Network
+            <span class="cover-title-accent">Penetration Testing</span>
+        </h1>
+        
+        <div class="cover-divider"></div>
+        
+        <!-- Client Info Block -->
+        <div class="client-block">
+            <div class="client-logo-placeholder">
+                [Client Logo]
+            </div>
+            <div class="client-block-label">Prepared Exclusively For</div>
+            <div class="client-name">Global Finance Corp</div>
+            <div class="client-address">123 Financial District Blvd, Suite 400<br>New York, NY 10004</div>
+        </div>
+        
+        <!-- Metadata Box (Now 4 Columns) -->
+        <div class="cover-meta">
+            <div class="meta-item">
+                <span class="meta-label">Date of Issuance</span>
+                <span class="meta-value">September 23, 2026</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Report Period</span>
+                <span class="meta-value">Q3 2026</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Revision</span>
+                <span class="meta-value">Rev 1.1</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Prepared By</span>
+                <span class="meta-value">ACME Offensive Security</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="cover-footer">
+        <div class="footer-info">
+            <div class="confidential-block">
+                <strong>Strictly Confidential</strong> — This document contains sensitive security and technical information. Reproduction, distribution, or disclosure to unauthorized parties without explicit written consent is strictly prohibited.
+            </div>
+            <div class="footer-line">
+                <span>Property of &nbsp;<strong>ACME Consulting</strong> &nbsp;|&nbsp; acmecyber.com</span>
+            </div>
+        </div>
+        <div class="footer-right">
+            <span class="page-indicator">01</span>
+            <span class="page-total">/ 32</span>
+        </div>
+    </div>
+    
+</div>
+
+</body>
+</html>

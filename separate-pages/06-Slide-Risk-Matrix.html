@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ACME - Risk Matrix</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+        
+        /* ============================================
+           SHARED SLIDE SETTINGS
+           ============================================ */
+        
+        @page {
+            size: 11in 8.5in;
+            margin: 0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        
+        html, body {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            background: white;
+            height: 100%;
+        }
+        
+        .slide {
+            width: 11in;
+            height: 8.5in;
+            position: relative;
+            overflow: hidden;
+            page-break-after: always;
+            page-break-inside: avoid;
+            background: linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 50%, #F1F5F9 100%);
+            color: #0A2540;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Accent Bar */
+        .slide::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(180deg, #0A4B9F 0%, #4781C3 35%, #D82018 100%);
+        }
+        
+        /* Subtle Grid */
+        .slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(10, 75, 159, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(10, 75, 159, 0.03) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+        }
+
+        /* ============================================
+           LAYOUT SECTIONS
+           ============================================ */
+
+        /* Header */
+        .header {
+            padding: 0.35in 0.8in 0.1in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo-placeholder-small {
+            width: 120px;
+            height: 32px;
+            background: #F1F5F9;
+            border: 1px dashed #94A3B8;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            color: #64748B;
+            font-weight: 600;
+        }
+
+        /* Main Content Layout - 2 Columns */
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 0 0.8in;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .section-title {
+            font-size: 32px; 
+            font-weight: 300;
+            color: #0A2540;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+            line-height: 1.1;
+        }
+
+        .section-title strong {
+            font-weight: 900;
+        }
+
+        .divider {
+            width: 60px;
+            height: 5px;
+            background: linear-gradient(90deg, #D82018, #0A4B9F);
+            border-radius: 2.5px;
+            margin-bottom: 24px;
+        }
+
+        .two-col-grid {
+            display: grid;
+            grid-template-columns: 4fr 6fr; /* 40% Left, 60% Right */
+            gap: 40px;
+            flex: 1;
+            align-items: stretch;
+            margin-bottom: 10px;
+        }
+
+        .left-col {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .right-col {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Strategy Box */
+        .strategy-box {
+            background: #F1F5F9;
+            border-left: 4px solid #0A4B9F;
+            padding: 16px 20px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 24px;
+        }
+
+        .strategy-label {
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #0A4B9F;
+            margin-bottom: 8px;
+        }
+
+        .strategy-text {
+            font-size: 13px;
+            font-weight: 600;
+            color: #0A2540;
+            line-height: 1.5;
+        }
+
+        /* Paragraph Text */
+        .desc-text {
+            font-size: 12px; 
+            line-height: 1.6;
+            color: #475569;
+            text-align: justify;
+        }
+        
+        .desc-text p {
+            margin-bottom: 14px;
+        }
+
+        /* ============================================
+           RISK MATRIX CSS
+           ============================================ */
+        
+        .matrix-card {
+            background: white;
+            padding: 24px; 
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.04);
+            border: 1px solid #E2E8F0;
+            display: flex;
+            flex-direction: column;
+            height: 100%; 
+            width: 100%;
+        }
+
+        .matrix-header {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .matrix-title {
+            color: #0A2540;
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: -0.2px;
+            margin-bottom: 2px;
+        }
+
+        .matrix-subtitle {
+            color: #64748B;
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        /* 5x5 Matrix Layout */
+        .matrix-container {
+            flex: 1;
+            display: grid;
+            /* Col 1: Y-axis arrow, Col 2: Y-axis labels, Col 3-5: Cells */
+            grid-template-columns: 40px 24px 1fr 1fr 1fr;
+            /* Row 1: X-axis arrow, Row 2: X-axis labels, Row 3-5: Cells */
+            grid-template-rows: 40px 24px 1fr 1fr 1fr;
+            gap: 4px; 
+            width: 100%;
+        }
+
+        /* --- X-AXIS (Top) --- */
+        .x-axis-area {
+            grid-column: 3 / 6;
+            grid-row: 1;
+            position: relative;
+        }
+        .x-axis-line {
+            position: absolute;
+            left: 0; right: 10px; top: 50%; height: 3px; 
+            background: #059669; /* Dark Green */
+            transform: translateY(-50%);
+            border-radius: 2px;
+
+        }
+        .x-axis-arrow {
+            position: absolute;
+            right: 0; top: 50%; transform: translateY(-50%);
+            width: 0; height: 0; 
+            border-top: 6px solid transparent; 
+            border-bottom: 6px solid transparent; 
+            border-left: 10px solid #059669;
+
+        }
+        .x-axis-pill {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: #059669; color: white; padding: 6px 14px; border-radius: 6px; 
+            font-size: 9px; font-weight: 800; z-index: 2; display: flex; align-items: center; gap: 6px;
+        }
+
+        /* --- Y-AXIS (Left) --- */
+        .y-axis-area {
+            grid-column: 1;
+            grid-row: 3 / 6;
+            position: relative;
+        }
+        .y-axis-line {
+            position: absolute;
+            top: 10px; bottom: 0; left: 50%; width: 3px; 
+            background: #DC2626; /* Red */
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+        .y-axis-arrow {
+            position: absolute;
+            top: 0; left: 50%; transform: translateX(-50%);
+            width: 0; height: 0; 
+            border-left: 6px solid transparent; 
+            border-right: 6px solid transparent; 
+            border-bottom: 10px solid #DC2626;
+        }
+        .y-axis-pill {
+            position: absolute; top: 50%; left: 50%; 
+            transform: translate(-50%, -50%) rotate(-90deg);
+            background: #DC2626; color: white; padding: 6px 14px; border-radius: 6px; 
+            font-size: 9px; font-weight: 800; z-index: 2; white-space: nowrap; 
+            display: flex; align-items: center; gap: 6px;
+        }
+
+        /* --- AXIS HEADERS --- */
+        .hdr {
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 9px; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 1px; border-radius: 4px;
+        }
+        .hdr-vert { writing-mode: vertical-lr; transform: rotate(180deg); }
+
+        /* Effort (Columns) */
+        .eff-low { grid-column: 3; grid-row: 2; background: #34D399; } /* Light Green */
+        .eff-med { grid-column: 4; grid-row: 2; background: #10B981; } /* Green */
+        .eff-high { grid-column: 5; grid-row: 2; background: #059669; } /* Dark Green */
+
+        /* Risk (Rows) */
+        .rsk-high { grid-column: 2; grid-row: 3; background: #EF4444; } /* Red */
+        .rsk-med { grid-column: 2; grid-row: 4; background: #F59E0B; } /* Orange */
+        .rsk-low { grid-column: 2; grid-row: 5; background: #FCD34D; } /* Yellow */
+
+        /* --- CELLS --- */
+        .cell {
+            background: #F8FAFC;
+            border: 1px dashed #CBD5E1;
+            border-radius: 4px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .c-h-l { grid-column: 3; grid-row: 3; }
+        .c-h-m { grid-column: 4; grid-row: 3; }
+        .c-h-h { grid-column: 5; grid-row: 3; }
+        .c-m-l { grid-column: 3; grid-row: 4; }
+        .c-m-m { grid-column: 4; grid-row: 4; }
+        .c-m-h { grid-column: 5; grid-row: 4; }
+        .c-l-l { grid-column: 3; grid-row: 5; }
+        .c-l-m { grid-column: 4; grid-row: 5; }
+        .c-l-h { grid-column: 5; grid-row: 5; }
+
+        /* --- FINDING CARDS --- */
+        .finding-card {
+            background: white;
+            border-radius: 4px;
+            padding: 8px 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            border: 1px solid #E2E8F0;
+            border-left-width: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        
+        .finding-card.high { border-left-color: #EF4444; }
+        .finding-card.med { border-left-color: #F59E0B; }
+        .finding-card.low { border-left-color: #FCD34D; }
+
+        .finding-id {
+            font-size: 7.5px;
+            font-weight: 800;
+            color: #94A3B8;
+        }
+
+        .finding-title {
+            font-size: 9.5px;
+            font-weight: 600;
+            color: #0A2540;
+            line-height: 1.3;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 0.15in 0.8in 0.3in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .footer-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 700px;
+        }
+        
+        .confidential-block {
+            font-size: 9px;
+            color: #64748B;
+            line-height: 1.5;
+        }
+
+        .confidential-block strong {
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .footer-bottom-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .footer-line {
+            font-size: 10px;
+            color: #94A3B8;
+        }
+        
+        .footer-line strong {
+            font-weight: 600;
+            color: #0A4B9F;
+        }
+
+        .footer-tags {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tag {
+            font-size: 7px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 3px 6px;
+            border-radius: 3px;
+        }
+
+        .tag-draft {
+            background: rgba(100, 116, 139, 0.1);
+            color: #475569;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+        }
+
+        .tag-tlp {
+            background: rgba(217, 119, 6, 0.1);
+            color: #B45309;
+            border: 1px solid rgba(217, 119, 6, 0.2);
+        }
+        
+        .footer-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2px;
+        }
+        
+        .page-indicator {
+            font-size: 12px;
+            font-weight: 700;
+            color: #0A4B9F;
+        }
+        
+        .page-total {
+            font-size: 12px;
+            font-weight: 400;
+            color: #94A3B8;
+        }
+
+        /* ============================================
+           BROWSER PREVIEW
+           ============================================ */
+        
+        @media screen {
+            html { background: #64748B; height: auto; }
+            body { padding: 0.5in; background: #64748B; }
+            .slide {
+                margin: 0 auto;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- SLIDE 06: RISK MATRIX -->
+<div class="slide">
+    
+    <!-- Header -->
+    <div class="header">
+        <div class="logo-placeholder-small">
+            [ACME Logo]
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="content">
+        
+        <!-- Top Title and Divider -->
+        <h2 class="section-title">Risk <strong>Matrix</strong></h2>
+        <div class="divider"></div>
+        
+        <div class="two-col-grid">
+            
+            <!-- LEFT COLUMN: Text & Highlights -->
+            <div class="left-col">
+                
+                <!-- Strategy Callout -->
+                <div class="strategy-box">
+                    <div class="strategy-label">Prioritization Strategy</div>
+                    <div class="strategy-text">
+                        Focus first on the top-left quadrant (High Risk, Low Effort) to eliminate critical vulnerabilities with minimal resource expenditure.
+                    </div>
+                </div>
+
+                <!-- Descriptive Text -->
+                <div class="desc-text">
+                    <p>The following matrix shows a visual summary of recommendations mapped against two critical dimensions: the <strong>Level of Risk</strong> (severity of potential impact) and the <strong>Level of Effort Required</strong> (resources required to remediate) to mitigate the finding to an acceptable level.</p>
+                    <p>ACME Consulting recommends utilizing this matrix to triage remediation efforts across your internal development and operations teams. By systematically addressing high-risk / low-effort tasks first, Global Finance Corp can immediately lower the volume of actionable findings to a more manageable level and maximize security ROI.</p>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN: Matrix Card -->
+            <div class="right-col">
+                <div class="matrix-card">
+                    
+                    <div class="matrix-header">
+                        <div class="matrix-title">Vulnerability Prioritization Matrix</div>
+                        <div class="matrix-subtitle">Findings plotted by severity and remediation difficulty</div>
+                    </div>
+
+                    <!-- CSS Grid Matrix -->
+                    <div class="matrix-container">
+                        
+                        <!-- X-Axis (Top) -->
+                        <div class="x-axis-area" >
+                            <div class="x-axis-line"></div>
+                            <div class="x-axis-arrow"></div>
+                            <div class="x-axis-pill">
+                                <svg width="12" height="12" viewBox="0 0 24 24"  fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+                                LEVEL OF EFFORT REQUIRED
+                            </div>
+                        </div>
+
+                        <!-- Y-Axis (Left) -->
+                        <div class="y-axis-area">
+                            <div class="y-axis-line"></div>
+                            <div class="y-axis-arrow"></div>
+                            <div class="y-axis-pill">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate(90deg);"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                                LEVEL OF RISK
+                            </div>
+                        </div>
+
+                        <!-- Effort Headers (Row 2) -->
+                        <div class="hdr eff-low">LOW</div>
+                        <div class="hdr eff-med">MEDIUM</div>
+                        <div class="hdr eff-high">HIGH</div>
+
+                        <!-- Risk Headers (Col 2) -->
+                        <div class="hdr hdr-vert rsk-high">HIGH</div>
+                        <div class="hdr hdr-vert rsk-med">MEDIUM</div>
+                        <div class="hdr hdr-vert rsk-low">LOW</div>
+
+                        <!-- CELLS -->
+                        <div class="cell c-h-l">
+                            <!-- Empty Cell: High Risk, Low Effort -->
+                        </div>
+                        <div class="cell c-h-m"></div>
+                        <div class="cell c-h-h"></div>
+
+                        <div class="cell c-m-l"></div>
+                        
+                        <div class="cell c-m-m">
+                            <!-- Finding: Medium Risk, Medium Effort -->
+                            <div class="finding-card med">
+                                <span class="finding-id">CVE-2026-27654</span>
+                                <span class="finding-title">Nginx Buffer Overflow Vulnerability</span>
+                            </div>
+                        </div>
+                        
+                        <div class="cell c-m-h"></div>
+
+                        <div class="cell c-l-l">
+                            <!-- Finding: Low Risk, Low Effort -->
+                            <div class="finding-card low">
+                                <span class="finding-id">APP-CONF-01</span>
+                                <span class="finding-title">HSTS Missing From HTTPS Server</span>
+                            </div>
+                        </div>
+                        
+                        <div class="cell c-l-m">
+                            <!-- Finding: Low Risk, Medium Effort -->
+                            <div class="finding-card low">
+                                <span class="finding-id">NET-CONF-04</span>
+                                <span class="finding-title">Inconsistent Hostname and IP Address</span>
+                            </div>
+                        </div>
+                        
+                        <div class="cell c-l-h"></div>
+
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-info">
+            <div class="confidential-block">
+                <strong>Strictly Confidential</strong> — This document contains sensitive security and technical information. Reproduction, distribution, or disclosure to unauthorized parties without explicit written consent is strictly prohibited.
+            </div>
+            <div class="footer-bottom-row">
+                <div class="footer-line">
+                    <span>Property of &nbsp;<strong>ACME Consulting</strong> &nbsp;|&nbsp; acmecyber.com</span>
+                </div>
+                <div class="footer-tags">
+                    <span class="tag tag-draft">Draft</span>
+                    <span class="tag tag-tlp">TLP:AMBER</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-right">
+            <span class="page-indicator">06</span>
+            <span class="page-total">/ 32</span>
+        </div>
+    </div>
+    
+</div>
+
+</body>
+</html>

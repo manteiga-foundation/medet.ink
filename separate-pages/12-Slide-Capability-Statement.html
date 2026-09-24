@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ACME - Capability Statement</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+        
+        /* ============================================
+           SHARED SLIDE SETTINGS
+           ============================================ */
+        
+        @page {
+            size: 11in 8.5in;
+            margin: 0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        
+        html, body {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            background: white;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .slide {
+            width: 11in;
+            height: 8.5in;
+            max-height: 8.5in; /* Forces strict bounds */
+            position: relative;
+            overflow: hidden;
+            page-break-after: always;
+            page-break-inside: avoid;
+            background: linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 50%, #F1F5F9 100%);
+            color: #0A2540;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Accent Bar */
+        .slide::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 8px;
+            background: linear-gradient(180deg, #0A4B9F 0%, #4781C3 35%, #D82018 100%);
+        }
+        
+        /* Subtle Grid */
+        .slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(10, 75, 159, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(10, 75, 159, 0.03) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+        }
+
+        /* ============================================
+           LAYOUT SECTIONS
+           ============================================ */
+
+        /* Header */
+        .header {
+            padding: 0.35in 0.8in 0.1in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo-placeholder-small {
+            width: 120px;
+            height: 32px;
+            background: #F1F5F9;
+            border: 1px dashed #94A3B8;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            color: #64748B;
+            font-weight: 600;
+        }
+
+        /* Main Content Layout */
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 0 0.8in;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-title {
+            font-size: 30px; 
+            font-weight: 300;
+            color: #0A2540;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+            line-height: 1.1;
+        }
+
+        .section-title strong {
+            font-weight: 900;
+        }
+
+        .divider {
+            width: 60px;
+            height: 5px;
+            background: linear-gradient(90deg, #D82018, #0A4B9F);
+            border-radius: 2.5px;
+            margin-bottom: 16px;
+        }
+
+        .intro-text {
+            font-size: 11.5px; 
+            line-height: 1.5;
+            color: #475569;
+            margin-bottom: 16px;
+            text-align: justify;
+        }
+        
+        .intro-text p {
+            margin-bottom: 8px;
+        }
+
+        /* ============================================
+           CAPABILITY CARDS
+           ============================================ */
+        
+        .past-performance-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+
+        .pp-badge {
+            background: #0A2540;
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 10px 32px;
+            border-radius: 8px;
+            box-shadow: 0 8px 20px rgba(10, 37, 64, 0.2);
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            width: 100%;
+        }
+
+        .entity-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+            border: 1px solid #E2E8F0;
+            padding: 20px 24px 16px 24px;
+            display: flex;
+            flex-direction: column;
+            min-height: 280px;
+        }
+
+        .card-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 300;
+            color: #0A4B9F;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .card-desc {
+            font-size: 10.5px;
+            line-height: 1.5;
+            color: #64748B;
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 0 10px;
+        }
+
+        /* Logo Grids */
+        .logo-grid {
+            display: grid;
+            align-items: center;
+            justify-items: center;
+            margin-bottom: 16px;
+            flex: 1;
+        }
+
+        /* 6 Logos for Private */
+        .grid-private { 
+            grid-template-columns: 1fr 1fr; 
+            gap: 16px 12px; 
+        }
+        
+        /* 4 Logos for Public */
+        .grid-public { 
+            grid-template-columns: 1fr 1fr; 
+            gap: 24px 16px; 
+            padding: 10px 20px 0 20px;
+        }
+
+        /* Bulletproof Image Styling for Placeholders */
+        .logo-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 45px; 
+            max-height: 45px;
+            overflow: hidden;
+        }
+
+        .client-logo {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            display: block;
+            border-radius: 4px;
+        }
+
+        /* Card Footers */
+        .card-footer {
+            border-top: 1px dashed #E2E8F0;
+            padding-top: 12px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-top: auto;
+        }
+
+        .cf-title {
+            font-size: 10px;
+            font-weight: 700;
+            color: #0A4B9F;
+        }
+
+        .cf-number {
+            font-size: 14px;
+            font-weight: 600;
+            color: #94A3B8;
+            letter-spacing: 1px;
+        }
+
+        .cf-link {
+            font-size: 8px;
+            color: #3B82F6;
+            text-decoration: underline;
+        }
+
+        /* ============================================
+           FOOTER
+           ============================================ */
+           
+        .footer {
+            padding: 0.1in 0.8in 0.25in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            position: relative;
+            z-index: 1;
+            margin-top: auto;
+        }
+        
+        .footer-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 700px;
+        }
+        
+        .confidential-block {
+            font-size: 9px;
+            color: #64748B;
+            line-height: 1.5;
+        }
+
+        .confidential-block strong {
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .footer-bottom-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .footer-line {
+            font-size: 10px;
+            color: #94A3B8;
+        }
+        
+        .footer-line strong {
+            font-weight: 600;
+            color: #0A4B9F;
+        }
+
+        .footer-tags {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tag {
+            font-size: 7px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 3px 6px;
+            border-radius: 3px;
+        }
+
+        .tag-draft {
+            background: rgba(100, 116, 139, 0.1);
+            color: #475569;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+        }
+
+        .tag-tlp {
+            background: rgba(217, 119, 6, 0.1);
+            color: #B45309;
+            border: 1px solid rgba(217, 119, 6, 0.2);
+        }
+        
+        .footer-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2px;
+        }
+        
+        .page-indicator {
+            font-size: 12px;
+            font-weight: 700;
+            color: #0A4B9F;
+        }
+        
+        .page-total {
+            font-size: 12px;
+            font-weight: 400;
+            color: #94A3B8;
+        }
+
+        /* ============================================
+           BROWSER PREVIEW (Restored Gray Background)
+           ============================================ */
+        @media screen {
+            html { background: #64748B; height: auto; }
+            body { padding: 0.5in; background: #64748B; }
+            .slide {
+                margin: 0 auto;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- SLIDE 17: CAPABILITY STATEMENT -->
+<div class="slide">
+    
+    <!-- Header -->
+    <div class="header">
+        <div class="logo-placeholder-small">
+            [ACME Logo]
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="content">
+        
+        <!-- Title Block -->
+        <h2 class="section-title">Capability <strong>Statement</strong></h2>
+        <div class="divider"></div>
+
+        <!-- Intro Text -->
+        <div class="intro-text">
+            <p>ACME Consulting has assembled a diverse and inclusive team of talented, hardworking professionals with more than 20 years of experience operating in the Information Security and Cybersecurity space. Our specialized offensive security team has achieved industry-leading certifications including CISSP, CISA, CRISC, CGEIT, OSCP, and CPM.</p>
+            <p>We are deeply committed to delivering high-quality services that consistently meet and exceed client expectations. We maintain rigorous quality control processes, adhere to industry best practices, and tailor our methodologies to fit the unique risk profile of every organization we engage with.</p>
+        </div>
+
+        <!-- Past Performance Section -->
+        <div class="past-performance-wrapper">
+            
+            <div class="pp-badge">Past Performance</div>
+
+            <div class="cards-grid">
+                
+                <!-- LEFT CARD: Private Entities -->
+                <div class="entity-card">
+                    <div class="card-title">Private Entities</div>
+                    <div class="card-desc">
+                        ACME Consulting has successfully completed highly sensitive engagements for clients across diverse, heavily regulated industries. 
+                    </div>
+                    
+                    <!-- 6 Placeholder Logos using Placehold.co -->
+                    <div class="logo-grid grid-private">
+                        <div class="logo-box">
+                            <img class="client-logo" src="https://placehold.co/200x80/F1F5F9/94A3B8?text=Client+Logo" alt="Client Logo">
+                        </div>
+                        <div class="logo-box">
+                            <img class="client-logo" src="https://placehold.co/200x80/F1F5F9/94A3B8?text=Client+Logo" alt="Client Logo">
+                        </div>
+                        <div class="logo-box">
+                            <img class="client-logo" src="https://placehold.co/200x80/F1F5F9/94A3B8?text=Client+Logo" alt="Client Logo">
+                        </div>
+                        <div class="logo-box">
+                            <img class="client-logo" src="https://placehold.co/200x80/F1F5F9/94A3B8?text=Client+Logo" alt="Client Logo">
+                        </div>
+                        <div class="logo-box">
+                            <img class="client-logo" src="https://placehold.co/200x80/F1F5F9/94A3B8?text=Client+Logo" alt="Client Logo">
+                        </div>
+                        <div class="logo-box">
+                            <img class="client-logo" src="https://placehold.co/200x80/F1F5F9/94A3B8?text=Client+Logo" alt="Client Logo">
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <div class="cf-title">Dun & Bradstreet License Number</div>
+                        <div class="cf-number">080568062</div>
+                        <div class="cf-link">https://cage.report/DUNS/080568062</div>
+                    </div>
+                </div>
+
+                <!-- RIGHT CARD: Public Entities -->
+                <div class="entity-card">
+                    <div class="card-title">Public Entities</div>
+                    <div class="card-desc">
+                        ACME is fully authorized to provide services to the US Federal Government. Below are select agencies and municipalities we have supported.
+                    </div>
+                    
+                    <!-- 4 Placeholder Logos using Placehold.co -->
+                    <div class="logo-grid grid-public">
+                        <div class="logo-box">
+                            <img class="client-logo" src="https://placehold.co/200x80/F1F5F9/94A3B8?text=Agency+Logo" alt="Agency Logo">
+                        </div>
+                        <div class="logo-box">
+                            <img class="client-logo" src="https://placehold.co/200x80/F1F5F9/94A3B8?text=Agency+Logo" alt="Agency Logo">
+                        </div>
+                        <div class="logo-box">
+                            <img class="client-logo" src="https://placehold.co/200x80/F1F5F9/94A3B8?text=Agency+Logo" alt="Agency Logo">
+                        </div>
+                        <div class="logo-box">
+                            <img class="client-logo" src="https://placehold.co/200x80/F1F5F9/94A3B8?text=Agency+Logo" alt="Agency Logo">
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <div class="cf-title">Approved Federal Commercial Entity (CAGE)</div>
+                        <div class="cf-number">80A06</div>
+                        <div class="cf-link">https://cage.dla.mil/Search/Details?id=10010813</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-info">
+            <div class="confidential-block">
+                <strong>Strictly Confidential</strong> — This document contains sensitive security and technical information. Reproduction, distribution, or disclosure to unauthorized parties without explicit written consent is strictly prohibited.
+            </div>
+            <div class="footer-bottom-row">
+                <div class="footer-line">
+                    <span>Property of &nbsp;<strong>ACME Consulting</strong> &nbsp;|&nbsp; acmecyber.com</span>
+                </div>
+                <div class="footer-tags">
+                    <span class="tag tag-draft">Draft</span>
+                    <span class="tag tag-tlp">TLP:AMBER</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-right">
+            <span class="page-indicator">17</span>
+            <span class="page-total">/ 32</span>
+        </div>
+    </div>
+    
+</div>
+
+</body>
+</html>

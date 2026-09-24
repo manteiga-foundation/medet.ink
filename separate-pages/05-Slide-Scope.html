@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ACME - Scope & Methodology</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+        
+        /* ============================================
+           SHARED SLIDE SETTINGS
+           ============================================ */
+        
+        @page {
+            size: 11in 8.5in;
+            margin: 0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        
+        html, body {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            background: white;
+            height: 100%;
+        }
+        
+        .slide {
+            width: 11in;
+            height: 8.5in;
+            position: relative;
+            overflow: hidden;
+            page-break-after: always;
+            page-break-inside: avoid;
+            background: linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 50%, #F1F5F9 100%);
+            color: #0A2540;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Accent Bar */
+        .slide::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(180deg, #0A4B9F 0%, #4781C3 35%, #D82018 100%);
+        }
+        
+        /* Subtle Grid */
+        .slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(10, 75, 159, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(10, 75, 159, 0.03) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+        }
+
+        /* ============================================
+           LAYOUT SECTIONS
+           ============================================ */
+
+        /* Header */
+        .header {
+            padding: 0.35in 0.8in 0.1in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo-placeholder-small {
+            width: 120px;
+            height: 32px;
+            background: #F1F5F9;
+            border: 1px dashed #94A3B8;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            color: #64748B;
+            font-weight: 600;
+        }
+
+        /* Main Content Layout - 2 Columns */
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 0 0.8in;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .section-title {
+            font-size: 32px; 
+            font-weight: 300;
+            color: #0A2540;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+            line-height: 1.1;
+        }
+
+        .section-title strong {
+            font-weight: 900;
+        }
+
+        .divider {
+            width: 60px;
+            height: 5px;
+            background: linear-gradient(90deg, #D82018, #0A4B9F);
+            border-radius: 2.5px;
+            margin-bottom: 24px;
+        }
+
+        .two-col-grid {
+            display: grid;
+            grid-template-columns: 4fr 6fr; /* 40% Left, 60% Right to give chart room */
+            gap: 40px;
+            flex: 1;
+            align-items: stretch;
+            margin-bottom: 10px;
+        }
+
+        .left-col {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .right-col {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Highlights Box */
+        .highlights-box {
+            background: #F1F5F9;
+            border-left: 4px solid #0A4B9F;
+            padding: 16px 20px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 24px;
+        }
+
+        .highlights-label {
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #0A4B9F;
+            margin-bottom: 10px;
+        }
+
+        .highlights-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .highlights-list li {
+            font-size: 11px;
+            font-weight: 600;
+            color: #0A2540;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            line-height: 1.4;
+        }
+
+        .highlights-list li::before {
+            content: '✓';
+            color: #10B981; /* Green checkmark */
+            font-weight: bold;
+        }
+
+        /* Scope Paragraph Text */
+        .scope-text {
+            font-size: 12px; 
+            line-height: 1.6;
+            color: #475569;
+            text-align: justify;
+        }
+        
+        .scope-text p {
+            margin-bottom: 14px;
+        }
+
+        /* ============================================
+           HIERARCHY CHART CSS (Scaled for Column)
+           ============================================ */
+        
+        .chart-card {
+            background: white;
+            padding: 24px 16px; 
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.04);
+            border: 1px solid #E2E8F0;
+            display: flex;
+            flex-direction: column;
+            height: 100%; 
+            width: 100%;
+        }
+
+        .chart-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .chart-title {
+            color: #0A2540;
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: -0.2px;
+            margin-bottom: 4px;
+        }
+
+        .chart-subtitle {
+            color: #64748B;
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        /* Chart Structure */
+        .org-chart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin: auto 0; /* Vertically center in card */
+        }
+
+        .org-top {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .org-level-2 {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            position: relative;
+            padding-top: 15px;
+        }
+
+        /* The horizontal connector line spanning columns */
+        .org-horiz-line {
+            position: absolute;
+            top: 0;
+            left: 17%;
+            right: 17%;
+            height: 1px;
+            background: #CBD5E1;
+        }
+
+        .org-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 130px; /* Scaled down width */
+            margin: 0 6px; /* Tighter margins */
+            position: relative;
+        }
+
+        /* Vertical connector lines */
+        .vert-line-down { width: 1px; height: 15px; background: #CBD5E1; }
+        .vert-line-up { position: absolute; top: 0; left: 50%; width: 1px; height: 15px; background: #CBD5E1; }
+
+        /* Container for stacked bottom nodes */
+        .org-bot-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-top: 12px;
+            position: relative;
+            padding-top: 12px;
+        }
+
+        /* The vertical line running through the bottom nodes */
+        .vert-line-through {
+            position: absolute;
+            top: 0;
+            bottom: 25px;
+            left: 50%;
+            width: 1px;
+            background: #CBD5E1;
+            z-index: 0;
+        }
+
+        /* Nodes (Cards) */
+        .node {
+            border-radius: 6px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            z-index: 1; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Specific Node Sizes & Colors (SCALED FOR COLUMN) */
+        .node-top {
+            background: #1E293B; 
+            padding: 16px 20px;
+            width: 260px; /* Scaled down */
+            border-radius: 8px;
+        }
+
+        .node-top-logo {
+            background: white;
+            color: #0A4B9F;
+            font-weight: 900;
+            font-size: 11px;
+            padding: 6px 12px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            display: inline-block;
+            box-shadow: inset 0 0 0 1px #E2E8F0;
+        }
+
+        .node-top .n-title { font-size: 11px; font-weight: 700; margin-bottom: 4px; }
+        .node-top .n-sub { font-size: 9px; color: #94A3B8; margin-bottom: 2px; }
+        .node-top .n-detail { font-size: 8px; color: #64748B; }
+
+        .node-mid {
+            background: #334155; 
+            padding: 10px 8px;
+            width: 126px; /* Scaled down */
+            margin-top: 15px; 
+        }
+        
+        .node-mid.lighter { background: #64748B; }
+
+        .node-mid .n-title { font-size: 9px; font-weight: 700; margin-bottom: 3px; }
+        .node-mid .n-sub { font-size: 8px; color: #CBD5E1; margin-bottom: 2px; }
+        .node-mid .n-detail { font-size: 7px; color: #94A3B8; }
+
+        .node-bot {
+            padding: 8px;
+            width: 110px; /* Scaled down */
+        }
+
+        .node-bot.blue { background: #3B82F6; } 
+        .node-bot.green { background: #10B981; }
+
+        .node-bot .n-title { font-size: 9px; font-weight: 700; margin-bottom: 3px; }
+        .node-bot .n-sub { font-size: 8px; color: rgba(255,255,255,0.9); margin-bottom: 2px; }
+        .node-bot .n-detail { font-size: 7px; color: rgba(255,255,255,0.7); }
+
+        /* Footer */
+        .footer {
+            padding: 0.15in 0.8in 0.3in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .footer-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 700px;
+        }
+        
+        .confidential-block {
+            font-size: 9px;
+            color: #64748B;
+            line-height: 1.5;
+        }
+
+        .confidential-block strong {
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .footer-bottom-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .footer-line {
+            font-size: 10px;
+            color: #94A3B8;
+        }
+        
+        .footer-line strong {
+            font-weight: 600;
+            color: #0A4B9F;
+        }
+
+        .footer-tags {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tag {
+            font-size: 7px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 3px 6px;
+            border-radius: 3px;
+        }
+
+        .tag-draft {
+            background: rgba(100, 116, 139, 0.1);
+            color: #475569;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+        }
+
+        .tag-tlp {
+            background: rgba(217, 119, 6, 0.1);
+            color: #B45309;
+            border: 1px solid rgba(217, 119, 6, 0.2);
+        }
+        
+        .footer-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2px;
+        }
+        
+        .page-indicator {
+            font-size: 12px;
+            font-weight: 700;
+            color: #0A4B9F;
+        }
+        
+        .page-total {
+            font-size: 12px;
+            font-weight: 400;
+            color: #94A3B8;
+        }
+
+        /* ============================================
+           BROWSER PREVIEW
+           ============================================ */
+        
+        @media screen {
+            html { background: #64748B; height: auto; }
+            body { padding: 0.5in; background: #64748B; }
+            .slide {
+                margin: 0 auto;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- SLIDE 05: SCOPE & METHODOLOGY -->
+<div class="slide">
+    
+    <!-- Header -->
+    <div class="header">
+        <div class="logo-placeholder-small">
+            [ACME Logo]
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="content">
+        
+        <!-- Top Title and Divider -->
+        <h2 class="section-title">Scope & <strong>Methodology</strong></h2>
+        <div class="divider"></div>
+        
+        <div class="two-col-grid">
+            
+            <!-- LEFT COLUMN: Text & Highlights -->
+            <div class="left-col">
+                
+                <!-- Highlights Callout -->
+                <div class="highlights-box">
+                    <div class="highlights-label">Scope Highlights</div>
+                    <ul class="highlights-list">
+                        <li>Comprehensive mapping of internet-facing assets</li>
+                        <li>Passive and active reconnaissance techniques</li>
+                        <li>Coverage across Cloud, Transit, and Regional ISPs</li>
+                    </ul>
+                </div>
+
+                <!-- Scope Text -->
+                <div class="scope-text">
+                    <p>The external network penetration test encompassed Global Finance Corp's internet-facing infrastructure across several IP ranges supporting critical banking operations.</p>
+                    <p>ACME Security employed advanced external reconnaissance techniques combining both passive and active discovery methods to identify all internet-accessible services and potentially hidden infrastructure components.</p>
+                    <p>Our methodology included comprehensively reviewing public information sources, such as autonomous system registrations, to ensure complete coverage and mapping of all internet-facing assets prior to active vulnerability testing and exploitation phases.</p>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN: Chart Card -->
+            <div class="right-col">
+                <div class="chart-card">
+                    
+                    <div class="chart-header">
+                        <div class="chart-title">External Network Infrastructure</div>
+                        <div class="chart-subtitle">Internet-facing assets across regional ISPs and distributed networks</div>
+                    </div>
+
+                    <div class="org-chart">
+                        
+                        <!-- LEVEL 1: Root Node -->
+                        <div class="org-top">
+                            <div class="node node-top">
+                                <div class="node-top-logo">GLOBAL FINANCE CORP</div>
+                                <div class="n-title">Global Finance Banking Perimeter</div>
+                                <div class="n-sub">27 Discovered Active IPs</div>
+                                <div class="n-detail">Distributed Cloud & Regional ISP Architecture</div>
+                            </div>
+                            <div class="vert-line-down"></div>
+                        </div>
+
+                        <!-- LEVEL 2 & 3: Columns -->
+                        <div class="org-level-2">
+                            <div class="org-horiz-line"></div>
+                            
+                            <!-- Column 1 -->
+                            <div class="org-col">
+                                <div class="vert-line-up"></div>
+                                <div class="node node-mid">
+                                    <div class="n-title">Primary Regional ISPs</div>
+                                    <div class="n-sub">LATAM Datacenters</div>
+                                    <div class="n-detail">3 Ranges • 12 Active Hosts</div>
+                                </div>
+                                
+                                <div class="org-bot-container">
+                                    <div class="vert-line-through"></div>
+                                    
+                                    <div class="node node-bot blue">
+                                        <div class="n-title">181.119.220.0/24</div>
+                                        <div class="n-sub">7 active hosts</div>
+                                        <div class="n-detail">Cable Network</div>
+                                    </div>
+                                    <div class="node node-bot blue">
+                                        <div class="n-title">190.61.96.0/24</div>
+                                        <div class="n-sub">3 active hosts</div>
+                                        <div class="n-detail">Cable & Wireless</div>
+                                    </div>
+                                    <div class="node node-bot blue">
+                                        <div class="n-title">201.149.79.0/24</div>
+                                        <div class="n-sub">2 active hosts</div>
+                                        <div class="n-detail">Regional ISP</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Column 2 -->
+                            <div class="org-col">
+                                <div class="vert-line-up"></div>
+                                <div class="node node-mid">
+                                    <div class="n-title">Secondary Allocations</div>
+                                    <div class="n-sub">Transit & Connectivity</div>
+                                    <div class="n-detail">2 Logical Blocks • 8 Hosts</div>
+                                </div>
+                                
+                                <div class="org-bot-container">
+                                    <div class="vert-line-through"></div>
+                                    
+                                    <div class="node node-bot green">
+                                        <div class="n-title">45.x.x.x Blocks</div>
+                                        <div class="n-sub">5 active hosts</div>
+                                        <div class="n-detail">Multiple Subnets</div>
+                                    </div>
+                                    <div class="node node-bot green">
+                                        <div class="n-title">38.87.x.x Blocks</div>
+                                        <div class="n-sub">3 active hosts</div>
+                                        <div class="n-detail">Cogent</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Column 3 -->
+                            <div class="org-col">
+                                <div class="vert-line-up"></div>
+                                <div class="node node-mid lighter">
+                                    <div class="n-title">Cloud & Distributed</div>
+                                    <div class="n-sub">External Services</div>
+                                    <div class="n-detail">Various Vendors • 7 Hosts</div>
+                                </div>
+                                
+                                <div class="org-bot-container">
+                                    <div class="vert-line-through"></div>
+                                    
+                                    <div class="node node-bot green">
+                                        <div class="n-title">20.230.12.30</div>
+                                        <div class="n-sub">1 active host</div>
+                                        <div class="n-detail">Microsoft Azure</div>
+                                    </div>
+                                    <div class="node node-bot green">
+                                        <div class="n-title">Misc. Standalone</div>
+                                        <div class="n-sub">6 active hosts</div>
+                                        <div class="n-detail">External Providers</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-info">
+            <div class="confidential-block">
+                <strong>Strictly Confidential</strong> — This document contains sensitive security and technical information. Reproduction, distribution, or disclosure to unauthorized parties without explicit written consent is strictly prohibited.
+            </div>
+            <div class="footer-bottom-row">
+                <div class="footer-line">
+                    <span>Property of &nbsp;<strong>ACME Consulting</strong> &nbsp;|&nbsp; acmecyber.com</span>
+                </div>
+                <div class="footer-tags">
+                    <span class="tag tag-draft">Draft</span>
+                    <span class="tag tag-tlp">TLP:AMBER</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-right">
+            <span class="page-indicator">05</span>
+            <span class="page-total">/ 32</span>
+        </div>
+    </div>
+    
+</div>
+
+</body>
+</html>

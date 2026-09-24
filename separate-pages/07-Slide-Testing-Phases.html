@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ACME - Testing Phases</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+        
+        /* ============================================
+           SHARED SLIDE SETTINGS
+           ============================================ */
+        
+        @page {
+            size: 11in 8.5in;
+            margin: 0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        
+        html, body {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            background: white;
+            height: 100%;
+        }
+        
+        .slide {
+            width: 11in;
+            height: 8.5in;
+            position: relative;
+            overflow: hidden;
+            page-break-after: always;
+            page-break-inside: avoid;
+            background: linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 50%, #F1F5F9 100%);
+            color: #0A2540;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Accent Bar */
+        .slide::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(180deg, #0A4B9F 0%, #4781C3 35%, #D82018 100%);
+        }
+        
+        /* Subtle Grid */
+        .slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(10, 75, 159, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(10, 75, 159, 0.03) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+        }
+
+        /* ============================================
+           LAYOUT SECTIONS
+           ============================================ */
+
+        /* Header */
+        .header {
+            padding: 0.35in 0.8in 0.1in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo-placeholder-small {
+            width: 120px;
+            height: 32px;
+            background: #F1F5F9;
+            border: 1px dashed #94A3B8;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            color: #64748B;
+            font-weight: 600;
+        }
+
+        /* Main Content Layout - 2 Columns */
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 0 0.8in;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .section-title {
+            font-size: 32px; 
+            font-weight: 300;
+            color: #0A2540;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+            line-height: 1.1;
+        }
+
+        .section-title strong {
+            font-weight: 900;
+        }
+
+        .divider {
+            width: 60px;
+            height: 5px;
+            background: linear-gradient(90deg, #D82018, #0A4B9F);
+            border-radius: 2.5px;
+            margin-bottom: 24px;
+        }
+
+        .two-col-grid {
+            display: grid;
+            grid-template-columns: 4.5fr 5.5fr; /* 45% Left, 55% Right */
+            gap: 50px;
+            flex: 1;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .left-col {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .right-col {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+        }
+
+        /* Summary Box */
+        .summary-box {
+            background: #F1F5F9;
+            border-left: 4px solid #0A4B9F;
+            padding: 16px 20px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 24px;
+        }
+
+        .summary-label {
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #0A4B9F;
+            margin-bottom: 8px;
+        }
+
+        .summary-text {
+            font-size: 13px;
+            font-weight: 600;
+            color: #0A2540;
+            line-height: 1.5;
+        }
+
+        /* Paragraph Text */
+        .desc-text {
+            font-size: 12.5px; 
+            line-height: 1.6;
+            color: #475569;
+            text-align: justify;
+        }
+        
+        .desc-text p {
+            margin-bottom: 14px;
+        }
+
+        /* ============================================
+           STEPPED PHASES CSS
+           ============================================ */
+        
+        .phases-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            position: relative;
+            padding: 10px 0;
+        }
+
+        /* Subtle background track line */
+        .phases-container::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            bottom: 20px;
+            left: 32px;
+            width: 2px;
+            background: #E2E8F0;
+            z-index: 0;
+        }
+
+        .phase-card {
+            display: flex;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+            position: relative;
+            z-index: 1;
+            transition: transform 0.2s ease;
+        }
+
+        /* The stepping effect */
+        .step-1 { margin-left: 0px; margin-right: 60px; }
+        .step-2 { margin-left: 20px; margin-right: 40px; }
+        .step-3 { margin-left: 40px; margin-right: 20px; }
+        .step-4 { margin-left: 60px; margin-right: 0px; }
+
+        .phase-icon-box {
+            width: 64px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            border-radius: 8px 0 0 8px;
+            flex-shrink: 0;
+        }
+
+        /* Color mapping */
+        .color-1 { background: #0A4B9F; } /* Deep Blue */
+        .color-2 { background: #3B82F6; } /* Bright Blue */
+        .color-3 { background: #D82018; } /* Red */
+        .color-4 { background: #F59E0B; } /* Amber */
+
+        .phase-num {
+            font-size: 16px;
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .phase-icon {
+            width: 20px;
+            height: 20px;
+            opacity: 0.9;
+        }
+
+        .phase-content {
+            padding: 16px 20px;
+            flex: 1;
+            border: 1px solid #E2E8F0;
+            border-left: none;
+            border-radius: 0 8px 8px 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .phase-title {
+            font-size: 13px;
+            font-weight: 800;
+            color: #0A2540;
+            margin-bottom: 4px;
+            letter-spacing: -0.2px;
+        }
+
+        .phase-desc {
+            font-size: 11px;
+            color: #64748B;
+            line-height: 1.5;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 0.15in 0.8in 0.3in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            position: relative;
+            z-index: 1;
+            margin-top: auto;
+        }
+        
+        .footer-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 700px;
+        }
+        
+        .confidential-block {
+            font-size: 9px;
+            color: #64748B;
+            line-height: 1.5;
+        }
+
+        .confidential-block strong {
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .footer-bottom-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .footer-line {
+            font-size: 10px;
+            color: #94A3B8;
+        }
+        
+        .footer-line strong {
+            font-weight: 600;
+            color: #0A4B9F;
+        }
+
+        .footer-tags {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tag {
+            font-size: 7px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 3px 6px;
+            border-radius: 3px;
+        }
+
+        .tag-draft {
+            background: rgba(100, 116, 139, 0.1);
+            color: #475569;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+        }
+
+        .tag-tlp {
+            background: rgba(217, 119, 6, 0.1);
+            color: #B45309;
+            border: 1px solid rgba(217, 119, 6, 0.2);
+        }
+        
+        .footer-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2px;
+        }
+        
+        .page-indicator {
+            font-size: 12px;
+            font-weight: 700;
+            color: #0A4B9F;
+        }
+        
+        .page-total {
+            font-size: 12px;
+            font-weight: 400;
+            color: #94A3B8;
+        }
+
+        /* ============================================
+           BROWSER PREVIEW
+           ============================================ */
+        
+        @media screen {
+            html { background: #64748B; height: auto; }
+            body { padding: 0.5in; background: #64748B; }
+            .slide {
+                margin: 0 auto;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- SLIDE 07: TESTING PHASES -->
+<div class="slide">
+    
+    <!-- Header -->
+    <div class="header">
+        <div class="logo-placeholder-small">
+            [ACME Logo]
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="content">
+        
+        <!-- Top Title and Divider -->
+        <h2 class="section-title">Testing <strong>Phases</strong></h2>
+        <div class="divider"></div>
+        
+        <div class="two-col-grid">
+            
+            <!-- LEFT COLUMN: Text & Highlights -->
+            <div class="left-col">
+                
+                <!-- Strategy Callout -->
+                <div class="summary-box">
+                    <div class="summary-label">Methodology Approach</div>
+                    <div class="summary-text">
+                        Our rigorous four-stage framework ensures comprehensive coverage, eliminates false positives, and delivers actionable, business-centric remediation strategies.
+                    </div>
+                </div>
+
+                <!-- Descriptive Text -->
+                <div class="desc-text">
+                    <p>ACME Consulting performed the penetration testing using a proven, four-phase methodology. The primary purpose of this approach is to identify and validate as many business-critical vulnerabilities as possible within the defined scope of this engagement.</p>
+                    <p>In addition to active exploitation, we collected all relevant vulnerabilities, meticulously eliminated false positives, and mapped the remaining findings to the corresponding information security controls currently implemented by the company. This allows us to accurately evaluate the real-world effectiveness of your preventative and detective defense mechanisms.</p>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN: Stepped Process -->
+            <div class="right-col">
+                
+                <div class="phases-container">
+                    
+                    <!-- Phase 1 -->
+                    <div class="phase-card step-1">
+                        <div class="phase-icon-box color-1">
+                            <div class="phase-num">1</div>
+                            <svg class="phase-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+                        </div>
+                        <div class="phase-content">
+                            <div class="phase-title">Intelligence Gathering</div>
+                            <div class="phase-desc">Gather as much information as possible to be utilized when penetrating the target during the active exploitation phases.</div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 2 -->
+                    <div class="phase-card step-2">
+                        <div class="phase-icon-box color-2">
+                            <div class="phase-num">2</div>
+                            <svg class="phase-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                        </div>
+                        <div class="phase-content">
+                            <div class="phase-title">Threat Modeling</div>
+                            <div class="phase-desc">Identify, enumerate, and prioritize potential attack vectors and vulnerabilities entirely from an attacker's point of view.</div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 3 -->
+                    <div class="phase-card step-3">
+                        <div class="phase-icon-box color-3">
+                            <div class="phase-num">3</div>
+                            <svg class="phase-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        </div>
+                        <div class="phase-content">
+                            <div class="phase-title">Vulnerability Analysis</div>
+                            <div class="phase-desc">Discover flaws in systems, services, and applications which can be actively leveraged and exploited by an attacker.</div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 4 -->
+                    <div class="phase-card step-4">
+                        <div class="phase-icon-box color-4">
+                            <div class="phase-num">4</div>
+                            <svg class="phase-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        </div>
+                        <div class="phase-content">
+                            <div class="phase-title">Reporting</div>
+                            <div class="phase-desc">Document findings, provide remediation strategies, and deliver actionable recommendations to secure the environment.</div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-info">
+            <div class="confidential-block">
+                <strong>Strictly Confidential</strong> — This document contains sensitive security and technical information. Reproduction, distribution, or disclosure to unauthorized parties without explicit written consent is strictly prohibited.
+            </div>
+            <div class="footer-bottom-row">
+                <div class="footer-line">
+                    <span>Property of &nbsp;<strong>ACME Consulting</strong> &nbsp;|&nbsp; acmecyber.com</span>
+                </div>
+                <div class="footer-tags">
+                    <span class="tag tag-draft">Draft</span>
+                    <span class="tag tag-tlp">TLP:AMBER</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-right">
+            <span class="page-indicator">07</span>
+            <span class="page-total">/ 32</span>
+        </div>
+    </div>
+    
+</div>
+
+</body>
+</html>
