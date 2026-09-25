@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ACME - Vulnerabilities Overview</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+        
+        /* ============================================
+           SHARED SLIDE SETTINGS
+           ============================================ */
+        
+        @page {
+            size: 11in 8.5in;
+            margin: 0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        
+        html, body {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            background: white;
+            height: 100%;
+        }
+        
+        .slide {
+            width: 11in;
+            height: 8.5in;
+            position: relative;
+            overflow: hidden;
+            page-break-after: always;
+            page-break-inside: avoid;
+            background: linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 50%, #F1F5F9 100%);
+            color: #0A2540;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(180deg, #0A4B9F 0%, #4781C3 35%, #D82018 100%);
+        }
+        
+        .slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(10, 75, 159, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(10, 75, 159, 0.03) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+        }
+
+        /* Header */
+        .header {
+            padding: 0.35in 0.8in 0.1in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Main Content */
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 0 0.8in;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .section-title {
+            font-size: 34px; 
+            font-weight: 300;
+            color: #0A2540;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+
+        .section-title strong {
+            font-weight: 900;
+        }
+
+        .divider {
+            width: 80px;
+            height: 5px;
+            background: linear-gradient(90deg, #D82018, #0A4B9F);
+            border-radius: 2.5px;
+            margin-bottom: 24px;
+        }
+
+        /* Summary Callout */
+        .summary-statement {
+            background: #F0FDF4;
+            border: 1px solid #BBF7D0;
+            color: #166534;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+        
+        .summary-statement strong {
+            font-weight: 800;
+            margin-right: 6px;
+        }
+
+        
+        .slide-intro {
+            font-size: 13px;
+            color: #475569;
+            line-height: 1.6;
+            margin-bottom: 24px;
+            text-align: justify;
+        }
+
+        /* Vulnerability Table */
+        .table-container {
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.04);
+            overflow: hidden;
+        }
+
+        .vuln-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11.5px;
+            line-height: 1.5;
+        }
+
+        .vuln-table th {
+            background: #0A2540;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 10px;
+            border-bottom: 2px solid #0A4B9F;
+        }
+
+        .vuln-table td {
+            padding: 16px;
+            border-bottom: 1px solid #E2E8F0;
+            vertical-align: top;
+            color: #475569;
+        }
+
+        .vuln-table tr:nth-child(even) td {
+            background: #F8FAFC;
+        }
+
+        .vuln-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Table Specific Typography */
+        .vuln-table td strong {
+            color: #0A2540;
+            font-weight: 700;
+            font-size: 12.5px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .vuln-desc {
+            text-align: justify;
+        }
+
+        .subtext {
+            font-size: 9.5px;
+            color: #94A3B8;
+            display: block;
+            margin-top: 4px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Severity Pills */
+        .sev-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            border-radius: 4px;
+            font-weight: 800;
+            color: white;
+            font-size: 13px;
+        }
+
+        .sev-pill.critical { background: #EF4444; }
+        .sev-pill.high { background: #F97316; }
+        .sev-pill.medium { background: #F59E0B; }
+        .sev-pill.low { background: #10B981; }
+        .sev-pill.info { background: #0EA5E9; }
+
+        /* Empty State inside table */
+        .empty-state-cell {
+            color: #10B981 !important;
+            font-weight: 600;
+            vertical-align: middle !important;
+        }
+
+        .empty-check {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            background: #10B981;
+            color: white;
+            border-radius: 50%;
+            font-size: 9px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 0.1in 0.8in 0.25in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            position: relative;
+            z-index: 1;
+            margin-top: auto;
+        }
+        
+        .footer-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 700px;
+        }
+        
+        .confidential-block {
+            font-size: 9px;
+            color: #64748B;
+            line-height: 1.5;
+        }
+
+        .confidential-block strong {
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .footer-bottom-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .footer-line {
+            font-size: 10px;
+            color: #94A3B8;
+        }
+        
+        .footer-line strong {
+            font-weight: 600;
+            color: #0A4B9F;
+        }
+        
+        .tag {
+            font-size: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        .tag-draft {
+            background: rgba(100, 116, 139, 0.1);
+            color: #475569;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+        }
+
+        .tag-tlp {
+            background: rgba(217, 119, 6, 0.1);
+            color: #B45309;
+            border: 1px solid rgba(217, 119, 6, 0.2);
+        }
+
+        .footer-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2px;
+        }
+        
+        .page-indicator {
+            font-size: 12px;
+            font-weight: 700;
+            color: #0A4B9F;
+        }
+        
+        .page-total {
+            font-size: 12px;
+            font-weight: 400;
+            color: #94A3B8;
+        }
+
+        @media screen {
+            html { background: #64748B; height: auto; }
+            body { padding: 0.5in; background: #64748B; }
+            .slide {
+                margin: 0 auto;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
+            }
+        }
+    
+        /* PDF Shadow Fix */
+        @media print {
+            * {
+                box-shadow: none !important;
+                filter: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- SLIDE: VULNERABILITIES OVERVIEW -->
+<div class="slide">
+    
+    <!-- Header -->
+    <div class="header">
+        <div>
+            <div style="height: 45px; display: flex; align-items: center; padding: 8px 16px; border-radius: 4px; width: fit-content;">
+                <img src="https://iseci.us/images/iSECi-Logo-White.png?__frsh_c=c143ca2c4e767053b7526ab8099a30996cebdb00" alt="iSECi Logo" style="max-height: 100%; object-fit: contain;">
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="content">
+        <h2 class="section-title">Vulnerabilities <strong>Overview</strong></h2>
+                <div class="divider"></div>
+        
+        <div class="slide-intro">
+            This section provides a consolidated inventory of all identified security findings, categorized by severity. The assessment confirms a robust perimeter with no critical or high-risk vulnerabilities present. The table below outlines the remaining medium, low, and informational exposures, detailing their immediate impact and affected security controls.
+        </div>
+        
+        <div class="table-container">
+            <table class="vuln-table">
+                <thead>
+                    <tr>
+                        <th style="width: 5%; text-align: center;">Sev</th>
+                        <th style="width: 25%">Vulnerability</th>
+                        <th style="width: 35%">Description</th>
+                        <th style="width: 15%">Exploitability</th>
+                        <th style="width: 20%">Affected Control</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="text-align: center; vertical-align: middle;"><span class="sev-pill critical">C</span></td>
+                        <td colspan="4" class="empty-state-cell">
+                            <span class="empty-check">✓</span> No vulnerabilities of critical risk were identified during this assessment.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center; vertical-align: middle;"><span class="sev-pill high">H</span></td>
+                        <td colspan="4" class="empty-state-cell">
+                            <span class="empty-check">✓</span> No vulnerabilities of high risk were identified during this assessment.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center; vertical-align: middle;"><span class="sev-pill medium">M</span></td>
+                        <td>
+                            <strong>Nginx Buffer Overflow</strong>
+                            <span class="subtext">CVE-2026-27654</span>
+                        </td>
+                        <td class="vuln-desc">A heap-based buffer overflow in <code>ngx_http_dav_module</code> allowing remote attackers to trigger worker process termination under specific configurations.</td>
+                        <td>
+                            <strong>Unsuccessful</strong>
+                            <span class="subtext">Private Exploits Potential</span>
+                        </td>
+                        <td>
+                            <strong>Access Control</strong>
+                            <span class="subtext">NIST CSF: PR.AC-3</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center; vertical-align: middle;"><span class="sev-pill low">L</span></td>
+                        <td>
+                            <strong>HSTS Missing From HTTPS Server</strong>
+                            <span class="subtext">Configuration Gap</span>
+                        </td>
+                        <td class="vuln-desc">The remote HTTPS server is not enforcing Strict Transport Security, weakening cookie-hijacking protections and allowing MitM SSL-stripping.</td>
+                        <td>
+                            <strong>Unlikely</strong>
+                            <span class="subtext">Requires MitM</span>
+                        </td>
+                        <td>
+                            <strong>Data Security</strong>
+                            <span class="subtext">NIST CSF: PR.DS-2</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center; vertical-align: middle;"><span class="sev-pill info">I</span></td>
+                        <td>
+                            <strong>Inconsistent Hostname & IP Address</strong>
+                            <span class="subtext">DNS Anomaly</span>
+                        </td>
+                        <td class="vuln-desc">Target machine hostnames fail to resolve or mismatch the expected IP due to misconfigured reverse DNS (PTR) records.</td>
+                        <td>
+                            <strong>No</strong>
+                            <span class="subtext">Informational Only</span>
+                        </td>
+                        <td>
+                            <strong>Asset Management</strong>
+                            <span class="subtext">NIST CSF: ID.AM-1</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-info">
+            <div class="confidential-block">
+                <strong>Strictly Confidential</strong> — This document contains sensitive security and technical information. Reproduction, distribution, or disclosure to unauthorized parties without explicit written consent is strictly prohibited.
+            </div>
+            <div class="footer-bottom-row">
+                <div class="footer-line">
+                <span>Report by &nbsp;<strong>ISEC International</strong> &nbsp;|&nbsp; iseci.us</span>
+                </div>
+                <div class="footer-tags">
+                    <span class="tag tag-draft">Final</span>
+                    <span class="tag tag-tlp">TLP:AMBER</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-right">
+            <span class="page-indicator">13</span>
+            <span class="page-total">/ 18</span>
+        </div>
+    </div>
+    
+</div>
+
+</body>
+</html>

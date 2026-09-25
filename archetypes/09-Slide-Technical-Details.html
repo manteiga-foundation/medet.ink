@@ -196,13 +196,14 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            z-index: 10;
         }
 
         #chartContainer {
             position: relative;
             height: 100%;
             width: 100%;
-            min-height: 240px;
+            min-height: 280px;
         }
 
         /* 3. Risk Score Vertical Bar (TALLER & LARGER) */
@@ -496,7 +497,7 @@
 
                 <div class="sub-heading">Vulnerability Description</div>
                 <div class="text-body">
-                    <p>ACME Security identified a heap-based buffer overflow vulnerability affecting the <code>ngx_http_dav_module</code> in NGINX Open Source and NGINX Plus. This vulnerability allows remote attackers to trigger a buffer overflow in the NGINX worker process, potentially resulting in worker process termination (denial of service) or unauthorized modification of source and destination file names outside the document root.</p>
+                    <p>ISECI Security identified a heap-based buffer overflow vulnerability affecting the <code>ngx_http_dav_module</code> in NGINX Open Source and NGINX Plus. This vulnerability allows remote attackers to trigger a buffer overflow in the NGINX worker process, potentially resulting in worker process termination (denial of service) or unauthorized modification of source and destination file names outside the document root.</p>
                     <p>The vulnerability is exploitable when specific configuration conditions are met: the NGINX configuration must use the DAV module's MOVE or COPY methods in combination with prefix location and alias directives. While the integrity impact is constrained, successful exploitation leads to service disruption.</p>
                 </div>
             </div>
@@ -506,7 +507,7 @@
                 
                 <div class="sub-heading">Remediation & Solution Strategy</div>
                 <div class="text-body" style="margin-bottom: 10px;">
-                    ACME Consulting recommends taking the following corrective actions in order of priority:
+                    ISECI recommends taking the following corrective actions in order of priority:
                 </div>
                 
                 <div class="remediation-step">
@@ -536,13 +537,13 @@
             </div>
             <div class="footer-bottom-row">
                 <div class="footer-line">
-                    <span>Property of &nbsp;<strong>ACME Consulting</strong> &nbsp;|&nbsp; acmecyber.com</span>
+                <span>Report by &nbsp;<strong>ISEC International</strong> &nbsp;|&nbsp; iseci.us</span>
                 </div>
             </div>
         </div>
         <div class="footer-right">
             <span class="page-indicator">09</span>
-            <span class="page-total">/ 32</span>
+            <span class="page-total">/ 20</span>
         </div>
     </div>
     
@@ -656,12 +657,12 @@
                     }
 
                     // Draw Title
-                    ctx.font = '800 8.5px Montserrat, sans-serif';
+                    ctx.font = '800 10px Montserrat, sans-serif';
                     ctx.fillStyle = '#0A2540';
                     ctx.fillText(titles[i], x, titleY);
 
                     // Draw Subtitle
-                    ctx.font = '500 7px Montserrat, sans-serif';
+                    ctx.font = '500 8.5px Montserrat, sans-serif';
                     ctx.fillStyle = '#64748B';
                     ctx.fillText(subtitles[i], x, subY);
                 }

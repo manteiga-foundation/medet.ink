@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ACME - Appendix A</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+        
+        /* ============================================
+           SHARED SLIDE SETTINGS
+           ============================================ */
+        @page {
+            size: 11in 8.5in;
+            margin: 0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        
+        html, body {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            background: white;
+            height: 100%;
+        }
+        
+        .slide {
+            width: 11in;
+            height: 8.5in;
+            position: relative;
+            overflow: hidden;
+            page-break-after: always;
+            page-break-inside: avoid;
+            background: linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 50%, #F1F5F9 100%);
+            color: #0A2540;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(180deg, #0A4B9F 0%, #4781C3 35%, #D82018 100%);
+        }
+        
+        .slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(10, 75, 159, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(10, 75, 159, 0.03) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+        }
+
+        /* Header */
+        .header {
+            padding: 0.35in 0.8in 0.1in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Main Content Layout */
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 0 0.8in;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .section-title {
+            font-size: 34px; 
+            font-weight: 900;
+            color: #0A2540;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+
+        .divider {
+            width: 80px;
+            height: 5px;
+            background: linear-gradient(90deg, #D82018, #0A4B9F);
+            border-radius: 2.5px;
+            margin-bottom: 12px;
+        }
+        
+        .subtitle {
+            font-size: 13px;
+            color: #475569;
+            margin-bottom: 5px;
+        }
+
+        /* ============================================
+           APPENDIX SPECIFIC LAYOUT
+           ============================================ */
+           
+        /* Full Width Image Container */
+        .map-container {
+            width: 100%;
+            height: 380px;
+            background: #000000; /* Dark background matching the map */
+            border-radius: 8px;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+        }
+        
+        .map-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        /* Scope Section */
+        .scope-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sub-heading {
+            font-size: 16px;
+            font-weight: 800;
+            color: #0A2540;
+            margin-bottom: 16px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #E2E8F0;
+            position: relative;
+        }
+
+        .sub-heading::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: #0A4B9F;
+        }
+        
+        /* IP List Grid */
+        .ip-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr; /* 3 Columns */
+            gap: 4px 32px;
+        }
+        
+        .ip-item {
+            font-family: monospace;
+            font-size: 9px;
+            font-weight: 600;
+            color: #64748B;
+            background: #F8FAFC;
+            padding: 1px 12px;
+            border-radius: 4px;
+            border: 1px solid #E2E8F0;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 0.1in 0.8in 0.25in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            position: relative;
+            z-index: 1;
+            margin-top: auto;
+        }
+        
+        .footer-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 700px;
+        }
+        
+        .confidential-block {
+            font-size: 9px;
+            color: #64748B;
+            line-height: 1.5;
+        }
+
+        .confidential-block strong {
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .footer-bottom-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .footer-line {
+            font-size: 10px;
+            color: #94A3B8;
+        }
+        
+        .footer-line strong {
+            font-weight: 600;
+            color: #0A4B9F;
+        }
+        
+        .tag {
+            font-size: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        .tag-draft {
+            background: rgba(100, 116, 139, 0.1);
+            color: #475569;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+        }
+
+        .tag-tlp {
+            background: rgba(217, 119, 6, 0.1);
+            color: #B45309;
+            border: 1px solid rgba(217, 119, 6, 0.2);
+        }
+
+        .footer-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2px;
+        }
+        
+        .page-indicator {
+            font-size: 12px;
+            font-weight: 700;
+            color: #0A4B9F;
+        }
+        
+        .page-total {
+            font-size: 12px;
+            font-weight: 400;
+            color: #94A3B8;
+        }
+
+        @media screen {
+            html { background: #64748B; height: auto; }
+            body { padding: 0.5in; background: #64748B; }
+            .slide {
+                margin: 0 auto;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
+            }
+        }
+    
+        /* PDF Shadow Fix */
+        @media print {
+            * {
+                box-shadow: none !important;
+                filter: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- SLIDE: APPENDIX A -->
+<div class="slide">
+    
+    <!-- Header -->
+    <div class="header">
+        <div>
+            <div style="height: 45px; display: flex; align-items: center; padding: 8px 16px; border-radius: 4px; width: fit-content;">
+                <img src="https://iseci.us/images/iSECi-Logo-White.png?__frsh_c=c143ca2c4e767053b7526ab8099a30996cebdb00" alt="iSECi Logo" style="max-height: 100%; object-fit: contain;">
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="content">
+        <h2 class="section-title">APPENDIX A</h2>
+        <div class="divider"></div>
+        <div class="subtitle">DNS Map of services listed under BICSA:</div>
+        
+        <!-- DNS Map Image -->
+        <div class="map-container">
+            <img src="dns-map.jpeg" alt="DNS Map of BICSA Services">
+        </div>
+
+        <!-- Scope IPs -->
+        <div class="scope-section">
+            <div class="sub-heading">Scope</div>
+            <div class="ip-grid">
+                <!-- Column 1 -->
+                <div class="ip-item">45.222.70.66</div>
+                <div class="ip-item">38.87.208.244</div>
+                <div class="ip-item">181.119.220.210</div>
+                <div class="ip-item">181.119.220.212</div>
+                <div class="ip-item">181.119.220.213</div>
+                <div class="ip-item">45.225.70.122</div>
+                <div class="ip-item">181.119.220.202</div>
+                <div class="ip-item">45.225.71.122</div>
+                <div class="ip-item">181.119.220.226</div>
+                <!-- Column 2 -->
+                <div class="ip-item">181.119.220.227</div>
+                <div class="ip-item">181.119.220.228</div>
+                <div class="ip-item">12.171.160.154</div>
+                <div class="ip-item">74.120.47.14</div>
+                <div class="ip-item">186.176.214.6</div>
+                <div class="ip-item">38.87.253.10</div>
+                <div class="ip-item">38.87.253.11</div>
+                <div class="ip-item">190.106.216.94</div>
+                <div class="ip-item">190.61.96.210</div>
+                <!-- Column 3 -->
+                <div class="ip-item">190.61.96.211</div>
+                <div class="ip-item">190.61.96.212</div>
+                <div class="ip-item">138.219.157.122</div>
+                <div class="ip-item">45.167.1.50</div>
+                <div class="ip-item">45.167.1.51</div>
+                <div class="ip-item">201.149.79.126</div>
+                <div class="ip-item">201.149.79.127</div>
+                <div class="ip-item">187.217.35.106</div>
+                <div class="ip-item">20.230.12.30</div>
+            </div>
+        </div>
+
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-info">
+            <div class="confidential-block">
+                <strong>Strictly Confidential</strong> — This document contains sensitive security and technical information. Reproduction, distribution, or disclosure to unauthorized parties without explicit written consent is strictly prohibited.
+            </div>
+            <div class="footer-bottom-row">
+                <div class="footer-line">
+                <span>Report by &nbsp;<strong>ISEC International</strong> &nbsp;|&nbsp; iseci.us</span>
+                </div>
+                <div class="footer-tags">
+                    <span class="tag tag-draft">Final</span>
+                    <span class="tag tag-tlp">TLP:AMBER</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-right">
+            <span class="page-indicator">17</span>
+            <span class="page-total">/ 18</span>
+        </div>
+    </div>
+    
+</div>
+
+</body>
+</html>
