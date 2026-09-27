@@ -2,19 +2,437 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>ACME - External Network Penetration Testing Report</title>
+    <title>ACME - Full Penetration Testing Report</title>
     <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script src="https://code.highcharts.com/modules/export-data.js"></script>
-    <script src="https://code.highcharts.com/modules/offline-exporting.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap');
-    
-    /* --- 01-Slide-Cover.html --- */
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/offline-exporting.js"></script>
+<script>
+    const chartData = {
+        categories: ['Startups', 'Small Biz', 'Mid-Market', 'Enterprise', 'Large Ent.', 'Fortune 500'],
+        series: {
+            poor: [20, 15, 8, 5, 2, 0],
+            belowAverage: [35, 30, 22, 15, 8, 3],
+            average: [30, 35, 35, 30, 25, 15],
+            good: [12, 15, 25, 35, 40, 42],
+            excellent: [3, 5, 10, 15, 25, 40]
+        }
+    };
 
+        Highcharts.chart('chart-container', {
+        chart: {
+            type: 'area',
+            backgroundColor: 'transparent',
+            style: {
+                fontFamily: 'Montserrat, sans-serif'
+            },
+            // Change margins to 0 to stretch to the container edges
+            marginLeft: 0,
+            marginRight: 0, 
+            marginTop: 10,
+            marginBottom: 50 
+        },
+        title: {
+            text: null
+        },
+        credits: {
+            enabled: false
+        },
+        xAxis: {
+            categories: chartData.categories,
+            // Add these three lines to remove the default gaps on the left/right
+            tickmarkPlacement: 'on',
+            minPadding: 0,
+            maxPadding: 0,
+            labels: {
+                style: {
+                    fontSize: '9px',
+                    color: '#64748B',
+                    fontWeight: '600'
+                }
+            },
+            lineWidth: 0,
+            tickWidth: 0
+
+        },
+        yAxis: {
+            title: {
+                text: null
+            },
+            min: 0,
+            max: 100,
+            gridLineWidth: 0,
+            labels: {
+                enabled: false
+            }
+        },
+        tooltip: {
+            enabled: false
+        },
+        legend: {
+            align: 'center',
+            verticalAlign: 'bottom',
+            layout: 'horizontal', /* Changed to horizontal layout at the bottom */
+            x: 0,
+            y: 15,
+            itemDistance: 12, /* Space between legend items */
+            itemStyle: {
+                fontSize: '9.5px',
+                color: '#475569',
+                fontWeight: '600'
+            },
+            symbolRadius: 3,
+            reversed: false
+        },
+        plotOptions: {
+            area: {
+                stacking: 'normal',
+                lineColor: 'transparent',
+                lineWidth: 0,
+                marker: {
+                    enabled: false
+                },
+                fillOpacity: 0.95,
+                states: {
+                    hover: {
+                        enabled: false
+                    }
+                }
+            }
+        },
+        series: [{
+            name: 'Poor',
+            data: chartData.series.excellent,
+            color: '#8B5CF6' 
+        }, {
+            name: 'Below Avg',
+            data: chartData.series.good,
+            color: '#EF4444' 
+        }, {
+            name: 'Average',
+            data: chartData.series.average,
+            color: '#F59E0B' 
+        }, {
+            name: 'Good',
+            data: chartData.series.belowAverage,
+            color: '#10B981' 
+        }, {
+            name: 'Excellent',
+            data: chartData.series.poor,
+            color: '#3B82F6' 
+        }],
+        exporting: {
+            enabled: false
+        }
+    }, function(chart) {
         
+        // Position Marker between Enterprise and Large Enterprise (Index 3.5)
+        const xPos = chart.xAxis[0].toPixels(3.5);
+        
+        const fsrIndex = 3; 
+        const poorHeight = chartData.series.poor[fsrIndex];
+        const belowAvgHeight = chartData.series.belowAverage[fsrIndex];
+        const belowAvgTop = poorHeight + belowAvgHeight;
+        
+        // Place in the Average band
+        const fsrPosition = belowAvgTop + 16;
+        const logoY = chart.yAxis[0].toPixels(fsrPosition);
+        
+        // Marker Dot
+        chart.renderer.circle(xPos - 5, logoY - 5, 5)
+            .attr({
+                fill: '#0A2540',
+                stroke: '#FFFFFF',
+                'stroke-width': 2,
+                zIndex: 15
+            })
+            .add();
+            
+        // Text Label
+        chart.renderer.label('<strong>Global Finance Corp</strong><br/>Maturity Score', xPos + 6, logoY - 16)
+            .css({
+                fontSize: '9px',
+                color: '#0A2540',
+                lineHeight: '12px',
+                textAlign: 'left'
+            })
+            .attr({
+                fill: 'rgba(255, 255, 255, 0.95)',
+                padding: 5,
+                r: 4,
+                zIndex: 14,
+                stroke: '#E2E8F0',
+                'stroke-width': 1
+            })
+            .add();
+    });
+</script>
+<script>
+    Highcharts.chart('chart-container', {
+        chart: {
+            type: 'pie',
+            backgroundColor: 'transparent',
+            style: {
+                fontFamily: 'Montserrat, sans-serif'
+            },
+            animation: false,
+            spacingTop: 0,
+            spacingBottom: 0
+        },
+        // Native Highcharts Centered Title
+        title: {
+            text: '<span style="font-size: 38px; font-weight: 900; color: #0A2540;">12</span><br><span style="font-size: 10px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 1px;">Total Findings</span>',
+            align: 'center',
+            verticalAlign: 'middle',
+            y: 10,
+            useHTML: true
+        },
+        credits: {
+            enabled: false
+        },
+        exporting: {
+            enabled: false
+        },
+        tooltip: {
+            enabled: false
+        },
+        plotOptions: {
+            pie: {
+                innerSize: '65%', // Creates the donut hole
+                depth: 45,
+                allowPointSelect: false,
+                cursor: 'default',
+                size: '95%',
+                states: {
+                    hover: {
+                        enabled: false
+                    }
+                },
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b><br>{point.y} ({point.percentage:.1f}%)',
+                    style: {
+                        fontSize: '11px',
+                        fontFamily: 'Montserrat, sans-serif',
+                        fontWeight: '700',
+                        textOutline: '2px white'
+                    },
+                    distance: 15,
+                    connectorWidth: 1.5,
+                    connectorPadding: 5
+                },
+                // Modern clean styling instead of broken slices
+                borderWidth: 4,
+                borderColor: '#ffffff',
+                shadow: false
+            }
+        },
+        series: [{
+            name: 'Vulnerabilities',
+            colorByPoint: true,
+            data: [{
+                name: 'Critical',
+                y: 0,
+                color: '#DC2626', // Modern Red
+                dataLabels: { color: '#DC2626' }
+            }, {
+                name: 'High',
+                y: 2,
+                color: '#F97316', // Modern Orange
+                dataLabels: { color: '#F97316' }
+            }, {
+                name: 'Medium',
+                y: 4,
+                color: '#FBBF24', // Modern Yellow/Amber
+                dataLabels: { color: '#D97706' } // Slightly darker text for readability
+            }, {
+                name: 'Low',
+                y: 6,
+                color: '#10B981', // Modern Green
+                dataLabels: { color: '#10B981' }
+            }]
+        }]
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const ctx = document.getElementById('radarChart').getContext('2d');
+        
+        // Medium Risk Gradient (Yellow/Amber)
+        const gradient = ctx.createLinearGradient(0, ctx.canvas.height, ctx.canvas.width, 0);
+        gradient.addColorStop(0, '#f57f17');
+        gradient.addColorStop(0.5, '#fbc02d');
+        gradient.addColorStop(1, '#ffeb3b');
+        
+        // Plugin to draw alternating hexagon backgrounds
+        const alternatingHexagonPlugin = {
+            id: 'alternatingHexagon',
+            beforeDraw: (chart) => {
+                const ctx = chart.ctx;
+                const scale = chart.scales.r;
+                ctx.save();
+                
+                for (let i = 1; i <= 4.5; i++) {
+                    if (i === 2 || i === 4) {
+                        const outerRadius = scale.getDistanceFromCenterForValue(i);
+                        const innerRadius = scale.getDistanceFromCenterForValue(i - 1);
+                        const angleStep = (2 * Math.PI) / 6;
+                        
+                        ctx.beginPath();
+                        for (let j = 0; j < 6; j++) {
+                            const angle = angleStep * j - Math.PI / 2;
+                            const x = scale.xCenter + outerRadius * Math.cos(angle);
+                            const y = scale.yCenter + outerRadius * Math.sin(angle);
+                            if (j === 0) ctx.moveTo(x, y);
+                            else ctx.lineTo(x, y);
+                        }
+                        ctx.closePath();
+                        
+                        ctx.moveTo(scale.xCenter + innerRadius * Math.cos(-Math.PI / 2), 
+                                   scale.yCenter + innerRadius * Math.sin(-Math.PI / 2));
+                        for (let j = 6; j >= 0; j--) {
+                            const angle = angleStep * j - Math.PI / 2;
+                            const x = scale.xCenter + innerRadius * Math.cos(angle);
+                            const y = scale.yCenter + innerRadius * Math.sin(angle);
+                            ctx.lineTo(x, y);
+                        }
+                        
+                        ctx.fillStyle = 'rgba(226, 232, 240, 0.4)';
+                        ctx.fill('evenodd');
+                    }
+                }
+                ctx.restore();
+            }
+        };
+        
+        // CUSTOM LABEL PLUGIN - Engineered to prevent overlap and bleeding
+        const customLabelsPlugin = {
+            id: 'customLabels',
+            afterDraw: (chart) => {
+                const ctx = chart.ctx;
+                const scale = chart.scales.r;
+                const angleStep = (2 * Math.PI) / 6;
+                
+                const titles = [
+                    'Business Impact',
+                    'Exploitation Prob.',
+                    'Attack Complexity',
+                    'Remediation Effort',
+                    'Integrity Impact',
+                    'Data Sensitivity'
+                ];
+
+                const subtitles = [
+                    'Revenue & ops at risk',
+                    'Likelihood to target',
+                    'Easier attacks score higher',
+                    'Effort to fix scores higher',
+                    'Damage to system trust',
+                    'Customer & compliance'
+                ];
+                
+                ctx.save();
+                
+                for (let i = 0; i < 6; i++) {
+                    const angle = angleStep * i - Math.PI / 2;
+                    
+                    const labelRadius = scale.getDistanceFromCenterForValue(scale.max) + 12; 
+                    const x = scale.xCenter + labelRadius * Math.cos(angle);
+                    const y = scale.yCenter + labelRadius * Math.sin(angle);
+                    
+                    ctx.textAlign = 'center';
+                    let titleY = y;
+                    let subY = y;
+
+                    // Dynamically shift baselines away from the hexagon center to prevent overlap
+                    if (i === 0) { // Top Label
+                        ctx.textBaseline = 'bottom';
+                        titleY = y - 10;
+                        subY = y;
+                    } else if (i === 3) { // Bottom Label
+                        ctx.textBaseline = 'top';
+                        titleY = y;
+                        subY = y + 10;
+                    } else { // Side Labels
+                        ctx.textAlign = (i === 1 || i === 2) ? 'left' : 'right';
+                        ctx.textBaseline = 'middle';
+                        titleY = y - 6;
+                        subY = y + 6;
+                    }
+
+                    // Draw Title
+                    ctx.font = '800 10px Montserrat, sans-serif';
+                    ctx.fillStyle = '#0A2540';
+                    ctx.fillText(titles[i], x, titleY);
+
+                    // Draw Subtitle
+                    ctx.font = '500 8.5px Montserrat, sans-serif';
+                    ctx.fillStyle = '#64748B';
+                    ctx.fillText(subtitles[i], x, subY);
+                }
+                
+                ctx.restore();
+            }
+        };
+        
+        Chart.register(alternatingHexagonPlugin, customLabelsPlugin);
+        
+        const config = {
+            type: 'radar',
+            data: {
+                labels: ['', '', '', '', '', ''],
+                datasets: [{
+                    data: [2.2, 1.0, 4.0, 1.5, 3.0, 2.0], // Medium Risk Data
+                    fill: true,
+                    backgroundColor: gradient,
+                    borderColor: 'transparent',
+                    borderWidth: 0,
+                    pointRadius: 0,
+                    pointHoverRadius: 0,
+                    tension: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                layout: {
+                    // Massive top and bottom padding guarantees the hexagon shrinks, giving the text plenty of room
+                    padding: { left: 90, right: 90, top: 45, bottom: 45 }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: false }
+                },
+                scales: {
+                    r: {
+                        min: 0,
+                        max: 4.5,
+                        ticks: { display: false },
+                        grid: {
+                            color: 'rgba(0,0,0,0.05)',
+                            lineWidth: 1,
+                            circular: false
+                        },
+                        angleLines: {
+                            color: 'rgba(0,0,0,0.05)',
+                            lineWidth: 1
+                        },
+                        pointLabels: {
+                            display: false 
+                        }
+                    }
+                }
+            }
+        };
+
+        new Chart(ctx, config);
+    });
+</script>
+    <style>
+/* --- 01-Slide-Cover.html --- */
+
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
         
         /* ============================================
            US LETTER LANDSCAPE - PRINT PERFECT
@@ -354,7 +772,10 @@
            BROWSER PREVIEW
            ============================================ */
         
-        
+        @media screen {
+            html {
+                background: #64748B;
+            }
             
             body {
                 padding: 0.5in;
@@ -371,7 +792,7 @@
     
 /* --- 02-Slide-Table-of-Content.html --- */
 
-        
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
         
         /* ============================================
            SHARED SLIDE SETTINGS
@@ -646,8 +1067,9 @@
            BROWSER PREVIEW
            ============================================ */
         
-        
-            
+        @media screen {
+            html { background: #64748B; }
+            body { padding: 0.5in; background: #64748B; }
             .slide {
                 margin: 0 auto;
                 box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
@@ -656,7 +1078,7 @@
     
 /* --- 03-Slide-Executive-Summary.html --- */
 
-        
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
         
         /* ============================================
            SHARED SLIDE SETTINGS
@@ -680,7 +1102,7 @@
             font-size: 12px;
             line-height: 1.4;
             background: white;
-            
+            height: 100%;
         }
         
         .slide {
@@ -1022,8 +1444,9 @@
            BROWSER PREVIEW
            ============================================ */
         
-        
-            
+        @media screen {
+            html { background: #64748B; height: auto; }
+            body { padding: 0.5in; background: #64748B; }
             .slide {
                 margin: 0 auto;
                 box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
@@ -1032,7 +1455,7 @@
     
 /* --- 04-Slide-Cybersecurity-Maturity.html --- */
 
-        
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
         
         /* ============================================
            SHARED SLIDE SETTINGS
@@ -1056,7 +1479,7 @@
             font-size: 12px;
             line-height: 1.4;
             background: white;
-            
+            height: 100%;
         }
         
         .slide {
@@ -1272,7 +1695,7 @@
             font-weight: 500;
         }
 
-        #chart-container-04 {
+        #chart-container {
             width: 100%;
             flex: 1; /* Flex-grow to fill remaining card height perfectly */
             min-height: 250px;
@@ -1379,8 +1802,9 @@
            BROWSER PREVIEW
            ============================================ */
         
-        
-            
+        @media screen {
+            html { background: #64748B; height: auto; }
+            body { padding: 0.5in; background: #64748B; }
             .slide {
                 margin: 0 auto;
                 box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
@@ -1389,7 +1813,7 @@
     
 /* --- 05-Slide-Scope.html --- */
 
-        
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
         
         /* ============================================
            SHARED SLIDE SETTINGS
@@ -1413,7 +1837,7 @@
             font-size: 12px;
             line-height: 1.4;
             background: white;
-            
+            height: 100%;
         }
         
         .slide {
@@ -1846,8 +2270,9 @@
            BROWSER PREVIEW
            ============================================ */
         
-        
-            
+        @media screen {
+            html { background: #64748B; height: auto; }
+            body { padding: 0.5in; background: #64748B; }
             .slide {
                 margin: 0 auto;
                 box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
@@ -1856,7 +2281,7 @@
     
 /* --- 06-Slide-Risk-Matrix.html --- */
 
-        
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
         
         /* ============================================
            SHARED SLIDE SETTINGS
@@ -1880,7 +2305,7 @@
             font-size: 12px;
             line-height: 1.4;
             background: white;
-            
+            height: 100%;
         }
         
         .slide {
@@ -2050,7 +2475,7 @@
             border: 1px solid #E2E8F0;
             display: flex;
             flex-direction: column;
-            flex: 1; min-height: 450px;
+            height: 100%; 
             width: 100%;
         }
 
@@ -2306,8 +2731,9 @@
            BROWSER PREVIEW
            ============================================ */
         
-        
-            
+        @media screen {
+            html { background: #64748B; height: auto; }
+            body { padding: 0.5in; background: #64748B; }
             .slide {
                 margin: 0 auto;
                 box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
@@ -2316,7 +2742,7 @@
     
 /* --- 07-Slide-Testing-Phases.html --- */
 
-        
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
         
         /* ============================================
            SHARED SLIDE SETTINGS
@@ -2340,7 +2766,7 @@
             font-size: 12px;
             line-height: 1.4;
             background: white;
-            
+            height: 100%;
         }
         
         .slide {
@@ -2690,8 +3116,9 @@
            BROWSER PREVIEW
            ============================================ */
         
-        
-            
+        @media screen {
+            html { background: #64748B; height: auto; }
+            body { padding: 0.5in; background: #64748B; }
             .slide {
                 margin: 0 auto;
                 box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
@@ -2700,7 +3127,7 @@
     
 /* --- 08-Slide-Findings-Overview.html --- */
 
-        
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
         
         /* ============================================
            SHARED SLIDE SETTINGS
@@ -2724,7 +3151,7 @@
             font-size: 12px;
             line-height: 1.4;
             background: white;
-            
+            height: 100%;
         }
         
         .slide {
@@ -2911,7 +3338,7 @@
             margin-bottom: 2px;
         }
 
-        #chart-container-08 {
+        #chart-container {
             width: 100%;
             flex: 1; /* Allows chart to fill available height */
             min-height: 250px;
@@ -3054,8 +3481,9 @@
            BROWSER PREVIEW
            ============================================ */
         
-        
-            
+        @media screen {
+            html { background: #64748B; height: auto; }
+            body { padding: 0.5in; background: #64748B; }
             .slide {
                 margin: 0 auto;
                 box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
@@ -3064,7 +3492,7 @@
     
 /* --- 09-Slide-Technical-Details.html --- */
 
-        
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
         
         /* ============================================
            SHARED SLIDE SETTINGS
@@ -3088,7 +3516,7 @@
             font-size: 12px;
             line-height: 1.4;
             background: white;
-            
+            height: 100%;
         }
         
         .slide {
@@ -3253,13 +3681,14 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            z-index: 10;
         }
 
         #chartContainer {
             position: relative;
             height: 100%;
             width: 100%;
-            min-height: 240px;
+            min-height: 280px;
         }
 
         /* 3. Risk Score Vertical Bar (TALLER & LARGER) */
@@ -3471,8 +3900,9 @@
             color: #94A3B8;
         }
 
-        
-            
+        @media screen {
+            html { background: #64748B; height: auto; }
+            body { padding: 0.5in; background: #64748B; }
             .slide {
                 margin: 0 auto;
                 box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
@@ -3481,8 +3911,8 @@
     
 /* --- 10-Slide-Proof-of-Concept.html --- */
 
-        
-        
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap');
         
         /* ============================================
            SHARED SLIDE SETTINGS
@@ -3506,7 +3936,7 @@
             font-size: 12px;
             line-height: 1.4;
             background: white;
-            
+            height: 100%;
         }
         
         .slide {
@@ -3871,8 +4301,9 @@
            BROWSER PREVIEW (Restored Gray Background)
            ============================================ */
            
-        
-            
+        @media screen {
+            html { background: #64748B; height: auto; }
+            body { padding: 0.5in; background: #64748B; }
             .slide {
                 margin: 0 auto;
                 box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
@@ -3881,7 +4312,7 @@
     
 /* --- 11-Slide-Team.html --- */
 
-        
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
         
         /* ============================================
            SHARED SLIDE SETTINGS
@@ -3905,7 +4336,7 @@
             font-size: 12px;
             line-height: 1.4;
             background: white;
-            
+            height: 100%;
         }
         
         .slide {
@@ -4214,8 +4645,9 @@
             color: #94A3B8;
         }
 
-        
-            
+        @media screen {
+            html { background: #64748B; height: auto; }
+            body { padding: 0.5in; background: #64748B; }
             .slide {
                 margin: 0 auto;
                 box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
@@ -4224,7 +4656,7 @@
     
 /* --- 12-Slide-Capability-Statement.html --- */
 
-        
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
         
         /* ============================================
            SHARED SLIDE SETTINGS
@@ -4248,8 +4680,8 @@
             font-size: 12px;
             line-height: 1.4;
             background: white;
-            
-            
+            height: 100%;
+            overflow: hidden;
         }
         
         .slide {
@@ -4596,8 +5028,9 @@
         /* ============================================
            BROWSER PREVIEW (Restored Gray Background)
            ============================================ */
-        
-            
+        @media screen {
+            html { background: #64748B; height: auto; }
+            body { padding: 0.5in; background: #64748B; }
             .slide {
                 margin: 0 auto;
                 box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
@@ -4606,7 +5039,7 @@
     
 /* --- 13-Slide-Company-Overview.html --- */
 
-        
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
         
         /* ============================================
            SHARED SLIDE SETTINGS
@@ -4630,8 +5063,8 @@
             font-size: 12px;
             line-height: 1.4;
             background: white;
-            
-            
+            height: 100%;
+            overflow: hidden;
         }
         
         .slide {
@@ -4932,70 +5365,1008 @@
             color: #94A3B8;
         }
 
-        
-            
+        @media screen {
+            html { background: #64748B; height: auto; }
+            body { padding: 0.5in; background: #64748B; }
             .slide {
                 margin: 0 auto;
                 box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
             }
         }
     
-    
-    /* OVERRIDES FOR MERGED FILE */
-    html, body {
-        height: auto !important;
-        overflow: auto !important; min-height: 100vh !important;
-        background: #64748B;
-    }
-    
-    @media print {
+/* --- 14-Slide-Vulnerabilities-Overview.html --- */
+
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+        
+        /* ============================================
+           SHARED SLIDE SETTINGS
+           ============================================ */
+        
         @page {
             size: 11in 8.5in;
-            margin: 0 !important;
+            margin: 0;
         }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        
         html, body {
-            margin: 0 !important;
-            padding: 0 !important;
-            height: auto !important;
-            width: 11in !important;
-            background: white !important;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            background: white;
+            height: 100%;
         }
+        
         .slide {
-            width: 11in !important;
-            height: 8.49in !important; /* Slightly less than 8.5in to prevent bleeding into a blank page */
-            max-height: 8.49in !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            box-shadow: none !important;
-            border: none !important;
-            page-break-after: always !important;
-            page-break-inside: avoid !important;
-            overflow: hidden !important; 
+            width: 11in;
+            height: 8.5in;
             position: relative;
-        }
-        .slide:last-of-type, .slide:last-child {
-            page-break-after: avoid !important;
-        }
-    }
-    
-    @media screen {
-        html, body { padding: 20px 0; background: #64748B; }
-        .slide { 
-            margin: 0 auto 40px auto; 
-            box-shadow: 0 10px 40px rgba(0,0,0,0.25);
-            /* Force exact landscape paper size and constraints on screen so it matches print */
-            width: 11in !important;
-            height: 8.5in !important;
-            max-height: 8.5in !important;
-            overflow: hidden !important; 
+            overflow: hidden;
+            page-break-after: always;
+            page-break-inside: avoid;
+            background: linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 50%, #F1F5F9 100%);
+            color: #0A2540;
             display: flex;
             flex-direction: column;
         }
-    }
+
+        .slide::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(180deg, #0A4B9F 0%, #4781C3 35%, #D82018 100%);
+        }
+        
+        .slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(10, 75, 159, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(10, 75, 159, 0.03) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+        }
+
+        /* Header */
+        .header {
+            padding: 0.35in 0.8in 0.1in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Main Content */
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 0 0.8in;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .section-title {
+            font-size: 34px; 
+            font-weight: 300;
+            color: #0A2540;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+
+        .section-title strong {
+            font-weight: 900;
+        }
+
+        .divider {
+            width: 80px;
+            height: 5px;
+            background: linear-gradient(90deg, #D82018, #0A4B9F);
+            border-radius: 2.5px;
+            margin-bottom: 24px;
+        }
+
+        /* Summary Callout */
+        .summary-statement {
+            background: #F0FDF4;
+            border: 1px solid #BBF7D0;
+            color: #166534;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+        
+        .summary-statement strong {
+            font-weight: 800;
+            margin-right: 6px;
+        }
+
+        
+        .slide-intro {
+            font-size: 13px;
+            color: #475569;
+            line-height: 1.6;
+            margin-bottom: 24px;
+            text-align: justify;
+        }
+
+        /* Vulnerability Table */
+        .table-container {
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.04);
+            overflow: hidden;
+        }
+
+        .vuln-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11.5px;
+            line-height: 1.5;
+        }
+
+        .vuln-table th {
+            background: #0A2540;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 10px;
+            border-bottom: 2px solid #0A4B9F;
+        }
+
+        .vuln-table td {
+            padding: 16px;
+            border-bottom: 1px solid #E2E8F0;
+            vertical-align: top;
+            color: #475569;
+        }
+
+        .vuln-table tr:nth-child(even) td {
+            background: #F8FAFC;
+        }
+
+        .vuln-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Table Specific Typography */
+        .vuln-table td strong {
+            color: #0A2540;
+            font-weight: 700;
+            font-size: 12.5px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .vuln-desc {
+            text-align: justify;
+        }
+
+        .subtext {
+            font-size: 9.5px;
+            color: #94A3B8;
+            display: block;
+            margin-top: 4px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Severity Pills */
+        .sev-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            border-radius: 4px;
+            font-weight: 800;
+            color: white;
+            font-size: 13px;
+        }
+
+        .sev-pill.critical { background: #EF4444; }
+        .sev-pill.high { background: #F97316; }
+        .sev-pill.medium { background: #F59E0B; }
+        .sev-pill.low { background: #10B981; }
+        .sev-pill.info { background: #0EA5E9; }
+
+        /* Empty State inside table */
+        .empty-state-cell {
+            color: #10B981 !important;
+            font-weight: 600;
+            vertical-align: middle !important;
+        }
+
+        .empty-check {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            background: #10B981;
+            color: white;
+            border-radius: 50%;
+            font-size: 9px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 0.1in 0.8in 0.25in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            position: relative;
+            z-index: 1;
+            margin-top: auto;
+        }
+        
+        .footer-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 700px;
+        }
+        
+        .confidential-block {
+            font-size: 9px;
+            color: #64748B;
+            line-height: 1.5;
+        }
+
+        .confidential-block strong {
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .footer-bottom-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .footer-line {
+            font-size: 10px;
+            color: #94A3B8;
+        }
+        
+        .footer-line strong {
+            font-weight: 600;
+            color: #0A4B9F;
+        }
+        
+        .tag {
+            font-size: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        .tag-draft {
+            background: rgba(100, 116, 139, 0.1);
+            color: #475569;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+        }
+
+        .tag-tlp {
+            background: rgba(217, 119, 6, 0.1);
+            color: #B45309;
+            border: 1px solid rgba(217, 119, 6, 0.2);
+        }
+
+        .footer-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2px;
+        }
+        
+        .page-indicator {
+            font-size: 12px;
+            font-weight: 700;
+            color: #0A4B9F;
+        }
+        
+        .page-total {
+            font-size: 12px;
+            font-weight: 400;
+            color: #94A3B8;
+        }
+
+        @media screen {
+            html { background: #64748B; height: auto; }
+            body { padding: 0.5in; background: #64748B; }
+            .slide {
+                margin: 0 auto;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
+            }
+        }
+    
+        /* PDF Shadow Fix */
+        @media print {
+            * {
+                box-shadow: none !important;
+                filter: none !important;
+            }
+        }
+    
+/* --- 15-Slide-Exploitability-Overview.html --- */
+
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+        
+        /* ============================================
+           SHARED SLIDE SETTINGS
+           ============================================ */
+        
+        @page {
+            size: 11in 8.5in;
+            margin: 0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        
+        html, body {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            background: white;
+            height: 100%;
+        }
+        
+        .slide {
+            width: 11in;
+            height: 8.5in;
+            position: relative;
+            overflow: hidden;
+            page-break-after: always;
+            page-break-inside: avoid;
+            background: linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 50%, #F1F5F9 100%);
+            color: #0A2540;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(180deg, #0A4B9F 0%, #4781C3 35%, #D82018 100%);
+        }
+        
+        .slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(10, 75, 159, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(10, 75, 159, 0.03) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+        }
+
+        /* Header */
+        .header {
+            padding: 0.35in 0.8in 0.1in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Main Content */
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 0 0.8in;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .section-title {
+            font-size: 34px; 
+            font-weight: 300;
+            color: #0A2540;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+
+        .section-title strong {
+            font-weight: 900;
+        }
+
+        .divider {
+            width: 80px;
+            height: 5px;
+            background: linear-gradient(90deg, #D82018, #0A4B9F);
+            border-radius: 2.5px;
+            margin-bottom: 24px;
+        }
+
+        /* Summary Callout */
+        .summary-statement {
+            background: #F0FDF4;
+            border: 1px solid #BBF7D0;
+            color: #166534;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+        
+        .summary-statement strong {
+            font-weight: 800;
+            margin-right: 6px;
+        }
+
+        
+        .slide-intro {
+            font-size: 13px;
+            color: #475569;
+            line-height: 1.6;
+            margin-bottom: 24px;
+            text-align: justify;
+        }
+
+        /* Vulnerability Table */
+        .table-container {
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.04);
+            overflow: hidden;
+        }
+
+        .vuln-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11.5px;
+            line-height: 1.5;
+        }
+
+        .vuln-table th {
+            background: #0A2540;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 10px;
+            border-bottom: 2px solid #0A4B9F;
+        }
+
+        .vuln-table td {
+            padding: 16px;
+            border-bottom: 1px solid #E2E8F0;
+            vertical-align: top;
+            color: #475569;
+        }
+
+        .vuln-table tr:nth-child(even) td {
+            background: #F8FAFC;
+        }
+
+        .vuln-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Table Specific Typography */
+        .vuln-table td strong {
+            color: #0A2540;
+            font-weight: 700;
+            font-size: 12.5px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .vuln-desc {
+            text-align: justify;
+        }
+
+        .subtext {
+            font-size: 9.5px;
+            color: #94A3B8;
+            display: block;
+            margin-top: 4px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Severity Pills */
+        .sev-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            border-radius: 4px;
+            font-weight: 800;
+            color: white;
+            font-size: 13px;
+        }
+
+        .sev-pill.critical { background: #EF4444; }
+        .sev-pill.high { background: #F97316; }
+        .sev-pill.medium { background: #F59E0B; }
+        .sev-pill.low { background: #10B981; }
+        .sev-pill.info { background: #0EA5E9; }
+
+        /* Empty State inside table */
+        .empty-state-cell {
+            color: #10B981 !important;
+            font-weight: 600;
+            vertical-align: middle !important;
+        }
+
+        .empty-check {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            background: #10B981;
+            color: white;
+            border-radius: 50%;
+            font-size: 9px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 0.1in 0.8in 0.25in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            position: relative;
+            z-index: 1;
+            margin-top: auto;
+        }
+        
+        .footer-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 700px;
+        }
+        
+        .confidential-block {
+            font-size: 9px;
+            color: #64748B;
+            line-height: 1.5;
+        }
+
+        .confidential-block strong {
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .footer-bottom-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .footer-line {
+            font-size: 10px;
+            color: #94A3B8;
+        }
+        
+        .footer-line strong {
+            font-weight: 600;
+            color: #0A4B9F;
+        }
+        
+        .tag {
+            font-size: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        .tag-draft {
+            background: rgba(100, 116, 139, 0.1);
+            color: #475569;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+        }
+
+        .tag-tlp {
+            background: rgba(217, 119, 6, 0.1);
+            color: #B45309;
+            border: 1px solid rgba(217, 119, 6, 0.2);
+        }
+
+        .footer-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2px;
+        }
+        
+        .page-indicator {
+            font-size: 12px;
+            font-weight: 700;
+            color: #0A4B9F;
+        }
+        
+        .page-total {
+            font-size: 12px;
+            font-weight: 400;
+            color: #94A3B8;
+        }
+
+        @media screen {
+            html { background: #64748B; height: auto; }
+            body { padding: 0.5in; background: #64748B; }
+            .slide {
+                margin: 0 auto;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
+            }
+        }
+    
+        /* PDF Shadow Fix */
+        @media print {
+            * {
+                box-shadow: none !important;
+                filter: none !important;
+            }
+        }
+    
+/* --- 16-Slide-Appendix-A.html --- */
+
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+        
+        /* ============================================
+           SHARED SLIDE SETTINGS
+           ============================================ */
+        @page {
+            size: 11in 8.5in;
+            margin: 0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        
+        html, body {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            background: white;
+            height: 100%;
+        }
+        
+        .slide {
+            width: 11in;
+            height: 8.5in;
+            position: relative;
+            overflow: hidden;
+            page-break-after: always;
+            page-break-inside: avoid;
+            background: linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 50%, #F1F5F9 100%);
+            color: #0A2540;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(180deg, #0A4B9F 0%, #4781C3 35%, #D82018 100%);
+        }
+        
+        .slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(10, 75, 159, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(10, 75, 159, 0.03) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+        }
+
+        /* Header */
+        .header {
+            padding: 0.35in 0.8in 0.1in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Main Content Layout */
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 0 0.8in;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .section-title {
+            font-size: 34px; 
+            font-weight: 900;
+            color: #0A2540;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+
+        .divider {
+            width: 80px;
+            height: 5px;
+            background: linear-gradient(90deg, #D82018, #0A4B9F);
+            border-radius: 2.5px;
+            margin-bottom: 12px;
+        }
+        
+        .subtitle {
+            font-size: 13px;
+            color: #475569;
+            margin-bottom: 5px;
+        }
+
+        /* ============================================
+           APPENDIX SPECIFIC LAYOUT
+           ============================================ */
+           
+        /* Full Width Image Container */
+        .map-container {
+            width: 100%;
+            height: 380px;
+            background: #000000; /* Dark background matching the map */
+            border-radius: 8px;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+        }
+        
+        .map-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        /* Scope Section */
+        .scope-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sub-heading {
+            font-size: 16px;
+            font-weight: 800;
+            color: #0A2540;
+            margin-bottom: 16px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #E2E8F0;
+            position: relative;
+        }
+
+        .sub-heading::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: #0A4B9F;
+        }
+        
+        /* IP List Grid */
+        .ip-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr; /* 3 Columns */
+            gap: 4px 32px;
+        }
+        
+        .ip-item {
+            font-family: monospace;
+            font-size: 9px;
+            font-weight: 600;
+            color: #64748B;
+            background: #F8FAFC;
+            padding: 1px 12px;
+            border-radius: 4px;
+            border: 1px solid #E2E8F0;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 0.1in 0.8in 0.25in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            position: relative;
+            z-index: 1;
+            margin-top: auto;
+        }
+        
+        .footer-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 700px;
+        }
+        
+        .confidential-block {
+            font-size: 9px;
+            color: #64748B;
+            line-height: 1.5;
+        }
+
+        .confidential-block strong {
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .footer-bottom-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .footer-line {
+            font-size: 10px;
+            color: #94A3B8;
+        }
+        
+        .footer-line strong {
+            font-weight: 600;
+            color: #0A4B9F;
+        }
+        
+        .tag {
+            font-size: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        .tag-draft {
+            background: rgba(100, 116, 139, 0.1);
+            color: #475569;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+        }
+
+        .tag-tlp {
+            background: rgba(217, 119, 6, 0.1);
+            color: #B45309;
+            border: 1px solid rgba(217, 119, 6, 0.2);
+        }
+
+        .footer-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2px;
+        }
+        
+        .page-indicator {
+            font-size: 12px;
+            font-weight: 700;
+            color: #0A4B9F;
+        }
+        
+        .page-total {
+            font-size: 12px;
+            font-weight: 400;
+            color: #94A3B8;
+        }
+
+        @media screen {
+            html { background: #64748B; height: auto; }
+            body { padding: 0.5in; background: #64748B; }
+            .slide {
+                margin: 0 auto;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
+            }
+        }
+    
+        /* PDF Shadow Fix */
+        @media print {
+            * {
+                box-shadow: none !important;
+                filter: none !important;
+            }
+        }
+    
+
+        /* --- GLOBAL SCROLL AND LAYOUT FIX FOR COMBINED VIEW --- */
+        html, body {
+            height: auto !important;
+            overflow: auto !important;
+            overflow-x: hidden !important;
+        }
+        @media screen {
+            body {
+                padding: 2rem 0 !important;
+                background-color: #64748B !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                gap: 2rem !important;
+            }
+            .slide {
+                margin: 0 !important; /* Managed by body gap */
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2) !important;
+            }
+        }
     </style>
 </head>
 <body>
-<!-- ===== BODY FROM 01-Slide-Cover.html ===== -->
+<!-- --- 01-Slide-Cover.html --- -->
 
 
 <!-- SLIDE 01: COVER -->
@@ -5084,7 +6455,7 @@
 </div>
 
 
-<!-- ===== BODY FROM 02-Slide-Table-of-Content.html ===== -->
+<!-- --- 02-Slide-Table-of-Content.html --- -->
 
 
 <!-- SLIDE 02: TABLE OF CONTENTS -->
@@ -5212,7 +6583,7 @@
 </div>
 
 
-<!-- ===== BODY FROM 03-Slide-Executive-Summary.html ===== -->
+<!-- --- 03-Slide-Executive-Summary.html --- -->
 
 
 <!-- SLIDE 03: EXECUTIVE SUMMARY -->
@@ -5334,7 +6705,7 @@
 </div>
 
 
-<!-- ===== BODY FROM 04-Slide-Cybersecurity-Maturity.html ===== -->
+<!-- --- 04-Slide-Cybersecurity-Maturity.html --- -->
 
 
 <!-- SLIDE 04: CYBERSECURITY MATURITY SCORE -->
@@ -5396,7 +6767,7 @@
                         <div class="chart-subtitle">2026 Assessment across organization sizes with Global Finance Corp positioning</div>
                     </div>
                     <!-- Highcharts Container -->
-                    <div id="chart-container-04"></div>
+                    <div id="chart-container"></div>
                 </div>
             </div>
             
@@ -5440,7 +6811,7 @@
         }
     };
 
-        Highcharts.chart('chart-container-04', {
+        Highcharts.chart('chart-container', {
         chart: {
             type: 'area',
             backgroundColor: 'transparent',
@@ -5590,7 +6961,7 @@
 </script>
 
 
-<!-- ===== BODY FROM 05-Slide-Scope.html ===== -->
+<!-- --- 05-Slide-Scope.html --- -->
 
 
 <!-- SLIDE 05: SCOPE & METHODOLOGY -->
@@ -5673,17 +7044,17 @@
                                     <div class="vert-line-through"></div>
                                     
                                     <div class="node node-bot blue">
-                                        <div class="n-title">181.119.220.0/24</div>
+                                        <div class="n-title">192.0.2.0/24</div>
                                         <div class="n-sub">7 active hosts</div>
                                         <div class="n-detail">Cable Network</div>
                                     </div>
                                     <div class="node node-bot blue">
-                                        <div class="n-title">190.61.96.0/24</div>
+                                        <div class="n-title">198.51.100.0/24</div>
                                         <div class="n-sub">3 active hosts</div>
                                         <div class="n-detail">Cable & Wireless</div>
                                     </div>
                                     <div class="node node-bot blue">
-                                        <div class="n-title">201.149.79.0/24</div>
+                                        <div class="n-title">203.0.113.0/24</div>
                                         <div class="n-sub">2 active hosts</div>
                                         <div class="n-detail">Regional ISP</div>
                                     </div>
@@ -5728,7 +7099,7 @@
                                     <div class="vert-line-through"></div>
                                     
                                     <div class="node node-bot green">
-                                        <div class="n-title">20.230.12.30</div>
+                                        <div class="n-title">10.0.1.30</div>
                                         <div class="n-sub">1 active host</div>
                                         <div class="n-detail">Microsoft Azure</div>
                                     </div>
@@ -5774,7 +7145,7 @@
 </div>
 
 
-<!-- ===== BODY FROM 06-Slide-Risk-Matrix.html ===== -->
+<!-- --- 06-Slide-Risk-Matrix.html --- -->
 
 
 <!-- SLIDE 06: RISK MATRIX -->
@@ -5926,7 +7297,7 @@
 </div>
 
 
-<!-- ===== BODY FROM 07-Slide-Testing-Phases.html ===== -->
+<!-- --- 07-Slide-Testing-Phases.html --- -->
 
 
 <!-- SLIDE 07: TESTING PHASES -->
@@ -6052,7 +7423,7 @@
 </div>
 
 
-<!-- ===== BODY FROM 08-Slide-Findings-Overview.html ===== -->
+<!-- --- 08-Slide-Findings-Overview.html --- -->
 
 
 <!-- SLIDE 08: FINDINGS OVERVIEW -->
@@ -6102,7 +7473,7 @@
                     </div>
 
                     <!-- Highcharts Container -->
-                    <div id="chart-container-08"></div>
+                    <div id="chart-container"></div>
 
                     <!-- Stat Boxes -->
                     <div class="stats-container">
@@ -6156,7 +7527,7 @@
 
 <!-- Highcharts Implementation Script -->
 <script>
-    Highcharts.chart('chart-container-08', {
+    Highcharts.chart('chart-container', {
         chart: {
             type: 'pie',
             backgroundColor: 'transparent',
@@ -6244,7 +7615,7 @@
 </script>
 
 
-<!-- ===== BODY FROM 09-Slide-Technical-Details.html ===== -->
+<!-- --- 09-Slide-Technical-Details.html --- -->
 
 
 <!-- SLIDE 09: TECHNICAL FINDING -->
@@ -6311,13 +7682,13 @@
                 
                 <div class="sub-heading">Affected Hosts</div>
                 <div class="host-pills">
-                    <span class="host-pill">181.119.220.213</span>
-                    <span class="host-pill">181.119.220.228</span>
+                    <span class="host-pill">192.0.2.213</span>
+                    <span class="host-pill">192.0.2.228</span>
                 </div>
 
                 <div class="sub-heading">Vulnerability Description</div>
                 <div class="text-body">
-                    <p>ACME Security identified a heap-based buffer overflow vulnerability affecting the <code>ngx_http_dav_module</code> in NGINX Open Source and NGINX Plus. This vulnerability allows remote attackers to trigger a buffer overflow in the NGINX worker process, potentially resulting in worker process termination (denial of service) or unauthorized modification of source and destination file names outside the document root.</p>
+                    <p>ISECI Security identified a heap-based buffer overflow vulnerability affecting the <code>ngx_http_dav_module</code> in NGINX Open Source and NGINX Plus. This vulnerability allows remote attackers to trigger a buffer overflow in the NGINX worker process, potentially resulting in worker process termination (denial of service) or unauthorized modification of source and destination file names outside the document root.</p>
                     <p>The vulnerability is exploitable when specific configuration conditions are met: the NGINX configuration must use the DAV module's MOVE or COPY methods in combination with prefix location and alias directives. While the integrity impact is constrained, successful exploitation leads to service disruption.</p>
                 </div>
             </div>
@@ -6327,7 +7698,7 @@
                 
                 <div class="sub-heading">Remediation & Solution Strategy</div>
                 <div class="text-body" style="margin-bottom: 10px;">
-                    ACME Consulting recommends taking the following corrective actions in order of priority:
+                    ISECI recommends taking the following corrective actions in order of priority:
                 </div>
                 
                 <div class="remediation-step">
@@ -6357,13 +7728,13 @@
             </div>
             <div class="footer-bottom-row">
                 <div class="footer-line">
-                    <span>Property of &nbsp;<strong>ACME Consulting</strong> &nbsp;|&nbsp; acmecyber.com</span>
+                <span>Report by &nbsp;<strong>ISEC International</strong> &nbsp;|&nbsp; iseci.us</span>
                 </div>
             </div>
         </div>
         <div class="footer-right">
             <span class="page-indicator">09</span>
-            <span class="page-total">/ 32</span>
+            <span class="page-total">/ 20</span>
         </div>
     </div>
     
@@ -6477,12 +7848,12 @@
                     }
 
                     // Draw Title
-                    ctx.font = '800 8.5px Montserrat, sans-serif';
+                    ctx.font = '800 10px Montserrat, sans-serif';
                     ctx.fillStyle = '#0A2540';
                     ctx.fillText(titles[i], x, titleY);
 
                     // Draw Subtitle
-                    ctx.font = '500 7px Montserrat, sans-serif';
+                    ctx.font = '500 8.5px Montserrat, sans-serif';
                     ctx.fillStyle = '#64748B';
                     ctx.fillText(subtitles[i], x, subY);
                 }
@@ -6546,7 +7917,7 @@
 </script>
 
 
-<!-- ===== BODY FROM 10-Slide-Proof-of-Concept.html ===== -->
+<!-- --- 10-Slide-Proof-of-Concept.html --- -->
 
 
 <!-- SLIDE 10: PROOF OF CONCEPT -->
@@ -6582,7 +7953,7 @@
                         <div class="window-dots">
                             <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
                         </div>
-                        <div class="window-title">Network Headers - 181.119.220.213</div>
+                        <div class="window-title">Network Headers - 192.0.2.213</div>
                     </div>
                     
                     <div class="browser-body">
@@ -6591,7 +7962,7 @@
                             <div class="http-header">▼ General</div>
                             <div class="http-row">
                                 <div class="http-key">Request URL</div>
-                                <div class="http-val">http://181.119.220.213/</div>
+                                <div class="http-val">http://192.0.2.213/</div>
                             </div>
                             <div class="http-row">
                                 <div class="http-key">Request Method</div>
@@ -6652,18 +8023,18 @@
                     
                     <div class="term-body">
                         <div><span class="t-prompt">-(acme@kali)-</span><span class="t-path">[~/Desktop/Pentest]</span></div>
-                        <div>$ <span class="t-cmd">python3 poc.py --target 181.119.220.213</span></div>
+                        <div>$ <span class="t-cmd">python3 poc.py --target 192.0.2.213</span></div>
                         <br>
                         <div>CVE-2026-27654 -- nginx dav_module DAV alias path handling PoC</div>
                         <div class="t-comment">--------------------------------------------------------------</div>
-                        <div>Target: http://181.119.220.213</div>
+                        <div>Target: http://192.0.2.213</div>
                         <div>Mode:   crash</div>
                         <div>DAV:    /uploads/</div>
                         <br>
                         <div><span class="t-info">[*]</span> Checking target connectivity ...</div>
                         <div><span class="t-success">[+]</span> Target is up</div>
                         <br>
-                        <div><span class="t-info">[*]</span> PUT http://181.119.220.213/uploads/triggerfile.txt</div>
+                        <div><span class="t-info">[*]</span> PUT http://192.0.2.213/uploads/triggerfile.txt</div>
                         
                         <!-- Highlighted Block -->
                         <div class="t-highlight-block">
@@ -6710,7 +8081,7 @@
 </div>
 
 
-<!-- ===== BODY FROM 11-Slide-Team.html ===== -->
+<!-- --- 11-Slide-Team.html --- -->
 
 
 <!-- SLIDE 11: ENGAGEMENT TEAM -->
@@ -6854,7 +8225,7 @@
 </div>
 
 
-<!-- ===== BODY FROM 12-Slide-Capability-Statement.html ===== -->
+<!-- --- 12-Slide-Capability-Statement.html --- -->
 
 
 <!-- SLIDE 17: CAPABILITY STATEMENT -->
@@ -6982,7 +8353,7 @@
 </div>
 
 
-<!-- ===== BODY FROM 13-Slide-Company-Overview.html ===== -->
+<!-- --- 13-Slide-Company-Overview.html --- -->
 
 
 <!-- SLIDE 18: COMPANY OVERVIEW (CLOSING SLIDE) -->
@@ -7067,6 +8438,329 @@
         <div class="footer-right">
             <span class="page-indicator">18</span>
             <span class="page-total">/ 32</span>
+        </div>
+    </div>
+    
+</div>
+
+
+<!-- --- 14-Slide-Vulnerabilities-Overview.html --- -->
+
+
+<!-- SLIDE: VULNERABILITIES OVERVIEW -->
+<div class="slide">
+    
+    <!-- Header -->
+    <div class="header">
+        <div>
+            <div style="height: 45px; display: flex; align-items: center; padding: 8px 16px; border-radius: 4px; width: fit-content;">
+                <div style="color: white; font-weight: 800; font-size: 20px; letter-spacing: 1px; line-height: 1;">[ACME Logo]</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="content">
+        <h2 class="section-title">Vulnerabilities <strong>Overview</strong></h2>
+                <div class="divider"></div>
+        
+        <div class="slide-intro">
+            This section provides a consolidated inventory of all identified security findings, categorized by severity. The assessment confirms a robust perimeter with no critical or high-risk vulnerabilities present. The table below outlines the remaining medium, low, and informational exposures, detailing their immediate impact and affected security controls.
+        </div>
+        
+        <div class="table-container">
+            <table class="vuln-table">
+                <thead>
+                    <tr>
+                        <th style="width: 5%; text-align: center;">Sev</th>
+                        <th style="width: 25%">Vulnerability</th>
+                        <th style="width: 35%">Description</th>
+                        <th style="width: 15%">Exploitability</th>
+                        <th style="width: 20%">Affected Control</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="text-align: center; vertical-align: middle;"><span class="sev-pill critical">C</span></td>
+                        <td colspan="4" class="empty-state-cell">
+                            <span class="empty-check">✓</span> No vulnerabilities of critical risk were identified during this assessment.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center; vertical-align: middle;"><span class="sev-pill high">H</span></td>
+                        <td colspan="4" class="empty-state-cell">
+                            <span class="empty-check">✓</span> No vulnerabilities of high risk were identified during this assessment.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center; vertical-align: middle;"><span class="sev-pill medium">M</span></td>
+                        <td>
+                            <strong>Nginx Buffer Overflow</strong>
+                            <span class="subtext">CVE-2026-27654</span>
+                        </td>
+                        <td class="vuln-desc">A heap-based buffer overflow in <code>ngx_http_dav_module</code> allowing remote attackers to trigger worker process termination under specific configurations.</td>
+                        <td>
+                            <strong>Unsuccessful</strong>
+                            <span class="subtext">Private Exploits Potential</span>
+                        </td>
+                        <td>
+                            <strong>Access Control</strong>
+                            <span class="subtext">NIST CSF: PR.AC-3</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center; vertical-align: middle;"><span class="sev-pill low">L</span></td>
+                        <td>
+                            <strong>HSTS Missing From HTTPS Server</strong>
+                            <span class="subtext">Configuration Gap</span>
+                        </td>
+                        <td class="vuln-desc">The remote HTTPS server is not enforcing Strict Transport Security, weakening cookie-hijacking protections and allowing MitM SSL-stripping.</td>
+                        <td>
+                            <strong>Unlikely</strong>
+                            <span class="subtext">Requires MitM</span>
+                        </td>
+                        <td>
+                            <strong>Data Security</strong>
+                            <span class="subtext">NIST CSF: PR.DS-2</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center; vertical-align: middle;"><span class="sev-pill info">I</span></td>
+                        <td>
+                            <strong>Inconsistent Hostname & IP Address</strong>
+                            <span class="subtext">DNS Anomaly</span>
+                        </td>
+                        <td class="vuln-desc">Target machine hostnames fail to resolve or mismatch the expected IP due to misconfigured reverse DNS (PTR) records.</td>
+                        <td>
+                            <strong>No</strong>
+                            <span class="subtext">Informational Only</span>
+                        </td>
+                        <td>
+                            <strong>Asset Management</strong>
+                            <span class="subtext">NIST CSF: ID.AM-1</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-info">
+            <div class="confidential-block">
+                <strong>Strictly Confidential</strong> — This document contains sensitive security and technical information. Reproduction, distribution, or disclosure to unauthorized parties without explicit written consent is strictly prohibited.
+            </div>
+            <div class="footer-bottom-row">
+                <div class="footer-line">
+                <span>Property of &nbsp;<strong>ACME Consulting</strong> &nbsp;|&nbsp; acmecyber.com</span>
+                </div>
+                <div class="footer-tags">
+                    <span class="tag tag-draft">Final</span>
+                    <span class="tag tag-tlp">TLP:AMBER</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-right">
+            <span class="page-indicator">13</span>
+            <span class="page-total">/ 18</span>
+        </div>
+    </div>
+    
+</div>
+
+
+<!-- --- 15-Slide-Exploitability-Overview.html --- -->
+
+
+<!-- SLIDE: VULNERABILITIES OVERVIEW -->
+<div class="slide">
+    
+    <!-- Header -->
+    <div class="header">
+        <div>
+            <div style="height: 45px; display: flex; align-items: center; padding: 8px 16px; border-radius: 4px; width: fit-content;">
+                <div style="color: white; font-weight: 800; font-size: 20px; letter-spacing: 1px; line-height: 1;">[ACME Logo]</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="content">
+        <h2 class="section-title">Exploitability <strong>Overview</strong></h2>
+                <div class="divider"></div>
+        
+        <div class="slide-intro">
+            This section evaluates the practical likelihood of threat actors successfully leveraging the identified vulnerabilities. It contextualizes the theoretical risk by outlining specific attack vectors, required preconditions, and our execution status during the assessment, confirming there are no immediate, high-likelihood exploit paths available to external attackers.
+        </div>
+        
+        <div class="table-container">
+            <table class="vuln-table">
+                <thead>
+                    <tr>
+                        <th style="width: 5%; text-align: center;">Lvl</th>
+                        <th style="width: 25%">Vulnerability</th>
+                        <th style="width: 15%">Attack Vector</th>
+                        <th style="width: 40%">Exploitation Requirements & Details</th>
+                        <th style="width: 15%">Execution Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="text-align: center; vertical-align: middle;"><span class="sev-pill high">H</span></td>
+                        <td colspan="4" class="empty-state-cell">
+                            <span class="empty-check">✓</span> No vulnerabilities with high exploitability were identified during this assessment.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center; vertical-align: middle;"><span class="sev-pill medium">M</span></td>
+                        <td>
+                            <strong>Nginx Buffer Overflow</strong>
+                            <span class="subtext">CVE-2026-27654</span>
+                        </td>
+                        <td>
+                            <strong>Network</strong>
+                            <span class="subtext">Remote</span>
+                        </td>
+                        <td class="vuln-desc">Exploitation requires the target to have <code>ngx_http_dav_module</code> enabled and utilizing COPY/MOVE methods alongside the <code>alias</code> directive. No public Proof of Concept (PoC) is currently available, precluding widespread automated exploitation, though targeted private exploits remain a potential threat.</td>
+                        <td>
+                            <strong>Unsuccessful</strong>
+                            <span class="subtext">Private Exploits Potential</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center; vertical-align: middle;"><span class="sev-pill low">L</span></td>
+                        <td>
+                            <strong>HSTS Missing From HTTPS Server</strong>
+                            <span class="subtext">Configuration Gap</span>
+                        </td>
+                        <td>
+                            <strong>Adjacent</strong>
+                            <span class="subtext">Man-in-the-Middle</span>
+                        </td>
+                        <td class="vuln-desc">To successfully execute SSL-stripping or downgrade attacks, a threat actor must be strategically positioned on the same network path (e.g., via a compromised router, DNS spoofing, or rogue public Wi-Fi) to intercept and manipulate traffic between the user and the server.</td>
+                        <td>
+                            <strong>Theoretical</strong>
+                            <span class="subtext">Unlikely in practice</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-info">
+            <div class="confidential-block">
+                <strong>Strictly Confidential</strong> — This document contains sensitive security and technical information. Reproduction, distribution, or disclosure to unauthorized parties without explicit written consent is strictly prohibited.
+            </div>
+            <div class="footer-bottom-row">
+                <div class="footer-line">
+                <span>Property of &nbsp;<strong>ACME Consulting</strong> &nbsp;|&nbsp; acmecyber.com</span>
+                </div>
+                <div class="footer-tags">
+                    <span class="tag tag-draft">Final</span>
+                    <span class="tag tag-tlp">TLP:AMBER</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-right">
+            <span class="page-indicator">14</span>
+            <span class="page-total">/ 18</span>
+        </div>
+    </div>
+    
+</div>
+
+
+<!-- --- 16-Slide-Appendix-A.html --- -->
+
+
+<!-- SLIDE: APPENDIX A -->
+<div class="slide">
+    
+    <!-- Header -->
+    <div class="header">
+        <div>
+            <div style="height: 45px; display: flex; align-items: center; padding: 8px 16px; border-radius: 4px; width: fit-content;">
+                <div style="color: white; font-weight: 800; font-size: 20px; letter-spacing: 1px; line-height: 1;">[ACME Logo]</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="content">
+        <h2 class="section-title">APPENDIX A</h2>
+        <div class="divider"></div>
+        <div class="subtitle">DNS Map of services listed under BICSA:</div>
+        
+        <!-- DNS Map Image -->
+        <div class="map-container">
+            <!-- Placeholder for DNS Map Image -->
+            <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background-color: #f1f5f9; border: 2px dashed #cbd5e1; border-radius: 8px; color: #64748b; font-weight: 600;">
+                [DNS Map Image Placeholder]
+            </div>
+        </div>
+
+        <!-- Scope IPs -->
+        <div class="scope-section">
+            <div class="sub-heading">Scope</div>
+            <div class="ip-grid">
+                <!-- Column 1 -->
+                <div class="ip-item">10.0.2.66</div>
+                <div class="ip-item">10.0.3.244</div>
+                <div class="ip-item">192.0.2.210</div>
+                <div class="ip-item">192.0.2.212</div>
+                <div class="ip-item">192.0.2.213</div>
+                <div class="ip-item">10.0.4.122</div>
+                <div class="ip-item">192.0.2.202</div>
+                <div class="ip-item">10.0.5.122</div>
+                <div class="ip-item">192.0.2.226</div>
+                <!-- Column 2 -->
+                <div class="ip-item">192.0.2.227</div>
+                <div class="ip-item">192.0.2.228</div>
+                <div class="ip-item">10.0.6.154</div>
+                <div class="ip-item">10.0.7.14</div>
+                <div class="ip-item">10.0.8.6</div>
+                <div class="ip-item">10.0.9.10</div>
+                <div class="ip-item">10.0.9.11</div>
+                <div class="ip-item">10.0.10.94</div>
+                <div class="ip-item">198.51.100.210</div>
+                <!-- Column 3 -->
+                <div class="ip-item">198.51.100.211</div>
+                <div class="ip-item">198.51.100.212</div>
+                <div class="ip-item">10.0.11.122</div>
+                <div class="ip-item">10.0.12.50</div>
+                <div class="ip-item">10.0.12.51</div>
+                <div class="ip-item">203.0.113.126</div>
+                <div class="ip-item">203.0.113.127</div>
+                <div class="ip-item">10.0.13.106</div>
+                <div class="ip-item">10.0.1.30</div>
+            </div>
+        </div>
+
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-info">
+            <div class="confidential-block">
+                <strong>Strictly Confidential</strong> — This document contains sensitive security and technical information. Reproduction, distribution, or disclosure to unauthorized parties without explicit written consent is strictly prohibited.
+            </div>
+            <div class="footer-bottom-row">
+                <div class="footer-line">
+                <span>Property of &nbsp;<strong>ACME Consulting</strong> &nbsp;|&nbsp; acmecyber.com</span>
+                </div>
+                <div class="footer-tags">
+                    <span class="tag tag-draft">Final</span>
+                    <span class="tag tag-tlp">TLP:AMBER</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-right">
+            <span class="page-indicator">17</span>
+            <span class="page-total">/ 18</span>
         </div>
     </div>
     
