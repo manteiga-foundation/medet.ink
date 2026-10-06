@@ -1,8 +1,8 @@
-"""Slide 04: the maturity chart's stacked bands, read from the chart Highcharts drew.
+"""Slide 04: the maturity chart's stacked bands, read from the drawn SVG.
 
-Highcharts draws the FIRST series of a stacked chart on TOP (yAxis.reversedStacks defaults to
-true), the opposite of what the array order suggests. The order was flipped four times in a row by
-reasoning about the array; this test settles it from the rendered geometry.
+The order was flipped four times in a row by reasoning about the series array (Highcharts, which
+drew the chart then, put the first series of a stack on top); this test settles it from the
+rendered geometry: each band is a polygon whose first points trace its upper edge.
 """
 from __future__ import annotations
 
@@ -12,10 +12,13 @@ from harness import Chromium
 
 BOTTOM_TO_TOP = ['Poor', 'Below Avg', 'Average', 'Good', 'Excellent']
 
-# For every series, where its band's upper edge sits at each category (plot pixels, y down).
+# For every band, where its upper edge sits at each category (pixels, y down).
 STACK_PROBE = """() => {
-  const chart = Highcharts.charts.find(Boolean);
-  return chart.series.map(s => ({ name: s.name, tops: s.points.map(p => p.plotY) }));
+  const bands = [...document.querySelectorAll('[data-chart="maturity"] polygon[data-series]')];
+  return bands.map(b => {
+    const points = b.getAttribute('points').trim().split(/\\s+/).map(p => +p.split(',')[1]);
+    return { name: b.dataset.series, tops: points.slice(0, points.length / 2) };
+  });
 }"""
 
 

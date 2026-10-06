@@ -75,9 +75,13 @@ pie label). The risk matrix's effort scale (slide 06) uses the blues `#4781C3`, 
 
 ## Charts
 
-- Libraries load from jsDelivr pinned to a version: Highcharts 13.1.1 (slides 04, 08), Chart.js
-  4.5.1 (slide 09). Never an unpinned "latest", never code.highcharts.com (it refuses headless
-  browsers and rate-limits). Whether Highcharts stays is open: see `docs/spikes/001-chart-library.md`.
+- Slide 04's maturity chart is inline SVG drawn by the slide's own script, with no library (spike
+  001). An SVG chart's container carries `data-chart="name"` (unique across the report); its script
+  finds the container by that attribute, keeps its variables inside a function, and draws inside
+  `document.fonts.ready.then(...)`. Band polygons carry `data-series` with the band's name.
+- Libraries load from jsDelivr pinned to a version: Highcharts 13.1.1 (slide 08), Chart.js 4.5.1
+  (slide 09). Never an unpinned "latest", never code.highcharts.com (it refuses headless browsers
+  and rate-limits).
 - Charts are created inside `document.fonts.ready.then(...)`. A chart measures its text when it
   draws; drawn before Montserrat loads, it keeps a fallback font's layout (canvas text, label
   placement and truncation) on screen and in print.
@@ -131,10 +135,13 @@ when".
   - each gallery thumbnail is the archetype's slide, within 0.1% of its pixels (failed on 04 and 08
     without charts, then on all 16 offset by the screen padding).
 - `tests/test_chart_fonts.py` - with the web fonts held back until the page's scripts ran, every
-  chart redrawn with the fonts loaded moves nothing (failed on 09 for Chart.js canvas text, then on
-  04 and 08 for Highcharts label layout: 0.13% and 0.30%).
-- `tests/test_maturity_chart.py` - slide 04's bands, read from the drawn chart: Poor at the bottom up
-  to Excellent on top, at every category (fails when the series array is reversed).
+  chart redrawn with the fonts loaded moves nothing, compared chart by chart (failed on 09 for
+  Chart.js canvas text, then on 04 and 08 for Highcharts label layout: 0.13% and 0.30% of the
+  slide; an SVG chart drawn before the fonts moves 0.51% of its area). SVG charts are redrawn by
+  running their script again.
+- `tests/test_maturity_chart.py` - slide 04's bands, read from the drawn SVG polygons: Poor at the
+  bottom up to Excellent on top, at every category (fails when the bands array is reversed; failed
+  before the chart was SVG: no polygons).
 - `tests/test_combined_report.py` - the combined report:
   - the committed file is byte for byte what `merge_slides.py` produces (fails when an archetype is
     edited without regenerating);

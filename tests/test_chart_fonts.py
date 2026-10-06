@@ -12,6 +12,12 @@ import unittest
 
 from harness import TOLERANCE_IMAGE, Chromium, archetypes, chart_calls, image_difference
 
+# Where each chart sits on the page: inline SVG containers, Chart.js canvases, Highcharts targets.
+CHART_AREAS = """() => [...document.querySelectorAll('[data-chart], canvas, [data-highcharts-chart]')].map(el => {
+  const r = el.getBoundingClientRect();
+  return { x: r.x, y: r.y, width: r.width, height: r.height };
+})"""
+
 # Rebuilds every chart from its own options and callback, now that the fonts have loaded.
 REDRAW = """async () => {
   await document.fonts.ready;
@@ -24,6 +30,20 @@ REDRAW = """async () => {
       Highcharts.chart(target, options, callback);
       charts++;
     }
+  }
+  // Inline SVG charts: empty each container and run its script again (it keeps its variables in a
+  // function, so it can run twice); the script draws once the fonts are ready.
+  const svgScripts = [...document.querySelectorAll('script:not([src])')].filter(s => s.textContent.includes('[data-chart='));
+  if (svgScripts.length) {
+    document.querySelectorAll('[data-chart]').forEach(el => el.replaceChildren());
+    for (const original of svgScripts) {
+      const again = document.createElement('script');
+      again.textContent = original.textContent;
+      document.body.appendChild(again);
+    }
+    await document.fonts.ready;
+    await new Promise(r => setTimeout(r, 50));
+    charts += [...document.querySelectorAll('[data-chart]')].filter(el => el.querySelector('svg')).length;
   }
   if (window.Chart) {
     for (const canvas of document.querySelectorAll('canvas')) {
@@ -52,15 +72,20 @@ class ChartFontTests(unittest.TestCase):
             if not expected:
                 continue
             opened = self.chromium.open(f'archetypes/{path.name}', hold_fonts=True)
-            first = opened.screenshot()
+            # Compare each chart's own area: a chart is a fraction of the slide, and a whole-slide
+            # comparison dilutes a moved label below the tolerance.
+            areas = opened.page.evaluate(CHART_AREAS)
+            first = [opened.page.screenshot(clip=area) for area in areas]
             redrawn = opened.page.evaluate(REDRAW)
-            difference = image_difference(first, opened.screenshot())
+            differences = [image_difference(before, opened.page.screenshot(clip=area)) for before, area in zip(first, areas)]
             opened.close()
             with self.subTest(archetype=path.name[:2]):
                 self.assertEqual(redrawn, expected, 'charts found on the page')
-                self.assertLessEqual(difference, TOLERANCE_IMAGE,
-                                     f'{difference:.2f}% of the slide moved when redrawn with the fonts loaded: '
-                                     'the chart was laid out before the web fonts arrived')
+                self.assertEqual(len(areas), expected, 'chart areas found on the page')
+                for difference in differences:
+                    self.assertLessEqual(difference, TOLERANCE_IMAGE,
+                                         f'{difference:.2f}% of a chart moved when redrawn with the fonts loaded: '
+                                         'the chart was laid out before the web fonts arrived')
             checked += 1
         self.assertGreater(checked, 0, 'no archetype draws a chart')
 

@@ -72,3 +72,12 @@ Tuning it took to get there, kept because it is what a replacement must get righ
 Not built in this spike: slide 08's donut (outside labels with connectors, a centred HTML title).
 Whichever approach is picked, the donut is the next slice, measured the same way against the
 Highcharts original, and Highcharts leaves the template only when both charts are replaced.
+
+## Decision
+
+The maintainer chose inline SVG. Slide 04 draws its chart in inline SVG; re-measured after the
+logo moved to the footer (a taller chart area), it differs from the Highcharts original in 0.02% of
+the chart's pixels (ECharts 0.51%, Chart.js 4.82%). The Highcharts original of slide 04 is kept in
+this folder as `04-highcharts.html`, the reference `build.py` and `measure.py` read. Slide 08's
+donut follows in the same way, and Highcharts then leaves the template.
+

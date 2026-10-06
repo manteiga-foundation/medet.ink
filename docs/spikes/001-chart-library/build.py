@@ -11,7 +11,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
 OUT = ROOT / 'docs' / 'spikes' / '001-chart-library'
-SOURCE = (ROOT / 'archetypes' / '04-Slide-Cybersecurity-Maturity.html').read_text(encoding='utf-8')
+# The Highcharts original of slide 04, frozen here when the slide moved to inline SVG.
+SOURCE = (OUT / '04-highcharts.html').read_text(encoding='utf-8')
 
 DATA = """    const chartData = {
         categories: ['Startups', 'Small Biz', 'Mid-Market', 'Enterprise', 'Large Ent.', 'Fortune 500'],

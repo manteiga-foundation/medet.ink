@@ -3,11 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>ACME - Cybersecurity Maturity Score</title>
-    <!-- Highcharts Dependencies -->
-    <script src="https://cdn.jsdelivr.net/npm/highcharts@13.1.1/highcharts.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/highcharts@13.1.1/modules/exporting.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/highcharts@13.1.1/modules/export-data.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/highcharts@13.1.1/modules/offline-exporting.js"></script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
@@ -236,11 +231,6 @@
             position: relative;
         }
 
-        /* Remove strokes from area series only */
-        .highcharts-area-series .highcharts-area {
-            stroke: none !important;
-            stroke-width: 0 !important;
-        }
 
         /* Footer */
         .footer {
@@ -414,8 +404,7 @@
                         <div class="chart-title">Maturity Scores by Company Size</div>
                         <div class="chart-subtitle">2026 Assessment across organization sizes with Global Finance Corp positioning</div>
                     </div>
-                    <!-- Highcharts Container -->
-                    <div id="chart-04"></div>
+                    <div id="chart-04" data-chart="maturity"></div>
                 </div>
             </div>
             
@@ -447,8 +436,9 @@
     
 </div>
 
-<!-- Highcharts Implementation Script -->
+<!-- Maturity chart: inline SVG, no library. Edit chartData to change the bands. -->
 <script>
+(function () {
     const chartData = {
         categories: ['Startups', 'Small Biz', 'Mid-Market', 'Enterprise', 'Large Ent.', 'Fortune 500'],
         series: {
@@ -459,158 +449,78 @@
             excellent: [3, 5, 10, 15, 25, 40]
         }
     };
+    // Bands from the bottom of the stack to the top; each category's values sum to 100.
+    const bands = [
+        ['Poor', chartData.series.poor, '#8B5CF6'],
+        ['Below Avg', chartData.series.belowAverage, '#EF4444'],
+        ['Average', chartData.series.average, '#F59E0B'],
+        ['Good', chartData.series.good, '#10B981'],
+        ['Excellent', chartData.series.excellent, '#3B82F6']
+    ];
+    // The client's position: between Enterprise and Large Ent., 16 points into the Average band.
+    const marker = {
+        category: 3.5,
+        value: chartData.series.poor[3] + chartData.series.belowAverage[3] + 16,
+        title: 'Global Finance Corp',
+        subtitle: 'Maturity Score'
+    };
 
-    // Highcharts measures label text when it draws: draw after the web fonts have loaded, or a
-    // first visit lays the chart out with a fallback font's metrics.
-    document.fonts.ready.then(function() {
-        Highcharts.chart('chart-04', {
-        chart: {
-            type: 'area',
-            backgroundColor: 'transparent',
-            style: {
-                fontFamily: 'Montserrat, sans-serif'
-            },
-            // Change margins to 0 to stretch to the container edges
-            marginLeft: 0,
-            marginRight: 0, 
-            marginTop: 10,
-            marginBottom: 50 
-        },
-        title: {
-            text: null
-        },
-        credits: {
-            enabled: false
-        },
-        xAxis: {
-            categories: chartData.categories,
-            // Add these three lines to remove the default gaps on the left/right
-            tickmarkPlacement: 'on',
-            minPadding: 0,
-            maxPadding: 0,
-            labels: {
-                style: {
-                    fontSize: '9px',
-                    color: '#64748B',
-                    fontWeight: '600'
-                }
-            },
-            lineWidth: 0,
-            tickWidth: 0
+    // The legend and the label box are sized from measured text: draw once the web fonts are ready.
+    document.fonts.ready.then(function () {
+        const el = document.querySelector('[data-chart="maturity"]');
+        const W = el.clientWidth, H = el.clientHeight, n = chartData.categories.length;
+        const top = 10, plotH = H - top - 50;
+        const x = i => (i + 0.5) * W / n;
+        const y = v => top + plotH * (1 - v / 100);
+        const NS = 'http://www.w3.org/2000/svg';
+        const add = (tag, attrs, parent) => {
+            const node = document.createElementNS(NS, tag);
+            for (const key in attrs) node.setAttribute(key, attrs[key]);
+            parent.appendChild(node);
+            return node;
+        };
+        const svg = add('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}`,
+                                 style: 'display: block; font-family: Montserrat, sans-serif' }, el);
 
-        },
-        yAxis: {
-            title: {
-                text: null
-            },
-            min: 0,
-            max: 100,
-            gridLineWidth: 0,
-            labels: {
-                enabled: false
-            }
-        },
-        tooltip: {
-            enabled: false
-        },
-        legend: {
-            align: 'center',
-            verticalAlign: 'bottom',
-            layout: 'horizontal', /* Changed to horizontal layout at the bottom */
-            x: 0,
-            y: 15,
-            itemDistance: 12, /* Space between legend items */
-            itemStyle: {
-                fontSize: '9.5px',
-                color: '#475569',
-                fontWeight: '600'
-            },
-            symbolRadius: 3,
-            reversed: false
-        },
-        plotOptions: {
-            area: {
-                stacking: 'normal',
-                lineColor: 'transparent',
-                lineWidth: 0,
-                marker: {
-                    enabled: false
-                },
-                fillOpacity: 0.95,
-                states: {
-                    hover: {
-                        enabled: false
-                    }
-                }
-            }
-        },
-        series: [{
-            name: 'Excellent',
-            data: chartData.series.excellent,
-            color: '#3B82F6' 
-        }, {
-            name: 'Good',
-            data: chartData.series.good,
-            color: '#10B981' 
-        }, {
-            name: 'Average',
-            data: chartData.series.average,
-            color: '#F59E0B' 
-        }, {
-            name: 'Below Avg',
-            data: chartData.series.belowAverage,
-            color: '#EF4444' 
-        }, {
-            name: 'Poor',
-            data: chartData.series.poor,
-            color: '#8B5CF6' 
-        }],
-        exporting: {
-            enabled: false
-        }
-    }, function(chart) {
-        
-        // Position Marker between Enterprise and Large Enterprise (Index 3.5)
-        const xPos = chart.xAxis[0].toPixels(3.5);
-        
-        const fsrIndex = 3; 
-        const poorHeight = chartData.series.poor[fsrIndex];
-        const belowAvgHeight = chartData.series.belowAverage[fsrIndex];
-        const belowAvgTop = poorHeight + belowAvgHeight;
-        
-        // Place in the Average band
-        const fsrPosition = belowAvgTop + 16;
-        const logoY = chart.yAxis[0].toPixels(fsrPosition);
-        
-        // Marker Dot
-        chart.renderer.circle(xPos - 5, logoY - 5, 5)
-            .attr({
-                fill: '#0A2540',
-                stroke: '#FFFFFF',
-                'stroke-width': 2,
-                zIndex: 15
-            })
-            .add();
-            
-        // Text Label
-        chart.renderer.label('<strong>Global Finance Corp</strong><br/>Maturity Score', xPos + 6, logoY - 16)
-            .css({
-                fontSize: '9px',
-                color: '#0A2540',
-                lineHeight: '12px',
-                textAlign: 'left'
-            })
-            .attr({
-                fill: 'rgba(255, 255, 255, 0.95)',
-                padding: 5,
-                r: 4,
-                zIndex: 14,
-                stroke: '#E2E8F0',
-                'stroke-width': 1
-            })
-            .add();
+        // Each band: its upper edge left to right, then its lower edge right to left.
+        let base = chartData.categories.map(() => 0);
+        bands.forEach(([name, values, color]) => {
+            const tops = values.map((v, i) => base[i] + v);
+            const points = tops.map((t, i) => `${x(i)},${y(t)}`)
+                .concat(base.map((b, i) => `${x(i)},${y(b)}`).reverse());
+            add('polygon', { points: points.join(' '), fill: color, 'fill-opacity': 0.95, 'data-series': name }, svg);
+            base = tops;
+        });
+
+        chartData.categories.forEach((label, i) => {
+            add('text', { x: x(i), y: top + plotH + 25, 'text-anchor': 'middle', fill: '#64748B',
+                          'font-size': 9, 'font-weight': 600 }, svg).textContent = label;
+        });
+
+        // Legend, top band first, centred under the chart.
+        const legend = add('g', {}, svg);
+        let cursor = 0;
+        bands.slice().reverse().forEach(([name, , color]) => {
+            add('rect', { x: cursor, y: H - 14, width: 16, height: 4, fill: color, 'fill-opacity': 0.95 }, legend);
+            const text = add('text', { x: cursor + 21, y: H - 10, fill: '#475569', 'font-size': 9.5,
+                                       'font-weight': 600 }, legend);
+            text.textContent = name;
+            cursor += 21 + text.getComputedTextLength() + 12;
+        });
+        legend.setAttribute('transform', `translate(${Math.round((W - (cursor - 12)) / 2)}, 0)`);
+
+        // Position marker and its label box.
+        const mx = (marker.category + 0.5) * W / n, my = y(marker.value);
+        add('circle', { cx: mx - 5, cy: my - 5, r: 5, fill: '#0A2540', stroke: '#FFFFFF', 'stroke-width': 2 }, svg);
+        const box = add('g', { transform: `translate(${Math.round(mx + 6)}, ${Math.round(my - 16)})` }, svg);
+        const rect = add('rect', { x: 0.5, y: 0.5, height: 33, rx: 4, fill: 'rgba(255, 255, 255, 0.95)',
+                                   stroke: '#E2E8F0', 'stroke-width': 1 }, box);
+        const label = add('text', { x: 5, y: 15, fill: '#0A2540', 'font-size': 9 }, box);
+        add('tspan', { 'font-weight': 'bold' }, label).textContent = marker.title;
+        add('tspan', { x: 5, dy: 12 }, label).textContent = marker.subtitle;
+        rect.setAttribute('width', Math.ceil(label.getBBox().width) + 10);
     });
-    });
+})();
 </script>
 
 </body>

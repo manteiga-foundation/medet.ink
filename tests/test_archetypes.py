@@ -62,7 +62,8 @@ class ArchetypeTests(unittest.TestCase):
         for number, r in self.rendered.items():
             slide = r['slides'][0]
             drawn = (sum(1 for painted in slide['canvases'] if painted > 0)
-                     + sum(1 for series in slide['highcharts'] if series > 0))
+                     + sum(1 for series in slide['highcharts'] if series > 0)
+                     + sum(1 for shapes in slide['svg'] if shapes > 0))
             with self.subTest(archetype=number):
                 self.assertEqual(drawn, r['charts'], 'a chart was not drawn: did its library load?')
         # Slides 04 and 08 (Highcharts) and 09 (Chart.js radar) carry charts today.

@@ -15,6 +15,7 @@ import hashlib
 import io
 import json
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -39,8 +40,8 @@ TOLERANCE_PX = 2        # sub-pixel rounding allowed by the overflow probe
 TOLERANCE_IMAGE = 0.1   # percent of pixels allowed to differ between two renders of one page
 
 # Every slide in the document: its size, how far its content reaches past its own box, and its
-# charts: painted pixels per canvas (a canvas keeps a 300x150 default when no library draws on it)
-# and series per Highcharts container.
+# charts: painted pixels per canvas (a canvas keeps a 300x150 default when no library draws on it),
+# series per Highcharts container, and shapes per inline SVG chart (`data-chart` containers).
 SLIDE_PROBE = """() => [...document.querySelectorAll('.slide')].map(s => ({
   width: s.clientWidth,
   height: s.clientHeight,
@@ -53,7 +54,8 @@ SLIDE_PROBE = """() => [...document.querySelectorAll('.slide')].map(s => ({
     for (let i = 3; i < px.length; i += 16) if (px[i]) painted++;
     return painted;
   }),
-  highcharts: [...s.querySelectorAll('.highcharts-container')].map(c => c.querySelectorAll('.highcharts-series').length)
+  highcharts: [...s.querySelectorAll('.highcharts-container')].map(c => c.querySelectorAll('.highcharts-series').length),
+  svg: [...s.querySelectorAll('[data-chart]')].map(c => c.querySelectorAll('svg path, svg polygon, svg circle, svg rect').length)
 }))"""
 
 
@@ -65,12 +67,13 @@ def archetypes() -> list[Path]:
 def chart_calls(path: Path) -> int:
     """How many charts an archetype's own script creates, counted in its source."""
     source = path.read_text(encoding='utf-8')
-    return source.count('Highcharts.chart(') + source.count('new Chart(')
+    containers = len(re.findall(r'<[a-z]+\b[^>]*\sdata-chart="', source))  # inline SVG charts
+    return source.count('Highcharts.chart(') + source.count('new Chart(') + containers
 
 
 def chart_signature(slide: dict) -> tuple:
-    """What a slide's charts look like once drawn: canvases painted, series per Highcharts chart."""
-    return [painted > 0 for painted in slide['canvases']], slide['highcharts']
+    """What a slide's charts look like once drawn: canvases painted, Highcharts series, SVG shapes."""
+    return [painted > 0 for painted in slide['canvases']], slide['highcharts'], slide['svg']
 
 
 def slide_number(path: Path) -> str:

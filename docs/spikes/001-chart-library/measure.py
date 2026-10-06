@@ -10,7 +10,7 @@ from PIL import Image, ImageDraw, ImageFont
 from pypdf import PdfReader
 from harness import Chromium, image_difference
 
-PAGES = {'highcharts': 'archetypes/04-Slide-Cybersecurity-Maturity.html'}
+PAGES = {'highcharts': 'docs/spikes/001-chart-library/04-highcharts.html'}
 for n in ('echarts', 'chartjs', 'svg'):
     PAGES[n] = f'docs/spikes/001-chart-library/04-{n}.html'
 
