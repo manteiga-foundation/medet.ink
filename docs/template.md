@@ -106,7 +106,7 @@ defines it), web fonts loaded before capture.
 
 ## Tests
 
-`python3 -m unittest discover -s tests -v`; 28 tests, about 40 s once the third-party cache is
+`python3 -m unittest discover -s tests -v`; 30 tests, about 40 s once the third-party cache is
 filled. The harness (`tests/harness.py`) serves the repository, drives Chromium through
 `scripts/browser.py`, and answers third-party requests from `tests/.cache`. Each test was seen
 failing for the right reason before it passed: against the defect it was written for, or against a
@@ -151,6 +151,9 @@ when".
   thumbnail is deleted or a script points at a missing path); chart libraries load from jsDelivr
   pinned to a version (failed on code.highcharts.com and an unpinned Chart.js); the landing page
   links every archetype and thumbnail; the social preview points at committed files on medet.ink.
+- `tests/test_repository.py` - no browser: no `.DS_Store` is tracked (failed: one at the root);
+  every file under `assets/` and `reports/` is generated or linked from the README, the landing
+  page or the viewer (failed on `assets/sample-report.pdf` and `reports/data_uri.txt`).
 - `tests/test_demo_gif.py` - no browser: the demo GIF has one frame per archetype, each within a
   mean difference of 6 of its thumbnail (the GIF is a dithered copy; failed at 19 to 45 with the old
   thumbnails, 0.6 to 0.9 when fresh).

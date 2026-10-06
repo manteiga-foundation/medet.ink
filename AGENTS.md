@@ -37,7 +37,7 @@ pypdf; the tests use the standard library's `unittest`.
   by `scripts/merge_slides.py`, which also writes the identical `reports/merged_report.html` that
   `scripts/make_pdf.py` prints. Never edited by hand.
 - **Sample PDF** - `reports/final_report.pdf`, printed from the combined report; the landing page's
-  Download PDF. (`assets/sample-report.pdf` is an older 13-page edition.)
+  Download PDF.
 - **Gallery** - the archetype cards on the landing page with their thumbnails
   `assets/slide_NN.png` (`scripts/make_images.py`), plus `assets/demo.gif` in the README.
 - **Landing page** - `index.html` at the root, served at https://medet.ink (domain in `CNAME`).
@@ -177,7 +177,7 @@ Done: sixteen archetypes, cover to appendix, each one landscape Letter page that
 one firm (ACME), one page count and a table of contents that matches across them; the combined
 report, in which every slide looks exactly like its archetype; the 16-page sample PDF, thumbnails
 and demo GIF, all faithful renders with their charts; the landing page with gallery, viewer and
-social preview; the suite (28 tests, all passing, each seen failing for the right reason first).
+social preview; the suite (30 tests, all passing, each seen failing for the right reason first).
 No known defects are open.
 
 Open, the maintainer decides:
@@ -187,6 +187,4 @@ Open, the maintainer decides:
    0.55% at 370 KB; Chart.js does not match and prints a bitmap. After the pick, slide 08's donut
    is the next slice, measured the same way.
 2. Two severity palettes in use (Critical `#DC2626` or `#EF4444`, Medium `#FBBF24` or `#F59E0B`).
-3. `reports/data_uri.txt` (an old report as a data URI) and `assets/sample-report.pdf` (the old
-   13-page sample) are referenced nowhere; `.DS_Store` is tracked.
-4. Slide 16's footer sits about 17 px under the address grid, tighter than on other slides.
+3. Slide 16's footer sits about 17 px under the address grid, tighter than on other slides.
