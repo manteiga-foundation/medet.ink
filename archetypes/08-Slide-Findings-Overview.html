@@ -221,7 +221,7 @@
             margin-bottom: 2px;
         }
 
-        #chart-container {
+        #chart-08 {
             width: 100%;
             flex: 1; /* Allows chart to fill available height */
             min-height: 250px;
@@ -423,7 +423,7 @@
                     </div>
 
                     <!-- Highcharts Container -->
-                    <div id="chart-container"></div>
+                    <div id="chart-08"></div>
 
                     <!-- Stat Boxes -->
                     <div class="stats-container">
@@ -480,7 +480,7 @@
     // Highcharts measures label text when it draws: draw after the web fonts have loaded, or a
     // first visit lays the chart out with a fallback font's metrics.
     document.fonts.ready.then(function() {
-    Highcharts.chart('chart-container', {
+    Highcharts.chart('chart-08', {
         chart: {
             type: 'pie',
             backgroundColor: 'transparent',

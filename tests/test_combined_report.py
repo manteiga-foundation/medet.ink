@@ -8,23 +8,15 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from harness import (PAGE_PT, ROOT, TOLERANCE_PX, Chromium, archetypes, chart_calls, chart_signature,
-                     pdf_pages, pdf_texts)
+from harness import (PAGE_PT, ROOT, TOLERANCE_IMAGE, TOLERANCE_PX, Chromium, archetypes, chart_calls,
+                     chart_signature, image_difference, pdf_pages, pdf_texts)
 
 REPORT = 'reports/combined_report.html'
 
 # Measured defects, open until fixed (docs/template.md, "Known defects"). A fix removes the slide
-# numbers here; the expected-failure tests then report an unexpected success until removed.
-#
-# merge_slides.py copies every inline script twice: into <head>, before any slide exists, and
-# again with each slide's body. The head copies fail (Highcharts error #13) after declaring
-# `const chartData`, so slide 04's own copy throws and the maturity chart is never drawn; slide
-# 08's chart then lands in the first id="chart-container", which is slide 04's. Chart.js is
-# created twice on slide 09's canvas.
-KNOWN_WRONG_CHARTS = {4, 8}
-# The Risk Matrix card grows to 969 px on slide 06 (it fits in its archetype); slides 09 and 16
-# clip their footers as their archetypes do.
-KNOWN_OVERFLOW = {6, 9, 16}
+# numbers here; the expected-failure test then reports an unexpected success until removed.
+# Slides 09 and 16 clip their footers, as their archetypes do.
+KNOWN_OVERFLOW = {9, 16}
 
 
 class CombinedReportTests(unittest.TestCase):
@@ -32,14 +24,17 @@ class CombinedReportTests(unittest.TestCase):
     def setUpClass(cls):
         cls.chromium = Chromium()
         cls.opened = cls.chromium.open(REPORT)
+        # Screen captures first: printing makes chart libraries reflow for the page.
+        cls.screens = cls.opened.slide_screenshots()
         cls.slides = cls.opened.slides()
-        # How each archetype that creates charts draws them on its own.
-        cls.own_charts = {}
+        # Each archetype on its own: how it looks, and how it draws its charts.
+        cls.own_screens, cls.own_charts = {}, {}
         for number, path in enumerate(archetypes(), start=1):
+            own = cls.chromium.open(f'archetypes/{path.name}')
+            cls.own_screens[number] = own.slide_screenshots()[0]
             if chart_calls(path):
-                own = cls.chromium.open(f'archetypes/{path.name}')
                 cls.own_charts[number] = chart_signature(own.slides()[0])
-                own.close()
+            own.close()
 
     @classmethod
     def tearDownClass(cls):
@@ -61,6 +56,15 @@ class CombinedReportTests(unittest.TestCase):
 
     def test_report_holds_one_slide_per_archetype(self):
         self.assertEqual(len(self.slides), len(archetypes()))
+
+    def test_each_slide_looks_exactly_like_its_archetype(self):
+        # One document shares one stylesheet, one id space and one script scope: any rule, id or
+        # script of one archetype that reaches another slide shows up here.
+        for number, own in self.own_screens.items():
+            with self.subTest(slide=number):
+                difference = image_difference(self.screens[number - 1], own)
+                self.assertLessEqual(difference, TOLERANCE_IMAGE,
+                                     f'{difference:.2f}% of the slide differs from its archetype')
 
     def test_report_prints_one_landscape_letter_page_per_slide(self):
         self.assertEqual(pdf_pages(self.opened.pdf()), [PAGE_PT] * len(archetypes()))
@@ -88,21 +92,12 @@ class CombinedReportTests(unittest.TestCase):
     def test_each_slide_draws_the_charts_its_archetype_draws(self):
         self.assertGreater(len(self.own_charts), 0, 'no archetype creates a chart')
         for number, expected in self.own_charts.items():
-            if number in KNOWN_WRONG_CHARTS:
-                continue
             with self.subTest(slide=number):
                 self.assertEqual(chart_signature(self.slides[number - 1]), expected)
 
-    @unittest.expectedFailure
-    def test_known_wrong_charts_are_fixed(self):
-        for number in sorted(KNOWN_WRONG_CHARTS):
-            self.assertEqual(chart_signature(self.slides[number - 1]), self.own_charts[number], number)
-
-    @unittest.expectedFailure
     def test_report_runs_without_page_errors(self):
         self.assertEqual(self.opened.errors, [])
 
-    @unittest.expectedFailure
     def test_element_ids_are_unique_across_the_report(self):
         duplicates = self.opened.page.evaluate("""() => {
           const seen = {};

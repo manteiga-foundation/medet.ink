@@ -250,7 +250,7 @@
             font-weight: 500;
         }
 
-        #chart-container {
+        #chart-04 {
             width: 100%;
             flex: 1; /* Flex-grow to fill remaining card height perfectly */
             min-height: 250px;
@@ -428,7 +428,7 @@
                         <div class="chart-subtitle">2026 Assessment across organization sizes with Global Finance Corp positioning</div>
                     </div>
                     <!-- Highcharts Container -->
-                    <div id="chart-container"></div>
+                    <div id="chart-04"></div>
                 </div>
             </div>
             
@@ -475,7 +475,7 @@
     // Highcharts measures label text when it draws: draw after the web fonts have loaded, or a
     // first visit lays the chart out with a fallback font's metrics.
     document.fonts.ready.then(function() {
-        Highcharts.chart('chart-container', {
+        Highcharts.chart('chart-04', {
         chart: {
             type: 'area',
             backgroundColor: 'transparent',
