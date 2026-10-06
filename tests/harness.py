@@ -137,6 +137,11 @@ class Opened:
     def screenshot(self) -> bytes:
         return self.page.screenshot()
 
+    def slide_screenshots(self) -> list[bytes]:
+        """Each .slide exactly, wherever the page places it on screen."""
+        slides = self.page.locator('.slide')
+        return [slides.nth(i).screenshot() for i in range(slides.count())]
+
     def close(self):
         self.page.context.close()
 

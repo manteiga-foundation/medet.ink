@@ -20,7 +20,7 @@ class ArchetypeTests(unittest.TestCase):
         for path in archetypes():
             opened = cls.chromium.open(f'archetypes/{path.name}')
             # Screen captures first: printing makes chart libraries reflow for the page.
-            screenshot = opened.screenshot()
+            screenshot = opened.slide_screenshots()[0]
             slides = opened.slides()
             cls.rendered[slide_number(path)] = {
                 'slides': slides,
