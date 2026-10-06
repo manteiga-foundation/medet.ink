@@ -6,12 +6,6 @@ import unittest
 from harness import (PAGE_PT, SLIDE_PX, TOLERANCE_IMAGE, TOLERANCE_PX, ROOT, Chromium, archetypes, chart_calls,
                      image_difference, pdf_pages, slide_number)
 
-# Measured defects, open until fixed (docs/template.md, "Known defects"). The footer of these
-# archetypes is pushed below the page edge and clipped. A fix removes the number here; the
-# expected-failure test below then reports an unexpected success until it is removed.
-KNOWN_OVERFLOW = {'09', '16'}
-
-
 class ArchetypeTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -54,16 +48,10 @@ class ArchetypeTests(unittest.TestCase):
 
     def test_content_stays_inside_the_slide(self):
         for number, r in self.rendered.items():
-            if number in KNOWN_OVERFLOW:
-                continue
             with self.subTest(archetype=number):
                 self.assertLessEqual(r['slides'][0]['overflow'], TOLERANCE_PX,
                                      'content reaches past the page edge and is clipped')
 
-    @unittest.expectedFailure
-    def test_known_overflow_is_fixed(self):
-        for number in sorted(KNOWN_OVERFLOW):
-            self.assertLessEqual(self.rendered[number]['slides'][0]['overflow'], TOLERANCE_PX, number)
 
     def test_no_archetype_throws_a_page_error(self):
         for number, r in self.rendered.items():

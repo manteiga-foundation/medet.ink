@@ -13,10 +13,6 @@ from harness import (PAGE_PT, ROOT, TOLERANCE_IMAGE, TOLERANCE_PX, Chromium, arc
 
 REPORT = 'reports/combined_report.html'
 
-# Measured defects, open until fixed (docs/template.md, "Known defects"). A fix removes the slide
-# numbers here; the expected-failure test then reports an unexpected success until removed.
-# Slides 09 and 16 clip their footers, as their archetypes do.
-KNOWN_OVERFLOW = {9, 16}
 
 
 class CombinedReportTests(unittest.TestCase):
@@ -79,15 +75,9 @@ class CombinedReportTests(unittest.TestCase):
 
     def test_content_stays_inside_each_slide(self):
         for number, slide in enumerate(self.slides, start=1):
-            if number in KNOWN_OVERFLOW:
-                continue
             with self.subTest(slide=number):
                 self.assertLessEqual(slide['overflow'], TOLERANCE_PX)
 
-    @unittest.expectedFailure
-    def test_known_overflow_is_fixed(self):
-        for number in sorted(KNOWN_OVERFLOW):
-            self.assertLessEqual(self.slides[number - 1]['overflow'], TOLERANCE_PX, number)
 
     def test_each_slide_draws_the_charts_its_archetype_draws(self):
         self.assertGreater(len(self.own_charts), 0, 'no archetype creates a chart')
