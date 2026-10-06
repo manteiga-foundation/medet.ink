@@ -110,18 +110,24 @@ Run everything from the repository root. The demo GIF recipe is in `docs/templat
 - Archetype files are `NN-Slide-Name.html`, numbered from 01 without gaps. A new archetype also
   needs its gallery card and `assets/slide_NN.png` on the landing page, an entry in the viewer's
   list, and regenerated derived artifacts.
-- Charts are created in the archetype's own script with `Highcharts.chart(` or `new Chart(`; the
-  tests count those calls in the source and expect as many charts drawn.
+- Charts are created in the archetype's own script with `Highcharts.chart(` or `new Chart(`, inside
+  `document.fonts.ready.then(...)`; the tests count those calls in the source, expect as many
+  charts drawn, and check that a late font changes nothing.
+- Chart libraries load from jsDelivr pinned to a version (`highcharts@13.1.1`, `chart.js@4.5.1`),
+  never an unpinned "latest" and never code.highcharts.com (it refuses headless browsers with 403
+  and rate-limits repeated runs with 429).
 - Highcharts draws the first series of a stack on top (`yAxis.reversedStacks` defaults to true).
-- The combined report is one document: ids, top-level script names and class rules from every
-  archetype share one namespace there. New archetypes use ids and classes unique to the slide
-  (for example `chart-04`) and keep their script variables out of the global scope. Today's
-  collisions are known defects.
-- Headless Chromium must present a regular Chrome user agent: code.highcharts.com answers 403 to
-  `HeadlessChrome` and rate-limits repeated runs (429). The tests also serve third-party files from
-  `tests/.cache` (fetched once; Highcharts falls back to its npm release on jsDelivr). Delete that
-  folder to refresh it.
-- Disable chart animations, or wait for them, before capturing images or PDFs.
+- The combined report is one document. `merge_slides.py` scopes each archetype's CSS to its slide,
+  but ids and inline-script globals still share one namespace: new archetypes use ids unique to the
+  slide (`chart-04`) and keep script variables out of the global scope.
+- A capture of a slide is a capture of its `.slide` element: on screen an archetype sits inside
+  0.5in of body padding. `scripts/browser.py` is the one browser setup for the scripts and the
+  tests (regular Chrome user agent, chart animations off, fonts loaded); the tests also serve
+  third-party files from `tests/.cache` (delete the folder to refresh it).
+- Every slide's footer reads "Property of ACME Consulting | acmecyber.com" and its page indicator
+  `NN / TOTAL` with TOTAL the archetype count; the table of contents lists pages 02 onward under
+  each archetype's `<title>`; the README states the archetype count. Adding an archetype means
+  updating all of them; the tests say where.
 - Public pages link only to files in the repository, by relative path; the social preview
   (`og:image`, `twitter:image`) is an absolute https://medet.ink/ URL of a committed file.
 - Commit in a separate step after reading the test counts; never chain a test run through `grep`
@@ -139,9 +145,11 @@ assets/slide_NN.png, demo.gif    generated: gallery thumbnails, README demo
 scripts/merge_slides.py          archetypes -> combined report
 scripts/make_pdf.py              merged report -> PDF (Playwright)
 scripts/make_images.py           archetypes -> thumbnails (Playwright)
-tests/harness.py                 the site over HTTP, Chromium, third-party cache, DOM probes
+scripts/browser.py               the browser setup the scripts and the tests share
+tests/harness.py                 Chromium for the tests, third-party cache, DOM and image probes
 tests/test_*.py                  the suite (listed in docs/template.md)
-docs/template.md                 notes on what is built: archetypes, tokens, tests, known defects
+docs/template.md                 notes on what is built: archetypes, tokens, charts, tests, decisions
+docs/spikes/                     measured experiments and their verdicts
 CNAME                            medet.ink, the GitHub Pages custom domain
 ```
 
@@ -165,27 +173,20 @@ CNAME                            medet.ink, the GitHub Pages custom domain
 
 ## Where things stand (update when it changes)
 
-Done: sixteen archetypes, cover to appendix, each one landscape Letter page; the combined report
-and the 16-page sample PDF generated from them; the landing page with gallery, viewer and social
-preview; the test suite (20 tests: 15 passing, each shown to fail against a deliberate break, and 5
-expected failures for the known defects below).
+Done: sixteen archetypes, cover to appendix, each one landscape Letter page that holds its content;
+one firm (ACME), one page count and a table of contents that matches across them; the combined
+report, in which every slide looks exactly like its archetype; the 16-page sample PDF, thumbnails
+and demo GIF, all faithful renders with their charts; the landing page with gallery, viewer and
+social preview; the suite (28 tests, all passing, each seen failing for the right reason first).
+No known defects are open.
 
-Known defects (measured; details and numbers in `docs/template.md`):
+Open, the maintainer decides:
 
-1. Combined report charts: `merge_slides.py` copies every inline script twice (into `<head>` and
-   with each slide), so slide 04's maturity chart is never drawn and slide 08's pie lands on
-   slide 04; four page errors. Page 4 of the sample PDF lacks the maturity chart as well.
-2. Slides 09 and 16 push their footer (confidentiality notice, page number) below the page edge,
-   where it is clipped; in the combined report the Risk Matrix (slide 06) is clipped as well.
-3. `scripts/make_pdf.py` and `scripts/make_images.py` launch headless Chromium with its default
-   user agent, which code.highcharts.com refuses, so their output lacks the Highcharts charts.
-
-Seen, not decided (ask before changing): two severity palettes in use; page totals, numbering and
-branding differ between archetypes; the README counts 13 layouts and a 13-page PDF where there are
-16; `patch.py`, `patch2.py`, `patch3.py` at the root are one-off edits from the chart-order commits;
-`.DS_Store` is tracked; vendoring the chart libraries would make the template work offline, but
-Highcharts is not MIT-licensed, so that is a licensing decision.
-
-Next candidates, in recommended order: the merge script's duplicated scripts (clears defect 1);
-the headless scripts' user agent, then regenerate the sample PDF and thumbnails (defect 3); the
-footer overflow and the Risk Matrix (defect 2); then the undecided items with the maintainer.
+1. Replacing Highcharts (`docs/spikes/001-chart-library.md`): inline SVG reproduces slide 04's
+   stacked area chart to within 0.02% of its pixels with no library, CDN or licence; ECharts to
+   0.55% at 370 KB; Chart.js does not match and prints a bitmap. After the pick, slide 08's donut
+   is the next slice, measured the same way.
+2. Two severity palettes in use (Critical `#DC2626` or `#EF4444`, Medium `#FBBF24` or `#F59E0B`).
+3. `reports/data_uri.txt` (an old report as a data URI) and `assets/sample-report.pdf` (the old
+   13-page sample) are referenced nowhere; `.DS_Store` is tracked.
+4. Slide 16's footer sits about 17 px under the address grid, tighter than on other slides.

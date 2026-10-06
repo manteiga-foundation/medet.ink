@@ -66,19 +66,33 @@ Critical `#DC2626` (3 archetypes) or `#EF4444` (6); High `#F97316`; Medium `#FBB
   `page-break-after: always`: an exact 8.5in rounds over the boundary and adds a blank page.
 - Images in flex layouts need `flex: none`, a fixed height and `object-fit: contain`, or they
   stretch the page; long unbroken strings in flex children need `min-width: 0` and an overflow.
-- Merged documents need the global override `html, body { height: auto; overflow: auto }` (the
-  merge script appends it) or the combined report cannot scroll past its first slide.
+- On screen an archetype sits inside `body { padding: 0.5in }`: a capture of the slide is a capture
+  of the `.slide` element, never of the viewport.
+
+## Charts
+
+- Libraries load from jsDelivr pinned to a version: Highcharts 13.1.1 (slides 04, 08), Chart.js
+  4.5.1 (slide 09). Never an unpinned "latest", never code.highcharts.com (it refuses headless
+  browsers and rate-limits). Whether Highcharts stays is open: see `docs/spikes/001-chart-library.md`.
+- Charts are created inside `document.fonts.ready.then(...)`. A chart measures its text when it
+  draws; drawn before Montserrat loads, it keeps a fallback font's layout (canvas text, label
+  placement and truncation) on screen and in print.
+- Chart containers have ids unique across archetypes (`chart-04`, `chart-08`, `radarChart`).
+- Highcharts draws the first series of a stack on top (`yAxis.reversedStacks` defaults to true).
 
 ## Build pipeline
 
 1. Edit an archetype.
-2. `python3 scripts/merge_slides.py`: extracts each archetype's styles, scripts and body into
+2. `python3 scripts/merge_slides.py`: one document from the archetypes. Each archetype's stylesheet
+   is nested under a wrapper class for its slide (`.archetype-NN`, CSS nesting), so no rule reaches
+   another slide; its `html`/`body` rules become the wrapper's inherited typography, and typography
+   every archetype shares also goes on the document's `html, body` (chart libraries measure text in
+   elements they attach to the body). `@import` is hoisted, `@page` declared once, external scripts
+   load once in `<head>`, inline scripts stay with their slide. Writes
    `reports/combined_report.html` and the identical `reports/merged_report.html`.
-3. `python3 scripts/make_pdf.py`: serves the repository on a free port, prints
-   `reports/merged_report.html` with Playwright to `reports/final_report.pdf`.
-4. `python3 scripts/make_images.py`: screenshots each archetype at 1056 x 816 into
-   `assets/slide_NN.png`.
-5. The README's demo GIF from the thumbnails:
+3. `python3 scripts/make_pdf.py`: prints `reports/merged_report.html` to `reports/final_report.pdf`.
+4. `python3 scripts/make_images.py`: captures each archetype's `.slide` into `assets/slide_NN.png`.
+5. The README's demo GIF from the thumbnails, one second per slide:
 
 ```
 ffmpeg -framerate 1 -i assets/slide_%02d.png \
@@ -86,77 +100,79 @@ ffmpeg -framerate 1 -i assets/slide_%02d.png \
   -loop 0 assets/demo.gif
 ```
 
-Steps 3 and 4 currently produce output without the Highcharts charts (known defect 3).
+Steps 3 and 4 share `scripts/browser.py` with the tests: the repository served on a free port, a
+regular Chrome user agent, chart animations off (each library is configured the moment its script
+defines it), web fonts loaded before capture.
 
 ## Tests
 
-`python3 -m unittest discover -s tests -v`; about 25 s once the third-party cache is filled. The
-harness (`tests/harness.py`) serves the repository over HTTP on a free port, drives a headless
-Chromium with a regular Chrome user agent, and answers third-party requests from `tests/.cache`.
-Each test below was shown to fail against a deliberate break applied to a copy of the repository
-(`MEDET_ROOT=<copy>`); the break is noted after "fails when".
+`python3 -m unittest discover -s tests -v`; 28 tests, about 40 s once the third-party cache is
+filled. The harness (`tests/harness.py`) serves the repository, drives Chromium through
+`scripts/browser.py`, and answers third-party requests from `tests/.cache`. Each test was seen
+failing for the right reason before it passed: against the defect it was written for, or against a
+deliberate break applied to a copy of the repository (`MEDET_ROOT=<copy>`); noted after "fails
+when".
 
-- `tests/test_archetypes.py` - every archetype in Chromium at 1056 x 816:
+- `tests/test_archetypes.py` - every archetype in Chromium:
   - numbered from 01 without gaps (fails when 17 is missing and 18 exists);
   - exactly one `.slide` of 1056 x 816 px (fails when a slide is 9.5in tall: 1056 x 912);
   - prints to exactly one 792 x 612 pt page (fails on the same break: two pages);
-  - content stays inside the slide, within 2 px, except the known defects (fails when a 900 px
-    block that does not shrink is added: 871 px over; a block that may shrink is absorbed by the
-    flex column and proves nothing);
-  - no uncaught page errors (fails when a script calls an undefined function, or a chart library
-    does not load);
-  - every chart the archetype's script creates is drawn: painted canvas pixels for Chart.js,
-    series for Highcharts (fails when Chart.js is not loaded; a canvas keeps a 300 x 150 default,
-    so canvas size alone proves nothing);
-  - expected failure: the known footer overflow on 09 and 16.
-- `tests/test_maturity_chart.py` - slide 04's bands, read from the drawn chart: Poor at the bottom,
-  then Below Avg, Average, Good, Excellent on top, at every category (fails when the series array
-  is reversed).
+  - content stays inside the slide, within 2 px (failed on 09 and 16: 82 and 75 px; fails when a
+    900 px block that does not shrink is added; a block that may shrink is absorbed by the flex
+    column and proves nothing);
+  - no uncaught page errors (fails when a script calls an undefined function or a library is
+    missing);
+  - every chart the archetype's script creates is drawn: painted canvas pixels, Highcharts series
+    (fails when Chart.js is not loaded; a canvas keeps a 300 x 150 default, so size proves nothing);
+  - each gallery thumbnail is the archetype's slide, within 0.1% of its pixels (failed on 04 and 08
+    without charts, then on all 16 offset by the screen padding).
+- `tests/test_chart_fonts.py` - with the web fonts held back until the page's scripts ran, every
+  chart redrawn with the fonts loaded moves nothing (failed on 09 for Chart.js canvas text, then on
+  04 and 08 for Highcharts label layout: 0.13% and 0.30%).
+- `tests/test_maturity_chart.py` - slide 04's bands, read from the drawn chart: Poor at the bottom up
+  to Excellent on top, at every category (fails when the series array is reversed).
 - `tests/test_combined_report.py` - the combined report:
-  - the committed file is byte for byte what `merge_slides.py` produces from the archetypes
-    (fails when an archetype is edited without regenerating);
-  - one slide per archetype (fails when an archetype is added without regenerating: 16 != 17);
-  - prints one 792 x 612 pt page per slide (fails when the last archetype's `.slide` is 9.5in
-    tall, which in the merged stylesheet applies to every slide);
-  - content stays inside each slide, except the known defects (fails on the 900 px block);
-  - each slide draws the charts its archetype draws on its own, except the known defects (fails
-    when slide 09's canvas id is changed in the combined report);
-  - expected failures: the known overflow (06, 09, 16), the known wrong charts (04, 08), page
-    errors, duplicate ids.
-- `tests/test_links.py` - no browser:
-  - every local `href`/`src` on the landing page, the viewer (including its scripted slide list)
-    and the combined report resolves to a file (fails when a thumbnail is deleted, or a script
-    points at a missing path);
-  - the landing page links every archetype and its thumbnail (fails when an archetype is added
-    without a gallery card);
-  - the social preview: `og:url`/`twitter:url` are https://medet.ink/, matching `CNAME`, and
-    `og:image`/`twitter:image` are committed files (fails when the image is renamed).
+  - the committed file is byte for byte what `merge_slides.py` produces (fails when an archetype is
+    edited without regenerating);
+  - one slide per archetype (fails when an archetype is added without regenerating);
+  - every slide looks exactly like its archetype rendered alone, within 0.1% of its pixels (failed
+    on all 16: 3 to 24%);
+  - prints one 792 x 612 pt page per slide (fails when the last archetype's `.slide` is 9.5in tall);
+  - the sample PDF has the text of a fresh print, page by page (failed on page 4);
+  - content stays inside each slide (failed on 06, 09 and 16);
+  - each slide draws the charts its archetype draws (failed on 04 and 08);
+  - no page errors (failed: four), element ids unique (failed: `chart-container`).
+- `tests/test_consistency.py` - no browser: every footer reads "Property of ACME Consulting |
+  acmecyber.com" (failed on 09); no other firm is named (failed on 09); each page number is the
+  slide number out of the archetype count (failed on all 16); the table of contents lists pages 02
+  to 16 under each archetype's title (failed); the README and landing page state the archetype
+  count (failed on the README's 13).
+- `tests/test_links.py` - no browser: local links on the public pages resolve (fails when a
+  thumbnail is deleted or a script points at a missing path); chart libraries load from jsDelivr
+  pinned to a version (failed on code.highcharts.com and an unpinned Chart.js); the landing page
+  links every archetype and thumbnail; the social preview points at committed files on medet.ink.
+- `tests/test_demo_gif.py` - no browser: the demo GIF has one frame per archetype, each within a
+  mean difference of 6 of its thumbnail (the GIF is a dithered copy; failed at 19 to 45 with the old
+  thumbnails, 0.6 to 0.9 when fresh).
 
 ## Known defects
 
-Each is held by an expected-failure test; a fix removes it from the test's known set.
-
-1. Combined report charts. `merge_slides.py` collects every `<script>` of each archetype into
-   `<head>` and also keeps it in the slide's body, so inline chart scripts run twice. The head copies
-   run before any slide exists (Highcharts error #13, twice) after declaring `const chartData`; the
-   body copy of slide 04 then throws `Identifier 'chartData' has already been declared` and the
-   maturity chart is never drawn. Slide 08's pie is drawn into the first `id="chart-container"`,
-   which is slide 04's (both archetypes use that id), so slide 04 shows the pie and slide 08 shows
-   no chart. Chart.js reports `Canvas is already in use` on slide 09 (its chart is drawn).
-   `reports/final_report.pdf` page 4 carries none of the maturity chart's text (legend, categories)
-   where a print of the archetype does.
-2. Overflow. Slides 09 and 16 reach 82 px and 75 px past the page: the footer starts at 863 px
-   and 854 px on an 816 px page and is clipped, on screen and in print. In the combined report the
-   Risk Matrix card on slide 06 is 969 px tall (it fits in its own archetype): 389 px over.
-3. Headless scripts. `make_pdf.py` and `make_images.py` launch Chromium with its default user
-   agent; code.highcharts.com answers `HeadlessChrome` with 403 (Chromium reports
-   `ERR_BLOCKED_BY_ORB`), so Highcharts is undefined and slides 04 and 08 render without charts.
+None open. Fixed and held by the tests above: charts missing or on the wrong slide in the combined
+report and the sample PDF; every combined slide drifting from its archetype through shared CSS;
+footers clipped on 09 and 16 and the Risk Matrix in the combined report; generated PDF and
+thumbnails without Highcharts charts; thumbnails offset and cropped by the screen padding; chart
+layout depending on font timing; another firm and out-of-sequence page numbers on some slides; a
+table of contents that did not match the report.
 
 ## Decisions and history
 
 - Maturity chart order: the bands stack Poor at the bottom to Excellent on top. Highcharts draws
   the first series of a stack on top, so the array reads Excellent first. Commits 7d18c0a to
   37b0ed2 flipped it four times by reasoning; the test now measures it.
+- Slide 09 fits its page with tighter spacing (top padding 0.25in, finding card padding 20 px and
+  margin 16 px, radar 250 px); slide 16's map placeholder is 300 px tall (was 380 px). The table of
+  contents rows have 6 px padding and the card 32 px, so fifteen rows fit.
 - The third-party cache in `tests/.cache` exists because code.highcharts.com refused the test
-  browser (403) and then rate-limited it (429) within one afternoon of runs; the template itself
-  still loads its libraries from the CDNs.
+  browser (403) and then rate-limited it (429) within one afternoon of runs.
+- Open: replacing Highcharts (spike 001: inline SVG matches its stacked area chart to 0.02% of its
+  pixels, ECharts to 0.55%; Chart.js does not). The maintainer picks; slide 08's donut follows.

@@ -61,4 +61,4 @@ python3 -m playwright install chromium
 python3 -m unittest discover -s tests -v
 ```
 
-The suite renders every archetype and the combined report in Chromium and verifies page size, single-page printing, content overflow, chart rendering and links. `AGENTS.md` describes how the repository is maintained; `docs/template.md` documents the archetypes, design tokens, build pipeline and tests.
+The suite renders every archetype and the combined report in Chromium and verifies page size, single-page printing, content overflow, chart rendering, that the combined report, sample PDF, thumbnails and demo GIF match the archetypes, consistent branding and page numbering, and links. `AGENTS.md` describes how the repository is maintained; `docs/template.md` documents the archetypes, design tokens, build pipeline and tests.
