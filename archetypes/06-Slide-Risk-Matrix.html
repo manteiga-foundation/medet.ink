@@ -242,7 +242,7 @@
         .x-axis-line {
             position: absolute;
             left: 0; right: 10px; top: 50%; height: 3px; 
-            background: #059669; /* Dark Green */
+            background: #0A4B9F; /* Accent blue */
             transform: translateY(-50%);
             border-radius: 2px;
 
@@ -253,12 +253,12 @@
             width: 0; height: 0; 
             border-top: 6px solid transparent; 
             border-bottom: 6px solid transparent; 
-            border-left: 10px solid #059669;
+            border-left: 10px solid #0A4B9F;
 
         }
         .x-axis-pill {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: #059669; color: white; padding: 6px 14px; border-radius: 6px; 
+            background: #0A4B9F; color: white; padding: 6px 14px; border-radius: 6px; 
             font-size: 9px; font-weight: 800; z-index: 2; display: flex; align-items: center; gap: 6px;
         }
 
@@ -271,7 +271,7 @@
         .y-axis-line {
             position: absolute;
             top: 10px; bottom: 0; left: 50%; width: 3px; 
-            background: #DC2626; /* Red */
+            background: #EF4444; /* Critical red */
             transform: translateX(-50%);
             border-radius: 2px;
         }
@@ -281,12 +281,12 @@
             width: 0; height: 0; 
             border-left: 6px solid transparent; 
             border-right: 6px solid transparent; 
-            border-bottom: 10px solid #DC2626;
+            border-bottom: 10px solid #EF4444;
         }
         .y-axis-pill {
             position: absolute; top: 50%; left: 50%; 
             transform: translate(-50%, -50%) rotate(-90deg);
-            background: #DC2626; color: white; padding: 6px 14px; border-radius: 6px; 
+            background: #EF4444; color: white; padding: 6px 14px; border-radius: 6px; 
             font-size: 9px; font-weight: 800; z-index: 2; white-space: nowrap; 
             display: flex; align-items: center; gap: 6px;
         }
@@ -300,14 +300,14 @@
         .hdr-vert { writing-mode: vertical-lr; transform: rotate(180deg); }
 
         /* Effort (Columns) */
-        .eff-low { grid-column: 3; grid-row: 2; background: #34D399; } /* Light Green */
-        .eff-med { grid-column: 4; grid-row: 2; background: #10B981; } /* Green */
-        .eff-high { grid-column: 5; grid-row: 2; background: #059669; } /* Dark Green */
+        .eff-low { grid-column: 3; grid-row: 2; background: #4781C3; } /* Light blue */
+        .eff-med { grid-column: 4; grid-row: 2; background: #0A4B9F; } /* Accent blue */
+        .eff-high { grid-column: 5; grid-row: 2; background: #0A2540; } /* Ink */
 
         /* Risk (Rows) */
-        .rsk-high { grid-column: 2; grid-row: 3; background: #EF4444; } /* Red */
-        .rsk-med { grid-column: 2; grid-row: 4; background: #F59E0B; } /* Orange */
-        .rsk-low { grid-column: 2; grid-row: 5; background: #FCD34D; } /* Yellow */
+        .rsk-high { grid-column: 2; grid-row: 3; background: #F97316; } /* High */
+        .rsk-med { grid-column: 2; grid-row: 4; background: #F59E0B; } /* Medium */
+        .rsk-low { grid-column: 2; grid-row: 5; background: #10B981; } /* Low */
 
         /* --- CELLS --- */
         .cell {
@@ -343,9 +343,9 @@
             gap: 2px;
         }
         
-        .finding-card.high { border-left-color: #EF4444; }
+        .finding-card.high { border-left-color: #F97316; }
         .finding-card.med { border-left-color: #F59E0B; }
-        .finding-card.low { border-left-color: #FCD34D; }
+        .finding-card.low { border-left-color: #10B981; }
 
         .finding-id {
             font-size: 7.5px;

@@ -53,9 +53,12 @@ Lift these from the archetypes; do not restyle.
 | Card | white, radius 12 px, border `#E2E8F0`, shadow `0 8px 30px rgba(0,0,0,0.04)` |
 | Maturity bands (slide 04) | Poor `#8B5CF6`, Below Avg `#EF4444`, Average `#F59E0B`, Good `#10B981`, Excellent `#3B82F6` |
 
-Severity colours: two sets are in use and not yet unified (a decision for the maintainer).
-Critical `#DC2626` (3 archetypes) or `#EF4444` (6); High `#F97316`; Medium `#FBBF24` (2) or
-`#F59E0B` (7); Low `#10B981`; Informational `#0EA5E9`.
+Severity colours, one palette on every slide (the Tailwind 500 tier): Critical `#EF4444`, High
+`#F97316`, Medium `#F59E0B`, Low `#10B981`, Informational `#0EA5E9`. A severity-coded element
+carries its severity as a class (`critical`, `high`, `medium` or `med`, `low`, `info`, alone or
+prefixed `sev-`, `color-`, `rsk-`). Amber text on white uses `#D97706` for legibility (slide 08's
+pie label). The risk matrix's effort scale (slide 06) uses the blues `#4781C3`, `#0A4B9F` and ink
+`#0A2540`, so no severity colour means anything else there.
 
 ## Print rules
 
@@ -106,7 +109,7 @@ defines it), web fonts loaded before capture.
 
 ## Tests
 
-`python3 -m unittest discover -s tests -v`; 30 tests, about 40 s once the third-party cache is
+`python3 -m unittest discover -s tests -v`; 35 tests (one expected failure), about 40 s once the third-party cache is
 filled. The harness (`tests/harness.py`) serves the repository, drives Chromium through
 `scripts/browser.py`, and answers third-party requests from `tests/.cache`. Each test was seen
 failing for the right reason before it passed: against the defect it was written for, or against a
@@ -154,18 +157,29 @@ when".
 - `tests/test_repository.py` - no browser: no `.DS_Store` is tracked (failed: one at the root);
   every file under `assets/` and `reports/` is generated or linked from the README, the landing
   page or the viewer (failed on `assets/sample-report.pdf` and `reports/data_uri.txt`).
+- `tests/test_severity_palette.py` - every severity-coded element and chart point uses the palette
+  colour of its severity (failed on 06 and 08: eleven elements); a slide that shows severities uses
+  neither `#DC2626` nor `#FBBF24` (failed on 06, 08, 09); the effort levels use no severity colour
+  (failed on 06's MEDIUM effort, `#10B981`, the colour of Low).
+- `tests/test_chart_labels.py` - no chart label is shortened with an ellipsis; slide 08 is a known
+  defect (expected failure).
 - `tests/test_demo_gif.py` - no browser: the demo GIF has one frame per archetype, each within a
   mean difference of 6 of its thumbnail (the GIF is a dithered copy; failed at 19 to 45 with the old
   thumbnails, 0.6 to 0.9 when fresh).
 
 ## Known defects
 
-None open. Fixed and held by the tests above: charts missing or on the wrong slide in the combined
-report and the sample PDF; every combined slide drifting from its archetype through shared CSS;
-footers clipped on 09 and 16 and the Risk Matrix in the combined report; generated PDF and
-thumbnails without Highcharts charts; thumbnails offset and cropped by the screen padding; chart
-layout depending on font timing; another firm and out-of-sequence page numbers on some slides; a
-table of contents that did not match the report.
+1. Slide 08's donut shortens two labels: Highcharts draws "Medi..." for Medium and "L..." for Low
+   because the labels do not fit beside the donut in Montserrat. Before the charts waited for the
+   web font, the labels were measured in a narrower fallback font and only Low was shortened.
+   Held by `test_chart_labels.py` (expected failure); to be fixed with the donut's replacement.
+
+Fixed and held by the tests above: charts missing or on the wrong slide in the combined report and
+the sample PDF; every combined slide drifting from its archetype through shared CSS; footers clipped
+on 09 and 16 and the Risk Matrix in the combined report; generated PDF and thumbnails without
+Highcharts charts; thumbnails offset and cropped by the screen padding; chart layout depending on
+font timing; another firm and out-of-sequence page numbers on some slides; a table of contents that
+did not match the report; two severity palettes.
 
 ## Decisions and history
 
@@ -177,5 +191,10 @@ table of contents that did not match the report.
   contents rows have 6 px padding and the card 32 px, so fifteen rows fit.
 - The third-party cache in `tests/.cache` exists because code.highcharts.com refused the test
   browser (403) and then rate-limited it (429) within one afternoon of runs.
+- Severity palette: the Tailwind 500 tier, measured in OKLCH. Its five colours span 0.132 in
+  lightness against 0.260 for the alternative (`#DC2626`, `#FBBF24`), adjacent severities stay
+  0.096 to 0.104 apart (about five times a just-noticeable difference), and amber-400 text on white
+  (1.67:1) became amber-500 (2.15:1). Trade-off: white text on `#EF4444` is 3.76:1 against 4.83:1
+  on `#DC2626`, so slide 10's status pill (a status, not a severity, in small text) keeps `#DC2626`.
 - Open: replacing Highcharts (spike 001: inline SVG matches its stacked area chart to 0.02% of its
   pixels, ECharts to 0.55%; Chart.js does not). The maintainer picks; slide 08's donut follows.

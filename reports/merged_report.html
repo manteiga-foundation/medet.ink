@@ -1635,7 +1635,7 @@
 .x-axis-line {
             position: absolute;
             left: 0; right: 10px; top: 50%; height: 3px; 
-            background: #059669; 
+            background: #0A4B9F; 
             transform: translateY(-50%);
             border-radius: 2px;
 
@@ -1646,12 +1646,12 @@
             width: 0; height: 0; 
             border-top: 6px solid transparent; 
             border-bottom: 6px solid transparent; 
-            border-left: 10px solid #059669;
+            border-left: 10px solid #0A4B9F;
 
         }
 .x-axis-pill {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: #059669; color: white; padding: 6px 14px; border-radius: 6px; 
+            background: #0A4B9F; color: white; padding: 6px 14px; border-radius: 6px; 
             font-size: 9px; font-weight: 800; z-index: 2; display: flex; align-items: center; gap: 6px;
         }
 .y-axis-area {
@@ -1662,7 +1662,7 @@
 .y-axis-line {
             position: absolute;
             top: 10px; bottom: 0; left: 50%; width: 3px; 
-            background: #DC2626; 
+            background: #EF4444; 
             transform: translateX(-50%);
             border-radius: 2px;
         }
@@ -1672,12 +1672,12 @@
             width: 0; height: 0; 
             border-left: 6px solid transparent; 
             border-right: 6px solid transparent; 
-            border-bottom: 10px solid #DC2626;
+            border-bottom: 10px solid #EF4444;
         }
 .y-axis-pill {
             position: absolute; top: 50%; left: 50%; 
             transform: translate(-50%, -50%) rotate(-90deg);
-            background: #DC2626; color: white; padding: 6px 14px; border-radius: 6px; 
+            background: #EF4444; color: white; padding: 6px 14px; border-radius: 6px; 
             font-size: 9px; font-weight: 800; z-index: 2; white-space: nowrap; 
             display: flex; align-items: center; gap: 6px;
         }
@@ -1687,12 +1687,12 @@
             letter-spacing: 1px; border-radius: 4px;
         }
 .hdr-vert { writing-mode: vertical-lr; transform: rotate(180deg); }
-.eff-low { grid-column: 3; grid-row: 2; background: #34D399; }
-.eff-med { grid-column: 4; grid-row: 2; background: #10B981; }
-.eff-high { grid-column: 5; grid-row: 2; background: #059669; }
-.rsk-high { grid-column: 2; grid-row: 3; background: #EF4444; }
+.eff-low { grid-column: 3; grid-row: 2; background: #4781C3; }
+.eff-med { grid-column: 4; grid-row: 2; background: #0A4B9F; }
+.eff-high { grid-column: 5; grid-row: 2; background: #0A2540; }
+.rsk-high { grid-column: 2; grid-row: 3; background: #F97316; }
 .rsk-med { grid-column: 2; grid-row: 4; background: #F59E0B; }
-.rsk-low { grid-column: 2; grid-row: 5; background: #FCD34D; }
+.rsk-low { grid-column: 2; grid-row: 5; background: #10B981; }
 .cell {
             background: #F8FAFC;
             border: 1px dashed #CBD5E1;
@@ -1722,9 +1722,9 @@
             flex-direction: column;
             gap: 2px;
         }
-.finding-card.high { border-left-color: #EF4444; }
+.finding-card.high { border-left-color: #F97316; }
 .finding-card.med { border-left-color: #F59E0B; }
-.finding-card.low { border-left-color: #FCD34D; }
+.finding-card.low { border-left-color: #10B981; }
 .finding-id {
             font-size: 7.5px;
             font-weight: 800;
@@ -2316,9 +2316,9 @@
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-.color-critical { color: #DC2626; }
+.color-critical { color: #EF4444; }
 .color-high { color: #F97316; }
-.color-medium { color: #FBBF24; }
+.color-medium { color: #F59E0B; }
 .color-low { color: #10B981; }
 .footer {
             padding: 0.15in 0.8in 0.3in 0.8in;
@@ -2598,7 +2598,7 @@
             left: 0;
             width: 100%;
             height: 59%; 
-            background: linear-gradient(0deg, #D97706, #FBBF24);
+            background: linear-gradient(0deg, #D97706, #F59E0B);
             border-radius: 19px;
             box-shadow: 0 -2px 10px rgba(245, 158, 11, 0.4);
         }
@@ -5921,8 +5921,8 @@ html, body { margin: 0; padding: 0; height: auto; overflow: visible; font-family
             data: [{
                 name: 'Critical',
                 y: 0,
-                color: '#DC2626', // Modern Red
-                dataLabels: { color: '#DC2626' }
+                color: '#EF4444', // Critical red
+                dataLabels: { color: '#EF4444' }
             }, {
                 name: 'High',
                 y: 2,
@@ -5931,7 +5931,7 @@ html, body { margin: 0; padding: 0; height: auto; overflow: visible; font-family
             }, {
                 name: 'Medium',
                 y: 4,
-                color: '#FBBF24', // Modern Yellow/Amber
+                color: '#F59E0B', // Medium amber
                 dataLabels: { color: '#D97706' } // Slightly darker text for readability
             }, {
                 name: 'Low',
