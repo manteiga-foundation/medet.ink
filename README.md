@@ -18,7 +18,7 @@ This project provides a highly professional, easily modifiable deliverable forma
 
 - **Executive-Ready Presentation:** Designed to communicate complex security findings effectively to both technical stakeholders and executive leadership.
 - **Pixel-Perfect Export:** Engineered with rigorous `@media print` CSS directives ensuring a 1:1 translation from the browser to a perfectly paginated, landscape PDF without margin degradation or layout breaks.
-- **Comprehensive Template Suite:** Includes 13 pre-formatted layouts covering Executive Summaries, Risk Matrices, Detailed Findings, Proof of Concepts, and Capability Statements.
+- **Comprehensive Template Suite:** Includes 16 pre-formatted layouts covering Executive Summaries, Risk Matrices, Detailed Findings, Proof of Concepts, and Capability Statements.
 - **Interactive Data Visualization:** Integrates industry-standard charting libraries (Chart.js / Highcharts) for dynamic presentation of metrics and maturity models.
 - **Zero-Friction Deployment:** Pure HTML and CSS architecture. Requires no complex build pipelines or proprietary software to edit and deploy.
 
@@ -29,7 +29,7 @@ This project provides a highly professional, easily modifiable deliverable forma
 1. **Clone the Repository:** Download the project files to your local environment.
 2. **Edit the Content:** Open `combined_report.html` in your preferred code or text editor to populate your specific assessment data, client branding, and vulnerability metrics.
 3. **Preview:** Open the file in a modern web browser to review the interactive layout.
-4. **Generate PDF:** Use the browser's native print function (Ctrl+P / Cmd+P) and save as PDF. The document will automatically format into a 13-page, landscape executive report.
+4. **Generate PDF:** Use the browser's native print function (Ctrl+P / Cmd+P) and save as PDF. The document will automatically format into a 16-page, landscape executive report.
 
 ---
 

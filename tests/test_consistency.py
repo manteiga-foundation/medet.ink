@@ -5,7 +5,7 @@ import html
 import re
 import unittest
 
-from harness import archetypes, slide_number
+from harness import ROOT, archetypes, slide_number
 
 BRAND_LINE = 'Property of ACME Consulting | acmecyber.com'
 
@@ -52,6 +52,16 @@ class ConsistencyTests(unittest.TestCase):
         listed = [(text_of(page), text_of(section)) for page, section in rows]
         expected = [(number, title_of(source)) for number, source in self.sources.items() if number != '01']
         self.assertEqual(listed, expected)
+
+    def test_public_pages_state_the_archetype_count(self):
+        claims = 0
+        for page in ('README.md', 'index.html'):
+            text = (ROOT / page).read_text(encoding='utf-8')
+            for match in re.finditer(r'\b(\d+)(?: pre-formatted layouts|-page\b| slides are included)', text):
+                claims += 1
+                with self.subTest(page=page, claim=match.group(0)):
+                    self.assertEqual(int(match.group(1)), len(self.sources))
+        self.assertGreater(claims, 0)
 
 
 if __name__ == '__main__':
