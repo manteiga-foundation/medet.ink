@@ -26,7 +26,7 @@ This project provides a highly professional, easily modifiable deliverable forma
 
 ## Usage Instructions
 
-1. **Clone the Repository:** Download the project files to your local environment.
+1. **Get the Template:** Download [medet-ink-template.zip](reports/medet-ink-template.zip) (Download HTML on the landing page), or clone the repository.
 2. **Edit the Content:** Open `combined_report.html` in your preferred code or text editor to populate your specific assessment data, client branding, and vulnerability metrics.
 3. **Preview:** Open the file in a modern web browser to review the interactive layout.
 4. **Generate PDF:** Use the browser's native print function (Ctrl+P / Cmd+P) and save as PDF. The document will automatically format into a 16-page, landscape executive report.

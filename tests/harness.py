@@ -158,8 +158,10 @@ class Chromium:
         self.browser = self._playwright.chromium.launch(headless=True, args=CHROMIUM_ARGS)
         self.user_agent = chrome_user_agent(self.browser)
 
-    def open(self, path: str, viewport: tuple[int, int] = SLIDE_PX, hold_fonts: bool = False) -> Opened:
-        """Loads a page. With hold_fonts, web font files arrive only after the page's scripts ran."""
+    def open(self, path: str, viewport: tuple[int, int] = SLIDE_PX, hold_fonts: bool = False,
+             before_load=None) -> Opened:
+        """Loads a page. With hold_fonts, web font files arrive only after the page's scripts ran.
+        before_load(page) runs before navigation, e.g. page.clock.install() to drive timers."""
         context = self.browser.new_context(
             viewport={'width': viewport[0], 'height': viewport[1]}, user_agent=self.user_agent)
         local = self.url + '/'
@@ -169,6 +171,8 @@ class Chromium:
             context.route('https://fonts.gstatic.com/**', lambda route: held.append(route))
         page = context.new_page()
         page.add_init_script(NO_ANIMATIONS)
+        if before_load:
+            before_load(page)
         errors: list[str] = []
         page.on('pageerror', lambda error: errors.append(str(error)))
         if hold_fonts:

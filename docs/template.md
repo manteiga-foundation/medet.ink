@@ -66,9 +66,19 @@ pie label). The risk matrix's effort scale (slide 06) uses the blues `#4781C3`, 
 `index.html`, design A of spike 002 (Terminal Paper): cream paper `#F2EFE6` with a faint 24 px
 grid, ink `#2B2B2B`, soft ink `#5B5850`, accents sage `#8FB3A8` (primary button), peach `#D9A877`
 (secondary), lavender `#A99BC2` (focus ring), status LED `#3E9B4F`; Space Grotesk for headings and
-text, IBM Plex Mono for labels; 2 px ink borders with hard 4 px offset shadows. Plain HTML and CSS
-with Google Fonts, no script. The copy presents the template for any report or presentation; the
-sample content is a fictional security assessment.
+text, IBM Plex Mono for labels; 2 px ink borders with hard 4 px offset shadows. HTML and CSS with
+Google Fonts and one inline script, no external script. The copy presents the template for any
+report or presentation; the sample content is a fictional security assessment.
+
+The hero plays the archetypes as a slideshow in the window frame: the title bar shows `NN / 16`, the
+slide name and a PLAYING/PAUSED LED; slides wipe in (left to right forward, right to left back,
+0.55 s); the pagination strip has prev and next keys, 16 ticks (past ones sage, the current one
+filling over its 4.5 s) and a pause key. It holds while a mouse points at it or keyboard focus is
+inside it, does not autoplay under reduced motion, and moves with the arrow keys. It shows the
+gallery's own thumbnails, the first in the markup and each next one fetched a slide ahead; without
+script the first slide shows alone. On phones the keys are 40 px and the ticks only indicate.
+Buttons: View Full Report, Download PDF, Download HTML (`reports/medet-ink-template.zip`), GitHub,
+in a 2 x 2 block.
 
 ## Print rules
 
@@ -121,13 +131,17 @@ ffmpeg -framerate 1 -i assets/slide_%02d.png \
   -loop 0 assets/demo.gif
 ```
 
+6. `python3 scripts/make_template.py`: zips the archetypes, the viewer, the combined report, README
+   and LICENSE into `reports/medet-ink-template.zip` (the landing page's Download HTML). Run it after
+   any change to those files; `tests/test_template_download.py` fails on a stale zip.
+
 Steps 3 and 4 share `scripts/browser.py` with the tests: the repository served on a free port, a
 regular Chrome user agent, chart animations off (each library is configured the moment its script
 defines it), web fonts loaded before capture.
 
 ## Tests
 
-`python3 -m unittest discover -s tests -v`; 49 tests, about 105 s once the third-party cache is
+`python3 -m unittest discover -s tests -v`; 55 tests, about 115 s once the third-party cache is
 filled. The harness (`tests/harness.py`) serves the repository, drives Chromium through
 `scripts/browser.py`, and answers third-party requests from `tests/.cache`. Each test was seen
 failing for the right reason before it passed: against the defect it was written for, or against a
@@ -201,10 +215,18 @@ when".
   the sample PDF drawn by CoreGraphics (`sips`, as Preview draws it) shows no flat area darker
   than the screen render, in 12 px blocks (failed on 12 pages, worst on 12: 44 levels darker behind
   the Past Performance badge and the cards; skipped where `sips` is missing).
-- `tests/test_landing.py` - the landing page loads no script (failed: the Tailwind CDN), its
+- `tests/test_landing.py` - the landing page loads no external script (failed: the Tailwind CDN), its
   title, headline and social titles do not limit it to cybersecurity (failed: "Pentest",
   "Cybersecurity"), and at 1440 x 900, 1280 x 800 and 390 x 844 it has no sideways scroll, broken
-  image or page error (fails when a 1600 px strip and a missing image are added).
+  image or page error (fails when a 1600 px strip and a missing image are added). The hero shows
+  every archetype in report order instead of the GIF (failed: the GIF); the slideshow pages with
+  prev, next, the ticks and the arrow keys, wrapping from 01 to 16, and holds under reduced motion
+  (fails when reduced motion is ignored); it advances after one interval on a fake clock, holds
+  while pointed at and on the pause key (fails when the hover is ignored: it reached 05); one link
+  downloads `reports/medet-ink-template.zip` (failed: absent).
+- `tests/test_template_download.py` - the zip holds the 16 archetypes, the viewer, the combined
+  report, README and LICENSE, byte for byte as in the repository (failed: absent; fails when a file
+  changes without `make_template.py`), and every relative link inside it resolves inside it.
 - `tests/test_demo_gif.py` - no browser: the demo GIF has one frame per archetype, each within a
   mean difference of 6 of its thumbnail (the GIF is a dithered copy; failed at 19 to 45 with the old
   thumbnails, 0.6 to 0.9 when fresh).
@@ -238,6 +260,11 @@ did not match the report; two severity palettes; card and badge shadows printing
   retro computing references, and asked that the wording not limit the template to cybersecurity.
   The page dropped the Tailwind CDN script; the 16:9 claim in the Teams and Zoom feature (11 x 8.5
   is 1.29:1) was replaced with an accurate sentence.
+- Hero slideshow instead of the GIF (the maintainer's request): one inline script, so the landing
+  page carries its own script but loads none. Images at first load fell from 5.97 MB (the GIF and
+  the gallery, which Chrome's lazy loading fetches at once) to 4.64 MB; the slideshow reuses the
+  gallery's thumbnails. Download HTML is a reproducible zip (`scripts/make_template.py`, fixed
+  dates, 100 KB) of the template folder, linked by relative path like the PDF.
 - Severity palette: the Tailwind 500 tier, measured in OKLCH. Its five colours span 0.132 in
   lightness against 0.260 for the alternative (`#DC2626`, `#FBBF24`), adjacent severities stay
   0.096 to 0.104 apart (about five times a just-noticeable difference), and amber-400 text on white

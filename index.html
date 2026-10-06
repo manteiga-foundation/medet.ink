@@ -58,9 +58,9 @@ a { color: inherit; }
 .label b { color: var(--ink); font-weight: 600; }
 h1 { font-size: clamp(38px, 4.6vw, 60px); line-height: 1.02; letter-spacing: -0.02em; text-transform: uppercase; margin: 18px 0 22px; font-weight: 700; text-wrap: balance; }
 .lead { font-size: 18px; color: var(--ink-soft); max-width: 34em; margin: 0 0 34px; }
-.actions { display: flex; flex-wrap: wrap; gap: 14px; }
+.actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; max-width: 440px; }
 .btn {
-    display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; border: 2px solid var(--ink);
+    display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 14px; border: 2px solid var(--ink);
     box-shadow: var(--shadow); font-family: var(--mono); font-weight: 600; font-size: 13px; letter-spacing: 0.08em;
     text-transform: uppercase; text-decoration: none; background: var(--paper); transition: transform 0.12s, box-shadow 0.12s;
 }
@@ -68,11 +68,40 @@ h1 { font-size: clamp(38px, 4.6vw, 60px); line-height: 1.02; letter-spacing: -0.
 .btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
 .btn.primary { background: var(--sage); }
 .btn.secondary { background: var(--peach); }
+.btn.tertiary { background: var(--lavender); }
 .window { border: 2px solid var(--ink); box-shadow: 8px 8px 0 var(--ink); background: #FFFFFF; }
 .window .bar { display: flex; align-items: center; gap: 8px; height: 34px; padding: 0 12px; border-bottom: 2px solid var(--ink); background: var(--paper-deep); font-family: var(--mono); font-size: 12px; }
 .window .bar i { width: 11px; height: 11px; border: 2px solid var(--ink); display: inline-block; }
-.window .bar span { margin-left: auto; color: var(--ink-soft); letter-spacing: 0.06em; }
-.window img { display: block; width: 100%; height: auto; }
+
+/* Slideshow: the archetypes one at a time, with a page indicator and a pagination strip */
+.window .bar .now { margin-left: auto; display: flex; align-items: baseline; gap: 6px; min-width: 0; color: var(--ink-soft); letter-spacing: 0.06em; white-space: nowrap; }
+.window .bar .now b { color: var(--ink); font-weight: 600; }
+.window .bar .now em { font-style: normal; text-transform: uppercase; margin-left: 8px; overflow: hidden; text-overflow: ellipsis; color: var(--ink); }
+.window .bar .state { display: none; align-items: center; gap: 7px; margin-left: 12px; padding-left: 12px; border-left: 2px solid var(--ink); text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap; }
+.slideshow.is-ready .bar .state { display: inline-flex; }
+.slideshow[data-state="paused"] .state .led { background: var(--peach); box-shadow: 0 0 0 2px rgba(217, 168, 119, 0.3); }
+.stage { position: relative; aspect-ratio: 1056 / 816; overflow: hidden; background: var(--paper-deep); }
+.slide { position: absolute; inset: 0; display: block; z-index: 0; clip-path: inset(0 100% 0 0); }
+.stage[data-direction="back"] .slide { clip-path: inset(0 0 0 100%); }
+.stage .slide.is-active { clip-path: inset(0 0 0 0); z-index: 2; transition: clip-path 0.55s cubic-bezier(0.65, 0, 0.35, 1); }
+.stage .slide.is-leaving { clip-path: inset(0 0 0 0); z-index: 1; }
+.slide img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.pager { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-top: 2px solid var(--ink); background: var(--paper-deep); }
+.pager[hidden] { display: none; }
+.key {
+    min-width: 34px; height: 30px; padding: 0 10px; border: 2px solid var(--ink); background: var(--paper); color: var(--ink);
+    box-shadow: 2px 2px 0 var(--ink); font-family: var(--mono); font-weight: 600; font-size: 12px; letter-spacing: 0.08em;
+    text-transform: uppercase; cursor: pointer;
+}
+.key:hover { background: #FFFFFF; }
+.key:active { transform: translate(2px, 2px); box-shadow: none; }
+.key.wide { min-width: 66px; }
+.ticks { flex: 1; display: flex; align-items: center; gap: 4px; min-width: 0; }
+.tick { position: relative; flex: 1; min-width: 6px; height: 12px; padding: 0; border: 2px solid var(--ink); background: var(--paper); cursor: pointer; overflow: hidden; }
+.tick::after { content: ''; position: absolute; inset: 0 auto 0 0; width: calc(var(--progress, 0) * 100%); background: var(--sage); transition: width 0.1s linear; }
+.tick.is-done::after { width: 100%; }
+.tick[aria-current="true"] { height: 18px; background: #FFFFFF; }
+.tick:hover { background: #FFFFFF; }
 
 /* Sections */
 section { padding: 72px 0; border-top: 2px solid var(--ink); }
@@ -111,6 +140,12 @@ footer .wrap { display: flex; justify-content: space-between; gap: 20px; padding
     .wrap { padding: 0 18px; }
     .band .wrap { gap: 14px; }
     .band .by { display: none; }
+    .window .bar .state span { display: none; }
+    .pager { gap: 6px; padding: 10px; }
+    .ticks { gap: 3px; }
+    /* Fingers: larger keys; the ticks only show the position (the gallery links every slide). */
+    .pager .key { height: 40px; min-width: 40px; }
+    .tick { pointer-events: none; }
     .gallery { gap: 16px; }
     footer .wrap { flex-direction: column; }
 }
@@ -137,13 +172,57 @@ footer .wrap { display: flex; justify-content: space-between; gap: 20px; padding
                     <div class="actions">
                         <a class="btn primary" href="reports/combined_report.html">View Full Report</a>
                         <a class="btn secondary" href="reports/final_report.pdf" download>Download PDF</a>
+                        <a class="btn tertiary" href="reports/medet-ink-template.zip" download>Download HTML</a>
                         <a class="btn" href="https://github.com/manteiga-foundation/medet.ink" target="_blank" rel="noopener">GitHub</a>
                     </div>
                 </div>
-                <div class="window">
-                    <div class="bar"><i></i><i></i><i></i><span>report preview</span></div>
-                    <img src="assets/demo.gif" alt="Report Demo">
-                </div>
+                <div class="window slideshow" data-slideshow data-interval="4500" data-state="paused" role="region" aria-roledescription="carousel" aria-label="Report preview">
+                    <div class="bar"><i></i><i></i><i></i>
+                        <span class="now" aria-live="off"><b data-page>01</b>/<span data-total>16</span><em data-name>Cover Page</em></span>
+                        <span class="state"><i class="led"></i><span>Paused</span></span>
+                    </div>
+                    <div class="stage" data-direction="forward">
+                        <a href="archetypes/01-Slide-Cover.html" class="slide is-active" data-slide data-name="Cover Page"><img src="assets/slide_01.png" alt="Slide 01: Cover Page" width="1056" height="816"></a>
+                        <a href="archetypes/02-Slide-Table-of-Content.html" class="slide" data-slide data-name="Table of Contents" aria-hidden="true" tabindex="-1"><img data-src="assets/slide_02.png" alt="Slide 02: Table of Contents" width="1056" height="816"></a>
+                        <a href="archetypes/03-Slide-Executive-Summary.html" class="slide" data-slide data-name="Executive Summary" aria-hidden="true" tabindex="-1"><img data-src="assets/slide_03.png" alt="Slide 03: Executive Summary" width="1056" height="816"></a>
+                        <a href="archetypes/04-Slide-Cybersecurity-Maturity.html" class="slide" data-slide data-name="Cybersecurity Maturity" aria-hidden="true" tabindex="-1"><img data-src="assets/slide_04.png" alt="Slide 04: Cybersecurity Maturity" width="1056" height="816"></a>
+                        <a href="archetypes/05-Slide-Scope.html" class="slide" data-slide data-name="Scope" aria-hidden="true" tabindex="-1"><img data-src="assets/slide_05.png" alt="Slide 05: Scope" width="1056" height="816"></a>
+                        <a href="archetypes/06-Slide-Risk-Matrix.html" class="slide" data-slide data-name="Risk Matrix" aria-hidden="true" tabindex="-1"><img data-src="assets/slide_06.png" alt="Slide 06: Risk Matrix" width="1056" height="816"></a>
+                        <a href="archetypes/07-Slide-Testing-Phases.html" class="slide" data-slide data-name="Testing Phases" aria-hidden="true" tabindex="-1"><img data-src="assets/slide_07.png" alt="Slide 07: Testing Phases" width="1056" height="816"></a>
+                        <a href="archetypes/08-Slide-Findings-Overview.html" class="slide" data-slide data-name="Findings Overview" aria-hidden="true" tabindex="-1"><img data-src="assets/slide_08.png" alt="Slide 08: Findings Overview" width="1056" height="816"></a>
+                        <a href="archetypes/09-Slide-Technical-Details.html" class="slide" data-slide data-name="Technical Details" aria-hidden="true" tabindex="-1"><img data-src="assets/slide_09.png" alt="Slide 09: Technical Details" width="1056" height="816"></a>
+                        <a href="archetypes/10-Slide-Proof-of-Concept.html" class="slide" data-slide data-name="Proof of Concept" aria-hidden="true" tabindex="-1"><img data-src="assets/slide_10.png" alt="Slide 10: Proof of Concept" width="1056" height="816"></a>
+                        <a href="archetypes/11-Slide-Team.html" class="slide" data-slide data-name="The Team" aria-hidden="true" tabindex="-1"><img data-src="assets/slide_11.png" alt="Slide 11: The Team" width="1056" height="816"></a>
+                        <a href="archetypes/12-Slide-Capability-Statement.html" class="slide" data-slide data-name="Capability Statement" aria-hidden="true" tabindex="-1"><img data-src="assets/slide_12.png" alt="Slide 12: Capability Statement" width="1056" height="816"></a>
+                        <a href="archetypes/13-Slide-Vulnerabilities-Overview.html" class="slide" data-slide data-name="Vulnerabilities Overview" aria-hidden="true" tabindex="-1"><img data-src="assets/slide_13.png" alt="Slide 13: Vulnerabilities Overview" width="1056" height="816"></a>
+                        <a href="archetypes/14-Slide-Exploitability-Overview.html" class="slide" data-slide data-name="Exploitability Overview" aria-hidden="true" tabindex="-1"><img data-src="assets/slide_14.png" alt="Slide 14: Exploitability Overview" width="1056" height="816"></a>
+                        <a href="archetypes/15-Slide-Appendix-A.html" class="slide" data-slide data-name="Appendix A" aria-hidden="true" tabindex="-1"><img data-src="assets/slide_15.png" alt="Slide 15: Appendix A" width="1056" height="816"></a>
+                        <a href="archetypes/16-Slide-Company-Overview.html" class="slide" data-slide data-name="Company Overview" aria-hidden="true" tabindex="-1"><img data-src="assets/slide_16.png" alt="Slide 16: Company Overview" width="1056" height="816"></a>
+                    </div>
+                    <div class="pager" hidden>
+                        <button type="button" class="key" data-prev aria-label="Previous slide">&lt;</button>
+                        <div class="ticks">
+                            <button type="button" class="tick" data-go="1" aria-label="Slide 1: Cover Page" aria-current="true"></button>
+                            <button type="button" class="tick" data-go="2" aria-label="Slide 2: Table of Contents"></button>
+                            <button type="button" class="tick" data-go="3" aria-label="Slide 3: Executive Summary"></button>
+                            <button type="button" class="tick" data-go="4" aria-label="Slide 4: Cybersecurity Maturity"></button>
+                            <button type="button" class="tick" data-go="5" aria-label="Slide 5: Scope"></button>
+                            <button type="button" class="tick" data-go="6" aria-label="Slide 6: Risk Matrix"></button>
+                            <button type="button" class="tick" data-go="7" aria-label="Slide 7: Testing Phases"></button>
+                            <button type="button" class="tick" data-go="8" aria-label="Slide 8: Findings Overview"></button>
+                            <button type="button" class="tick" data-go="9" aria-label="Slide 9: Technical Details"></button>
+                            <button type="button" class="tick" data-go="10" aria-label="Slide 10: Proof of Concept"></button>
+                            <button type="button" class="tick" data-go="11" aria-label="Slide 11: The Team"></button>
+                            <button type="button" class="tick" data-go="12" aria-label="Slide 12: Capability Statement"></button>
+                            <button type="button" class="tick" data-go="13" aria-label="Slide 13: Vulnerabilities Overview"></button>
+                            <button type="button" class="tick" data-go="14" aria-label="Slide 14: Exploitability Overview"></button>
+                            <button type="button" class="tick" data-go="15" aria-label="Slide 15: Appendix A"></button>
+                            <button type="button" class="tick" data-go="16" aria-label="Slide 16: Company Overview"></button>
+                        </div>
+                        <button type="button" class="key wide" data-toggle aria-label="Pause slideshow">Pause</button>
+                        <button type="button" class="key" data-next aria-label="Next slide">&gt;</button>
+                    </div>
+                </div><!-- /slideshow -->
             </div>
         </div>
         <section>
@@ -230,5 +309,91 @@ footer .wrap { display: flex; justify-content: space-between; gap: 20px; padding
         </section>
     </main>
     <footer><div class="wrap"><span>&copy; 2026 Manteiga Foundation. Released under the MIT License.</span><span>medet.ink</span></div></footer>
+    <script>
+    (() => {
+        const show = document.querySelector('[data-slideshow]');
+        if (!show) return;
+        const slides = [...show.querySelectorAll('[data-slide]')];
+        const ticks = [...show.querySelectorAll('[data-go]')];
+        const stage = show.querySelector('.stage');
+        const now = show.querySelector('.now');
+        const toggle = show.querySelector('[data-toggle]');
+        const interval = Number(show.dataset.interval) || 4500;
+        const STEP = 100;
+        let index = 0, elapsed = 0, leaving = null;
+        // Reduced motion: no autoplay; the visitor moves it with the controls or presses play.
+        let held = window.matchMedia('(prefers-reduced-motion: reduce)').matches, hovered = false, focused = false;
+
+        const pad = (n) => String(n).padStart(2, '0');
+        const playing = () => !held && !hovered && !focused;
+        const load = (i) => {
+            const img = slides[(i + slides.length) % slides.length].querySelector('img');
+            if (img.dataset.src && !img.getAttribute('src')) img.src = img.dataset.src;
+        };
+        const render = () => {
+            show.dataset.state = playing() ? 'playing' : 'paused';
+            show.querySelector('.state span').textContent = playing() ? 'Playing' : 'Paused';
+            toggle.textContent = held ? 'Play' : 'Pause';
+            toggle.setAttribute('aria-label', held ? 'Play slideshow' : 'Pause slideshow');
+            ticks.forEach((tick, i) => {
+                tick.classList.toggle('is-done', i < index);
+                tick.style.setProperty('--progress', i === index ? Math.min(elapsed / interval, 1) : 0);
+            });
+        };
+        const go = (target, direction, byVisitor) => {
+            const next = (target + slides.length) % slides.length;
+            if (next === index) return;
+            const old = slides[index], fresh = slides[next];
+            if (leaving) leaving.classList.remove('is-leaving');
+            stage.dataset.direction = direction;
+            load(next);
+            void fresh.offsetWidth;  // start the wipe from the side the direction gives
+            old.classList.replace('is-active', 'is-leaving');
+            old.setAttribute('aria-hidden', 'true');
+            old.tabIndex = -1;
+            fresh.classList.add('is-active');
+            fresh.removeAttribute('aria-hidden');
+            fresh.removeAttribute('tabindex');
+            leaving = old;
+            setTimeout(() => { if (leaving === old) { old.classList.remove('is-leaving'); leaving = null; } }, 600);
+            ticks[index].removeAttribute('aria-current');
+            ticks[next].setAttribute('aria-current', 'true');
+            index = next;
+            elapsed = 0;
+            now.setAttribute('aria-live', byVisitor ? 'polite' : 'off');
+            show.querySelector('[data-page]').textContent = pad(next + 1);
+            show.querySelector('[data-name]').textContent = fresh.dataset.name;
+            load(next + 1);
+            render();
+        };
+
+        show.querySelector('[data-prev]').addEventListener('click', () => go(index - 1, 'back', true));
+        show.querySelector('[data-next]').addEventListener('click', () => go(index + 1, 'forward', true));
+        ticks.forEach((tick, i) => tick.addEventListener('click', () => go(i, i > index ? 'forward' : 'back', true)));
+        toggle.addEventListener('click', () => { held = !held; render(); });
+        show.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowRight') go(index + 1, 'forward', true);
+            else if (event.key === 'ArrowLeft') go(index - 1, 'back', true);
+            else return;
+            event.preventDefault();
+        });
+        // Hold while a mouse points at it or the keyboard is inside it.
+        show.addEventListener('pointerenter', (event) => { if (event.pointerType === 'mouse') { hovered = true; render(); } });
+        show.addEventListener('pointerleave', () => { hovered = false; render(); });
+        show.addEventListener('focusin', (event) => { focused = event.target.matches(':focus-visible'); render(); });
+        show.addEventListener('focusout', (event) => { if (!show.contains(event.relatedTarget)) { focused = false; render(); } });
+        setInterval(() => {
+            if (!playing() || document.hidden) return;
+            elapsed += STEP;
+            if (elapsed >= interval) go(index + 1, 'forward', false);
+            else render();
+        }, STEP);
+
+        show.querySelector('.pager').hidden = false;
+        show.classList.add('is-ready');
+        load(1);
+        render();
+    })();
+    </script>
 </body>
 </html>
