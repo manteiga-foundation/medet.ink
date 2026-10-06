@@ -3,8 +3,8 @@ from __future__ import annotations
 
 import unittest
 
-from harness import (PAGE_PT, SLIDE_PX, TOLERANCE_PX, Chromium, archetypes, chart_calls, pdf_pages,
-                     slide_number)
+from harness import (PAGE_PT, SLIDE_PX, TOLERANCE_IMAGE, TOLERANCE_PX, ROOT, Chromium, archetypes, chart_calls,
+                     image_difference, pdf_pages, slide_number)
 
 # Measured defects, open until fixed (docs/template.md, "Known defects"). The footer of these
 # archetypes is pushed below the page edge and clipped. A fix removes the number here; the
@@ -19,8 +19,12 @@ class ArchetypeTests(unittest.TestCase):
         cls.rendered = {}
         for path in archetypes():
             opened = cls.chromium.open(f'archetypes/{path.name}')
+            # Screen captures first: printing makes chart libraries reflow for the page.
+            screenshot = opened.screenshot()
+            slides = opened.slides()
             cls.rendered[slide_number(path)] = {
-                'slides': opened.slides(),
+                'slides': slides,
+                'screenshot': screenshot,
                 'pages': pdf_pages(opened.pdf()),
                 'errors': list(opened.errors),
                 'charts': chart_calls(path),
@@ -75,6 +79,16 @@ class ArchetypeTests(unittest.TestCase):
                 self.assertEqual(drawn, r['charts'], 'a chart was not drawn: did its library load?')
         # Slides 04 and 08 (Highcharts) and 09 (Chart.js radar) carry charts today.
         self.assertGreaterEqual(sum(r['charts'] for r in self.rendered.values()), 3)
+
+    def test_each_gallery_thumbnail_is_a_render_of_its_archetype(self):
+        for number, r in self.rendered.items():
+            with self.subTest(archetype=number):
+                thumbnail = ROOT / 'assets' / f'slide_{number}.png'
+                self.assertTrue(thumbnail.is_file(), f'{thumbnail.name} is missing')
+                difference = image_difference(r['screenshot'], thumbnail.read_bytes())
+                self.assertLessEqual(difference, TOLERANCE_IMAGE,
+                                     f'{thumbnail.name} differs from the archetype in {difference:.2f}% of '
+                                     'its pixels: run python3 scripts/make_images.py')
 
 
 if __name__ == '__main__':

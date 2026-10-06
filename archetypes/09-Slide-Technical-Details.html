@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>ACME - Technical Finding</title>
     <!-- Chart.js Dependency -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
@@ -551,7 +551,9 @@
 
 <!-- Chart.js Implementation for the Medium Risk Radar -->
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    // Canvas text is painted once: draw after the web fonts have loaded, or the labels keep a
+    // fallback font on screen and in print.
+    document.fonts.ready.then(function() {
         const ctx = document.getElementById('radarChart').getContext('2d');
         
         // Medium Risk Gradient (Yellow/Amber)

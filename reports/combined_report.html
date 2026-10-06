@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>ACME - Full Penetration Testing Report</title>
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src="https://code.highcharts.com/modules/export-data.js"></script>
-<script src="https://code.highcharts.com/modules/offline-exporting.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highcharts@13.1.1/highcharts.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highcharts@13.1.1/modules/exporting.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highcharts@13.1.1/modules/export-data.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highcharts@13.1.1/modules/offline-exporting.js"></script>
 <script>
     const chartData = {
         categories: ['Startups', 'Small Biz', 'Mid-Market', 'Enterprise', 'Large Ent.', 'Fortune 500'],
@@ -19,6 +19,9 @@
         }
     };
 
+    // Highcharts measures label text when it draws: draw after the web fonts have loaded, or a
+    // first visit lays the chart out with a fallback font's metrics.
+    document.fonts.ready.then(function() {
         Highcharts.chart('chart-container', {
         chart: {
             type: 'area',
@@ -166,8 +169,12 @@
             })
             .add();
     });
+    });
 </script>
 <script>
+    // Highcharts measures label text when it draws: draw after the web fonts have loaded, or a
+    // first visit lays the chart out with a fallback font's metrics.
+    document.fonts.ready.then(function() {
     Highcharts.chart('chart-container', {
         chart: {
             type: 'pie',
@@ -253,10 +260,13 @@
             }]
         }]
     });
+    });
 </script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    // Canvas text is painted once: draw after the web fonts have loaded, or the labels keep a
+    // fallback font on screen and in print.
+    document.fonts.ready.then(function() {
         const ctx = document.getElementById('radarChart').getContext('2d');
         
         // Medium Risk Gradient (Yellow/Amber)
@@ -6811,6 +6821,9 @@
         }
     };
 
+    // Highcharts measures label text when it draws: draw after the web fonts have loaded, or a
+    // first visit lays the chart out with a fallback font's metrics.
+    document.fonts.ready.then(function() {
         Highcharts.chart('chart-container', {
         chart: {
             type: 'area',
@@ -6957,6 +6970,7 @@
                 'stroke-width': 1
             })
             .add();
+    });
     });
 </script>
 
@@ -7527,6 +7541,9 @@
 
 <!-- Highcharts Implementation Script -->
 <script>
+    // Highcharts measures label text when it draws: draw after the web fonts have loaded, or a
+    // first visit lays the chart out with a fallback font's metrics.
+    document.fonts.ready.then(function() {
     Highcharts.chart('chart-container', {
         chart: {
             type: 'pie',
@@ -7611,6 +7628,7 @@
                 dataLabels: { color: '#10B981' }
             }]
         }]
+    });
     });
 </script>
 
@@ -7742,7 +7760,9 @@
 
 <!-- Chart.js Implementation for the Medium Risk Radar -->
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    // Canvas text is painted once: draw after the web fonts have loaded, or the labels keep a
+    // fallback font on screen and in print.
+    document.fonts.ready.then(function() {
         const ctx = document.getElementById('radarChart').getContext('2d');
         
         // Medium Risk Gradient (Yellow/Amber)

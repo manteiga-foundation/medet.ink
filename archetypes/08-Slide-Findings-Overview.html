@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <title>ACME - Findings Overview</title>
     <!-- Highcharts Dependencies -->
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script src="https://code.highcharts.com/modules/export-data.js"></script>
-    <script src="https://code.highcharts.com/modules/offline-exporting.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highcharts@13.1.1/highcharts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highcharts@13.1.1/modules/exporting.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highcharts@13.1.1/modules/export-data.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highcharts@13.1.1/modules/offline-exporting.js"></script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
@@ -477,6 +477,9 @@
 
 <!-- Highcharts Implementation Script -->
 <script>
+    // Highcharts measures label text when it draws: draw after the web fonts have loaded, or a
+    // first visit lays the chart out with a fallback font's metrics.
+    document.fonts.ready.then(function() {
     Highcharts.chart('chart-container', {
         chart: {
             type: 'pie',
@@ -561,6 +564,7 @@
                 dataLabels: { color: '#10B981' }
             }]
         }]
+    });
     });
 </script>
 

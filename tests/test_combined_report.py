@@ -9,7 +9,7 @@ import unittest
 from pathlib import Path
 
 from harness import (PAGE_PT, ROOT, TOLERANCE_PX, Chromium, archetypes, chart_calls, chart_signature,
-                     pdf_pages)
+                     pdf_pages, pdf_texts)
 
 REPORT = 'reports/combined_report.html'
 
@@ -64,6 +64,14 @@ class CombinedReportTests(unittest.TestCase):
 
     def test_report_prints_one_landscape_letter_page_per_slide(self):
         self.assertEqual(pdf_pages(self.opened.pdf()), [PAGE_PT] * len(archetypes()))
+
+    def test_sample_pdf_is_a_print_of_the_combined_report(self):
+        committed = (ROOT / 'reports' / 'final_report.pdf').read_bytes()
+        fresh = self.opened.pdf()
+        self.assertEqual(pdf_pages(committed), pdf_pages(fresh))
+        for number, (old, new) in enumerate(zip(pdf_texts(committed), pdf_texts(fresh)), start=1):
+            with self.subTest(page=number):
+                self.assertEqual(old, new, 'reports/final_report.pdf is stale: run python3 scripts/make_pdf.py')
 
     def test_content_stays_inside_each_slide(self):
         for number, slide in enumerate(self.slides, start=1):

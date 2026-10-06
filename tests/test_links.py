@@ -55,6 +55,18 @@ class LinkTests(unittest.TestCase):
                 with self.subTest(page=page, link=link):
                     self.assertTrue(target.is_file(), f'{link} does not exist')
 
+    def test_chart_libraries_load_from_jsdelivr_pinned_to_a_version(self):
+        # code.highcharts.com refuses headless browsers (403) and rate-limits (429), which left the
+        # generated PDF and thumbnails without charts; an unpinned "latest" can change every print.
+        pinned = re.compile(r'^https://cdn\.jsdelivr\.net/npm/[a-z0-9.-]+@\d+\.\d+\.\d+/\S+\.js$')
+        scripts = 0
+        for path in archetypes():
+            for src in re.findall(r'<script[^>]*\ssrc="([^"]+)"', path.read_text(encoding='utf-8')):
+                scripts += 1
+                with self.subTest(archetype=path.name[:2], src=src):
+                    self.assertRegex(src, pinned)
+        self.assertGreater(scripts, 0)
+
     def test_landing_page_links_every_archetype_with_its_thumbnail(self):
         links = set(references('index.html').links)
         for path in archetypes():
