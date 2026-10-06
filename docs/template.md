@@ -109,7 +109,7 @@ defines it), web fonts loaded before capture.
 
 ## Tests
 
-`python3 -m unittest discover -s tests -v`; 35 tests (one expected failure), about 40 s once the third-party cache is
+`python3 -m unittest discover -s tests -v`; 36 tests (one expected failure), about 40 s once the third-party cache is
 filled. The harness (`tests/harness.py`) serves the repository, drives Chromium through
 `scripts/browser.py`, and answers third-party requests from `tests/.cache`. Each test was seen
 failing for the right reason before it passed: against the defect it was written for, or against a
@@ -149,7 +149,9 @@ when".
   acmecyber.com" (failed on 09); no other firm is named (failed on 09); each page number is the
   slide number out of the archetype count (failed on all 16); the table of contents lists pages 02
   to 16 under each archetype's title (failed); the README and landing page state the archetype
-  count (failed on the README's 13).
+  count (failed on the README's 13). Every IPv4 address in the archetypes, README and landing page lies
+  in an RFC 5737 documentation range (failed on 05 and 16: sixteen 10.0.x.x addresses); no other
+  organisation is named (failed on 16: BICSA).
 - `tests/test_links.py` - no browser: local links on the public pages resolve (fails when a
   thumbnail is deleted or a script points at a missing path); chart libraries load from jsDelivr
   pinned to a version (failed on code.highcharts.com and an unpinned Chart.js); the landing page
