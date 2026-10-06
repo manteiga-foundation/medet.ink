@@ -27,7 +27,8 @@ label box.
 
 Run from the repository root: `python3 docs/spikes/001-chart-library/build.py`, then
 `python3 docs/spikes/001-chart-library/measure.py`. Open the candidate files over HTTP
-(`python3 -m http.server 8000`) to see them as slides.
+(`python3 -m http.server 8000`) to see them as slides; `index.html` in this folder shows the three
+side by side (http://127.0.0.1:8000/docs/spikes/001-chart-library/).
 
 ## Results (Chromium 148, macOS arm64, 1056 x 816 slide, chart area 428 x 426 px)
 
