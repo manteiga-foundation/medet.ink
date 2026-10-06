@@ -24,9 +24,9 @@ addresses in samples use the documentation ranges of RFC 5737 (192.0.2.0/24, 198
 203.0.113.0/24), mapped consistently across the report.
 
 Stack: HTML5 and print CSS; charts in inline SVG drawn by each slide's own script, and Chart.js
-from a CDN for one radar; Google Fonts (Montserrat, Fira Code); the landing page uses the Tailwind
-CDN. Tooling: Python 3.9 or newer, Playwright for Python, pypdf; the tests use the standard
-library's `unittest`.
+from a CDN for one radar; Google Fonts (Montserrat, Fira Code); the landing page is plain HTML and
+CSS with Google Fonts (Space Grotesk, IBM Plex Mono). Tooling: Python 3.9 or newer, Playwright for
+Python, pypdf; the tests use the standard library's `unittest`.
 
 ## Vocabulary (fixed, use these words)
 
@@ -151,7 +151,7 @@ Run everything from the repository root. The demo GIF recipe is in `docs/templat
 ## Map
 
 ```
-index.html                       landing page: gallery, social preview tags (Tailwind CDN)
+index.html                       landing page: gallery, social preview tags (plain HTML and CSS, no script)
 archetypes/NN-Slide-*.html       the archetypes (16 today)
 archetypes/index.html            the viewer (iframe; its slide list lives in its script)
 reports/combined_report.html     generated: every archetype in one document (and merged_report.html)
@@ -194,8 +194,9 @@ content, with the logo in the footer and titles at 0.15in; one firm (ACME), one 
 table of contents that matches across them; one severity palette; sample content with documentation
 addresses only; the charts in inline SVG (slides 04 and 08) and one Chart.js radar (slide 09); the
 combined report, in which every slide looks exactly like its archetype; the 16-page sample PDF,
-thumbnails and demo GIF, all faithful renders; the landing page with gallery, viewer and social
-preview; the suite (46 tests, all passing, each seen failing for the right reason first). No known
+thumbnails and demo GIF, all faithful renders; the landing page in the Terminal Paper design (spike
+002), worded for any report or presentation, with gallery and social preview; the suite (49 tests,
+all passing, each seen failing for the right reason first). No known
 defects are open.
 
 Open, the maintainer decides:

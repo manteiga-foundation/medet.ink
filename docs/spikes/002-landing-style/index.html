@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spike 002 - Landing page style options</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap');
+        body { margin: 0; padding: 36px 40px 60px; background: #F2EFE6; color: #2B2B2B; font-family: 'Space Grotesk', sans-serif; }
+        h1 { font-size: 24px; margin: 0 0 6px; text-transform: uppercase; letter-spacing: 0.01em; }
+        p { margin: 0 0 6px; color: #5B5850; max-width: 960px; line-height: 1.6; }
+        code { font-family: 'IBM Plex Mono', monospace; font-size: 13px; }
+        .option { display: grid; grid-template-columns: 1fr 210px; gap: 22px; margin-top: 34px; padding-top: 26px; border-top: 2px solid #2B2B2B; }
+        .option h2 { grid-column: 1 / -1; margin: 0; font-size: 20px; text-transform: uppercase; }
+        .option h2 span { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #5B5850; margin-left: 10px; text-transform: none; }
+        .option .note { grid-column: 1 / -1; margin: -8px 0 0; }
+        .option img { display: block; width: 100%; height: auto; border: 2px solid #2B2B2B; }
+        .option a { grid-column: 1 / -1; font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 13px; color: #2B2B2B; }
+    </style>
+</head>
+<body>
+    <h1>Spike 002: landing page style options</h1>
+    <p>The current landing page's content and copy, unchanged, in three directions taken from the two style references.
+       Each image shows the first screen at 1440 x 900 and at 390 x 844 (phone). Open a live page to scroll the whole design.
+       Write-up: <code>docs/spikes/002-landing-style.md</code>.</p>
+
+    <div class="option">
+        <h2>A. Terminal Paper <span>conservative</span></h2>
+        <p class="note">The references' palette and type on today's layout: cream paper with a faint grid, charcoal ink, monospace labels, bold uppercase headings, hard offset shadows, an LED status in the slim navigation band. Features become a spec sheet instead of icon tiles. The most executive-ready of the three.</p>
+        <img src="shot-option-a-1440.png" alt="Option A at 1440 px">
+        <img src="shot-option-a-390.png" alt="Option A at 390 px">
+        <a href="option-a.html">Open option A</a>
+    </div>
+
+    <div class="option">
+        <h2>B. Hardware Console <span>closest to reference 1</span></h2>
+        <p class="note">The page as an instrument: bevelled panels with screws, LED indicators, bevelled keycap buttons, the demo on an LCD screen with scanlines, the gallery as a bank of small monitors, the features as modules.</p>
+        <img src="shot-option-b-1440.png" alt="Option B at 1440 px">
+        <img src="shot-option-b-390.png" alt="Option B at 390 px">
+        <a href="option-b.html">Open option B</a>
+    </div>
+
+    <div class="option">
+        <h2>C. Blueprint Sketchbook <span>divergent, reference 2</span></h2>
+        <p class="note">Paper grain, hand-drawn ink borders, watercolour washes behind the headings, the demo taped to the page, slides framed as postage stamps, typewriter text and a tall condensed wordmark.</p>
+        <img src="shot-option-c-1440.png" alt="Option C at 1440 px">
+        <img src="shot-option-c-390.png" alt="Option C at 390 px">
+        <a href="option-c.html">Open option C</a>
+    </div>
+</body>
+</html>

@@ -61,6 +61,15 @@ prefixed `sev-`, `color-`, `rsk-`). Amber text on white uses `#D97706` for legib
 pie label). The risk matrix's effort scale (slide 06) uses the blues `#4781C3`, `#0A4B9F` and ink
 `#0A2540`, so no severity colour means anything else there.
 
+## Landing page
+
+`index.html`, design A of spike 002 (Terminal Paper): cream paper `#F2EFE6` with a faint 24 px
+grid, ink `#2B2B2B`, soft ink `#5B5850`, accents sage `#8FB3A8` (primary button), peach `#D9A877`
+(secondary), lavender `#A99BC2` (focus ring), status LED `#3E9B4F`; Space Grotesk for headings and
+text, IBM Plex Mono for labels; 2 px ink borders with hard 4 px offset shadows. Plain HTML and CSS
+with Google Fonts, no script. The copy presents the template for any report or presentation; the
+sample content is a fictional security assessment.
+
 ## Print rules
 
 - `@page { size: 11in 8.5in; margin: 0 }`; in print, `html, body` flow (`height: auto`,
@@ -118,7 +127,7 @@ defines it), web fonts loaded before capture.
 
 ## Tests
 
-`python3 -m unittest discover -s tests -v`; 46 tests, about 100 s once the third-party cache is
+`python3 -m unittest discover -s tests -v`; 49 tests, about 105 s once the third-party cache is
 filled. The harness (`tests/harness.py`) serves the repository, drives Chromium through
 `scripts/browser.py`, and answers third-party requests from `tests/.cache`. Each test was seen
 failing for the right reason before it passed: against the defect it was written for, or against a
@@ -192,6 +201,10 @@ when".
   the sample PDF drawn by CoreGraphics (`sips`, as Preview draws it) shows no flat area darker
   than the screen render, in 12 px blocks (failed on 12 pages, worst on 12: 44 levels darker behind
   the Past Performance badge and the cards; skipped where `sips` is missing).
+- `tests/test_landing.py` - the landing page loads no script (failed: the Tailwind CDN), its
+  title, headline and social titles do not limit it to cybersecurity (failed: "Pentest",
+  "Cybersecurity"), and at 1440 x 900, 1280 x 800 and 390 x 844 it has no sideways scroll, broken
+  image or page error (fails when a 1600 px strip and a missing image are added).
 - `tests/test_demo_gif.py` - no browser: the demo GIF has one frame per archetype, each within a
   mean difference of 6 of its thumbnail (the GIF is a dithered copy; failed at 19 to 45 with the old
   thumbnails, 0.6 to 0.9 when fresh).
@@ -221,6 +234,10 @@ did not match the report; two severity palettes; card and badge shadows printing
   card up 0.1in to make room for the footer's logo row. The cover keeps its logos. The maintainer
   then halved the remaining gap above the titles (43 to 49 px to the letters, now 19 to 25 px):
   titles start at 0.15in, the same top margin as slide 09's card.
+- Landing page: the maintainer chose design A of spike 002 from three directions after their two
+  retro computing references, and asked that the wording not limit the template to cybersecurity.
+  The page dropped the Tailwind CDN script; the 16:9 claim in the Teams and Zoom feature (11 x 8.5
+  is 1.29:1) was replaced with an accurate sentence.
 - Severity palette: the Tailwind 500 tier, measured in OKLCH. Its five colours span 0.132 in
   lightness against 0.260 for the alternative (`#DC2626`, `#FBBF24`), adjacent severities stay
   0.096 to 0.104 apart (about five times a just-noticeable difference), and amber-400 text on white
