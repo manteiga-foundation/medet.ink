@@ -50,3 +50,15 @@ A selection of included page layouts:
 ## Contributing
 
 We welcome contributions from the cybersecurity community. Please submit pull requests or open issues to propose new layouts, design refinements, or reporting features.
+
+## Development and Verification
+
+The template itself needs nothing beyond a browser. Maintainers who regenerate the combined report, the sample PDF or the gallery images, or who run the verification suite, need Python 3.9 or newer:
+
+```sh
+python3 -m pip install -r requirements-dev.txt
+python3 -m playwright install chromium
+python3 -m unittest discover -s tests -v
+```
+
+The suite renders every archetype and the combined report in Chromium and verifies page size, single-page printing, content overflow, chart rendering and links. `AGENTS.md` describes how the repository is maintained; `docs/template.md` documents the archetypes, design tokens, build pipeline and tests.
