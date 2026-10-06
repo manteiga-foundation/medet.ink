@@ -23,9 +23,10 @@ The sample content is fictional (ACME). Real client data never enters the reposi
 addresses in samples use the documentation ranges of RFC 5737 (192.0.2.0/24, 198.51.100.0/24,
 203.0.113.0/24), mapped consistently across the report.
 
-Stack: HTML5 and print CSS; Highcharts and Chart.js from CDNs; Google Fonts (Montserrat, Fira
-Code); the landing page uses the Tailwind CDN. Tooling: Python 3.9 or newer, Playwright for Python,
-pypdf; the tests use the standard library's `unittest`.
+Stack: HTML5 and print CSS; charts in inline SVG drawn by each slide's own script, and Chart.js
+from a CDN for one radar; Google Fonts (Montserrat, Fira Code); the landing page uses the Tailwind
+CDN. Tooling: Python 3.9 or newer, Playwright for Python, pypdf; the tests use the standard
+library's `unittest`.
 
 ## Vocabulary (fixed, use these words)
 
@@ -53,11 +54,11 @@ Every slice follows the same loop. Do not skip steps because a change looks smal
 (a series order, a CSS height, a duplicated id) are the ones that broke the report.
 
 1. **RED first.** Write the failing test before the change, in `tests/`, against the rendered page
-   in real Chromium: geometry from the DOM, chart state from the chart library, pagination from
-   the printed PDF. Run it and see it fail for the right reason. A test for behaviour that already
-   exists cannot fail first, so prove that it can fail: apply a deliberate break to a copy of the
-   repository, run the suite against the copy with `MEDET_ROOT=<copy>`, and record in
-   `docs/template.md` what the test fails on.
+   in real Chromium: geometry from the DOM, chart state from the drawn SVG or the chart library,
+   pagination from the printed PDF. Run it and see it fail for the right reason. A test for
+   behaviour that already exists cannot fail first, so prove that it can fail: apply a deliberate
+   break to a copy of the repository, run the suite against the copy with `MEDET_ROOT=<copy>`, and
+   record in `docs/template.md` what the test fails on.
 2. **GREEN.** The smallest change that passes, then refactor with the tests still green.
    Regenerate every derived artifact the change touches: `merge_slides.py` always after an
    archetype edit, `make_pdf.py` and `make_images.py` when the printed or pictured result changed.
@@ -83,8 +84,9 @@ Larger questions get a spike: a throwaway experiment outside the repository, wri
 `docs/spikes/NNN-name.md` with Question, Approach, Results (a table of measurements) and Verdict.
 
 Why this rule exists here: four consecutive commits flipped the maturity chart's series order by
-reasoning about the array. One measurement of the rendered bands settles it (Highcharts draws the
-first series of a stack on top), and `tests/test_maturity_chart.py` now holds the answer.
+reasoning about the array (Highcharts, which drew the chart then, put the first series of a stack
+on top). One measurement of the rendered bands settles it, and `tests/test_maturity_chart.py` now
+holds the answer.
 
 ## Commands
 
@@ -92,7 +94,7 @@ first series of a stack on top), and `tests/test_maturity_chart.py` now holds th
 python3 -m pip install -r requirements-dev.txt   # maintainers only: Playwright for Python, pypdf
 python3 -m playwright install chromium
 
-python3 -m unittest discover -s tests -v          # the gate (under a minute)
+python3 -m unittest discover -s tests -v          # the gate (about a minute)
 MEDET_ROOT=/path/to/copy python3 -m unittest discover -s tests   # the suite against a copy
 python3 scripts/merge_slides.py                   # archetypes -> reports/combined_report.html (+ merged_report.html)
 python3 scripts/make_pdf.py                       # reports/merged_report.html -> reports/final_report.pdf
@@ -107,16 +109,19 @@ Run everything from the repository root. The demo GIF recipe is in `docs/templat
 - One `.slide` per archetype, 11in x 8.5in, with `@page { size: 11in 8.5in; margin: 0 }`; content
   stays inside it (the overflow probe allows 2 px). In print, slides sit a hair under the page
   (8.49in) with `overflow: hidden` and `page-break-after: always`, so no blank trailing pages.
-- Archetype files are `NN-Slide-Name.html`, numbered from 01 without gaps. A new archetype also
-  needs its gallery card and `assets/slide_NN.png` on the landing page, an entry in the viewer's
-  list, and regenerated derived artifacts.
-- Charts are created in the archetype's own script with `Highcharts.chart(` or `new Chart(`, inside
-  `document.fonts.ready.then(...)`; the tests count those calls in the source, expect as many
-  charts drawn, and check that a late font changes nothing.
-- Chart libraries load from jsDelivr pinned to a version (`highcharts@13.1.1`, `chart.js@4.5.1`),
-  never an unpinned "latest" and never code.highcharts.com (it refuses headless browsers with 403
-  and rate-limits repeated runs with 429).
-- Highcharts draws the first series of a stack on top (`yAxis.reversedStacks` defaults to true).
+- Archetype files are `NN-Slide-Name.html`, numbered from 01 without gaps, in the running order the
+  consistency test lists (the company overview closes the report). A new or moved archetype also
+  needs its gallery card and `assets/slide_NN.png` on the landing page, its place in the viewer's
+  list, and regenerated derived artifacts; the tests check the viewer and the gallery follow.
+- Slides after the cover have no header: titles start at 0.4in, and the logo is a `.footer-logo`
+  placed first in the footer's bottom row, centred on the brand line. The cover keeps its logos.
+- Charts are drawn by the archetype's own script inside `document.fonts.ready.then(...)`. An inline
+  SVG chart draws into a container with `data-chart="name"` (unique across the report), finds it
+  through that attribute, and keeps its variables inside a function so it can run twice; a Chart.js
+  chart is created with `new Chart(`. The tests count the containers and calls, expect as many
+  charts drawn, and redraw them to check that a late font changes nothing.
+- Chart.js loads from jsDelivr pinned to a version (`chart.js@4.5.1`), never an unpinned "latest".
+  No page loads Highcharts.
 - The combined report is one document. `merge_slides.py` scopes each archetype's CSS to its slide,
   but ids and inline-script globals still share one namespace: new archetypes use ids unique to the
   slide (`chart-04`) and keep script variables out of the global scope.
@@ -132,8 +137,11 @@ Run everything from the repository root. The demo GIF recipe is in `docs/templat
   Low `#10B981`, Informational `#0EA5E9`), and a severity-coded element carries its severity as a
   class (`critical`, `high`, `medium`/`med`, `low`, `info`, alone or prefixed `sev-`, `color-`,
   `rsk-`), which is how the palette test finds it.
+- Every IPv4 address in the archetypes, the README and the landing page lies in an RFC 5737 range,
+  and no real organisation is named; the tests check both.
 - Public pages link only to files in the repository, by relative path; the social preview
-  (`og:image`, `twitter:image`) is an absolute https://medet.ink/ URL of a committed file.
+  (`og:image`, `twitter:image`) is an absolute https://medet.ink/ URL of a committed file. Every
+  file under `assets/` and `reports/` is generated or linked, and no `.DS_Store` is tracked.
 - Commit in a separate step after reading the test counts; never chain a test run through `grep`
   into `git commit` (grep exits 0 when it prints failures).
 
@@ -172,26 +180,22 @@ CNAME                            medet.ink, the GitHub Pages custom domain
   HYPOTHESIS at the level its evidence supports.
 - Sample data is fictional and sanitized.
 - Design tokens are lifted from the archetypes, never restyled from scratch (`docs/template.md`).
+- Charts are inline SVG drawn by the slide's own script (spike 001); no Highcharts.
 - The landing page stays sleek and minimal: a slim navigation band, concise text.
 - Published from `main` through GitHub Pages with the `CNAME` file.
 
 ## Where things stand (update when it changes)
 
-Done: sixteen archetypes, cover to appendix, each one landscape Letter page that holds its content;
-one firm (ACME), one page count and a table of contents that matches across them; the combined
-report, in which every slide looks exactly like its archetype; the 16-page sample PDF, thumbnails
-and demo GIF, all faithful renders with their charts; the landing page with gallery, viewer and
-social preview; one severity palette on every slide; the suite (35 tests, each seen failing for
-the right reason first; one expected failure for the known defect below).
-
-Known defect: slide 08's donut shortens its Medium and Low labels ("Medi...", "L..."); see
-`docs/template.md`. It goes with the donut's replacement.
+Done: sixteen archetypes, cover to company overview, each one landscape Letter page that holds its
+content, with the logo in the footer and titles at 0.4in; one firm (ACME), one page count and a
+table of contents that matches across them; one severity palette; sample content with documentation
+addresses only; the charts in inline SVG (slides 04 and 08) and one Chart.js radar (slide 09); the
+combined report, in which every slide looks exactly like its archetype; the 16-page sample PDF,
+thumbnails and demo GIF, all faithful renders; the landing page with gallery, viewer and social
+preview; the suite (44 tests, all passing, each seen failing for the right reason first). No known
+defects are open.
 
 Open, the maintainer decides:
 
-1. Replacing Highcharts (`docs/spikes/001-chart-library.md`): inline SVG reproduces slide 04's
-   stacked area chart to within 0.02% of its pixels with no library, CDN or licence; ECharts to
-   0.55% at 370 KB; Chart.js does not match and prints a bitmap. After the pick, slide 08's donut
-   is the next slice, measured the same way.
-2. Slide 16's footer sits about 17 px under the address grid, tighter than on other slides
-   (the maintainer is checking it).
+1. The repository's public history still holds slide 16's earlier content (the name BICSA and
+   private 10.0.x.x addresses). Removing it means rewriting history and force-pushing.
