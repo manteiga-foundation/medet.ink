@@ -20,10 +20,10 @@ working contract is `AGENTS.md`.
 | 10 | `10-Slide-Proof-of-Concept.html` | Proof of concept | |
 | 11 | `11-Slide-Team.html` | Engagement team | |
 | 12 | `12-Slide-Capability-Statement.html` | Capability statement | |
-| 13 | `13-Slide-Company-Overview.html` | Company overview | |
-| 14 | `14-Slide-Vulnerabilities-Overview.html` | Vulnerabilities overview | |
-| 15 | `15-Slide-Exploitability-Overview.html` | Exploitability overview | |
-| 16 | `16-Slide-Appendix-A.html` | Appendix A | |
+| 13 | `13-Slide-Vulnerabilities-Overview.html` | Vulnerabilities overview | |
+| 14 | `14-Slide-Exploitability-Overview.html` | Exploitability overview | |
+| 15 | `15-Slide-Appendix-A.html` | Appendix A | |
+| 16 | `16-Slide-Company-Overview.html` | Company overview | closing page |
 
 Every archetype is a complete HTML document: `@page { size: 11in 8.5in; margin: 0 }`, a reset with
 `print-color-adjust: exact`, one `.slide` (11in x 8.5in, `overflow: hidden`), a left accent bar
@@ -110,7 +110,7 @@ defines it), web fonts loaded before capture.
 
 ## Tests
 
-`python3 -m unittest discover -s tests -v`; 39 tests (one expected failure), about 40 s once the third-party cache is
+`python3 -m unittest discover -s tests -v`; 41 tests (one expected failure), about 40 s once the third-party cache is
 filled. The harness (`tests/harness.py`) serves the repository, drives Chromium through
 `scripts/browser.py`, and answers third-party requests from `tests/.cache`. Each test was seen
 failing for the right reason before it passed: against the defect it was written for, or against a
@@ -150,13 +150,15 @@ when".
   acmecyber.com" (failed on 09); no other firm is named (failed on 09); each page number is the
   slide number out of the archetype count (failed on all 16); the table of contents lists pages 02
   to 16 under each archetype's title (failed); the README and landing page state the archetype
-  count (failed on the README's 13). Every IPv4 address in the archetypes, README and landing page lies
+  count (failed on the README's 13); the archetypes run in the agreed order, closing with the
+  company overview (failed while it was 13). Every IPv4 address in the archetypes, README and landing page lies
   in an RFC 5737 documentation range (failed on 05 and 16: sixteen 10.0.x.x addresses); no other
   organisation is named (failed on 16: BICSA).
 - `tests/test_links.py` - no browser: local links on the public pages resolve (fails when a
   thumbnail is deleted or a script points at a missing path); chart libraries load from jsDelivr
   pinned to a version (failed on code.highcharts.com and an unpinned Chart.js); the landing page
-  links every archetype and thumbnail; the social preview points at committed files on medet.ink.
+  links every archetype and thumbnail; the viewer and the gallery list the archetypes in order, each
+  card with its own thumbnail (failed when 13 to 16 were renamed); the social preview points at committed files on medet.ink.
 - `tests/test_repository.py` - no browser: no `.DS_Store` is tracked (failed: one at the root);
   every file under `assets/` and `reports/` is generated or linked from the README, the landing
   page or the viewer (failed on `assets/sample-report.pdf` and `reports/data_uri.txt`).

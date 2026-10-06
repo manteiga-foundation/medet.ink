@@ -87,6 +87,17 @@ class LinkTests(unittest.TestCase):
                 self.assertTrue((ROOT / image[len(SITE):]).is_file(), f'{image} is not in the repository')
         self.assertEqual(meta.get('twitter:card'), 'summary_large_image')
 
+    def test_viewer_and_gallery_follow_the_archetypes(self):
+        names = [p.name for p in archetypes()]
+        viewer = (ROOT / 'archetypes' / 'index.html').read_text(encoding='utf-8')
+        self.assertEqual(re.findall(r'"(\d{2}-Slide-[^"]+\.html)"', viewer), names, 'the viewer lists every archetype in order')
+        landing = (ROOT / 'index.html').read_text(encoding='utf-8')
+        cards = re.findall(r'<a href="archetypes/(\d{2}-Slide-[^"]+\.html)"[^>]*>\s*<div[^>]*>\s*<img src="assets/slide_(\d{2})\.png"', landing)
+        self.assertEqual([href for href, _ in cards], names, 'the gallery shows every archetype in order')
+        for href, thumbnail in cards:
+            with self.subTest(card=href):
+                self.assertEqual(thumbnail, href[:2], 'each card shows its own thumbnail')
+
 
 if __name__ == '__main__':
     unittest.main()
