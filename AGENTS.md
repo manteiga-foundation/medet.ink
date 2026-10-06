@@ -113,7 +113,7 @@ Run everything from the repository root. The demo GIF recipe is in `docs/templat
   consistency test lists (the company overview closes the report). A new or moved archetype also
   needs its gallery card and `assets/slide_NN.png` on the landing page, its place in the viewer's
   list, and regenerated derived artifacts; the tests check the viewer and the gallery follow.
-- Slides after the cover have no header: titles start at 0.4in, and the logo is a `.footer-logo`
+- Slides after the cover have no header: titles start at 0.15in, and the logo is a `.footer-logo`
   placed first in the footer's bottom row, centred on the brand line. The cover keeps its logos.
 - Charts are drawn by the archetype's own script inside `document.fonts.ready.then(...)`. An inline
   SVG chart draws into a container with `data-chart="name"` (unique across the report), finds it
@@ -187,7 +187,7 @@ CNAME                            medet.ink, the GitHub Pages custom domain
 ## Where things stand (update when it changes)
 
 Done: sixteen archetypes, cover to company overview, each one landscape Letter page that holds its
-content, with the logo in the footer and titles at 0.4in; one firm (ACME), one page count and a
+content, with the logo in the footer and titles at 0.15in; one firm (ACME), one page count and a
 table of contents that matches across them; one severity palette; sample content with documentation
 addresses only; the charts in inline SVG (slides 04 and 08) and one Chart.js radar (slide 09); the
 combined report, in which every slide looks exactly like its archetype; the 16-page sample PDF,

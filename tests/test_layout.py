@@ -5,7 +5,7 @@ import unittest
 
 from harness import Chromium, TOLERANCE_PX, archetypes, slide_number
 
-TITLE_TOP = 38.4  # 0.4in from the top of the slide
+TITLE_TOP = 14.4  # 0.15in from the top of the slide, as slide 09's card
 COVER = '01'
 
 PROBE = r"""() => {

@@ -51,7 +51,7 @@ Lift these from the archetypes; do not restyle.
 | Left accent bar | `linear-gradient(180deg, #0A4B9F 0%, #4781C3 35%, #D82018 100%)`, 8 px |
 | Slate text | `#64748B`, `#94A3B8` |
 | Card | white, radius 12 px, border `#E2E8F0`, shadow `0 8px 30px rgba(0,0,0,0.04)` |
-| Slide frame (after the cover) | no header; content padding `0.4in 0.8in 0`, so titles start at 0.4in; the logo is a 90 x 24 px placeholder (`.footer-logo`, `#F1F5F9`, dashed `#94A3B8`) first in the footer's bottom row, beside the brand line |
+| Slide frame (after the cover) | no header; content padding `0.15in 0.8in 0`, so titles start at 0.15in (the letters about 20 px from the edge); the logo is a 90 x 24 px placeholder (`.footer-logo`, `#F1F5F9`, dashed `#94A3B8`) first in the footer's bottom row, beside the brand line |
 | Maturity bands (slide 04) | Poor `#8B5CF6`, Below Avg `#EF4444`, Average `#F59E0B`, Good `#10B981`, Excellent `#3B82F6` |
 
 Severity colours, one palette on every slide (the Tailwind 500 tier): Critical `#EF4444`, High
@@ -179,8 +179,8 @@ when".
   the stat boxes under it, the centre shows their total, and the labels stay inside the chart and
   apart (failed under Highcharts: Low's label empty, Medium shortened, Critical 3 px above the
   chart).
-- `tests/test_layout.py` - every slide after the cover starts its title at 0.4in (failed on 02 to 08,
-  11, 12 and 14 to 16: 75, 88 or 90 px), carries one logo in its footer's bottom row, centred on
+- `tests/test_layout.py` - every slide after the cover starts its title at 0.15in (failed on 02 to 08,
+  11, 12 and 14 to 16: 75, 88 or 90 px; then on all thirteen at 0.4in), carries one logo in its footer's bottom row, centred on
   the brand line and aligned with the footer text (failed on all fifteen: none), and no logo above
   the footer (failed on eleven).
 - `tests/test_demo_gif.py` - no browser: the demo GIF has one frame per archetype, each within a
@@ -209,7 +209,9 @@ did not match the report; two severity palettes; slide 08's donut shortening its
 - The logo moved from a header above the title into the footer (maintainer's decision): some slides
   had no logo and others a 45 px block, which left the titles at three different heights. Titles now
   start at 0.4in on every slide, 37 to 52 px higher; slide 09, which had no header, moved its finding
-  card up 0.1in to make room for the footer's logo row. The cover keeps its logos.
+  card up 0.1in to make room for the footer's logo row. The cover keeps its logos. The maintainer
+  then halved the remaining gap above the titles (43 to 49 px to the letters, now 19 to 25 px):
+  titles start at 0.15in, the same top margin as slide 09's card.
 - Severity palette: the Tailwind 500 tier, measured in OKLCH. Its five colours span 0.132 in
   lightness against 0.260 for the alternative (`#DC2626`, `#FBBF24`), adjacent severities stay
   0.096 to 0.104 apart (about five times a just-noticeable difference), and amber-400 text on white
