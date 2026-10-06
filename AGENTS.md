@@ -128,6 +128,10 @@ Run everything from the repository root. The demo GIF recipe is in `docs/templat
   `NN / TOTAL` with TOTAL the archetype count; the table of contents lists pages 02 onward under
   each archetype's `<title>`; the README states the archetype count. Adding an archetype means
   updating all of them; the tests say where.
+- Severity colours come from one palette (Critical `#EF4444`, High `#F97316`, Medium `#F59E0B`,
+  Low `#10B981`, Informational `#0EA5E9`), and a severity-coded element carries its severity as a
+  class (`critical`, `high`, `medium`/`med`, `low`, `info`, alone or prefixed `sev-`, `color-`,
+  `rsk-`), which is how the palette test finds it.
 - Public pages link only to files in the repository, by relative path; the social preview
   (`og:image`, `twitter:image`) is an absolute https://medet.ink/ URL of a committed file.
 - Commit in a separate step after reading the test counts; never chain a test run through `grep`
@@ -177,8 +181,11 @@ Done: sixteen archetypes, cover to appendix, each one landscape Letter page that
 one firm (ACME), one page count and a table of contents that matches across them; the combined
 report, in which every slide looks exactly like its archetype; the 16-page sample PDF, thumbnails
 and demo GIF, all faithful renders with their charts; the landing page with gallery, viewer and
-social preview; the suite (30 tests, all passing, each seen failing for the right reason first).
-No known defects are open.
+social preview; one severity palette on every slide; the suite (35 tests, each seen failing for
+the right reason first; one expected failure for the known defect below).
+
+Known defect: slide 08's donut shortens its Medium and Low labels ("Medi...", "L..."); see
+`docs/template.md`. It goes with the donut's replacement.
 
 Open, the maintainer decides:
 
@@ -186,5 +193,5 @@ Open, the maintainer decides:
    stacked area chart to within 0.02% of its pixels with no library, CDN or licence; ECharts to
    0.55% at 370 KB; Chart.js does not match and prints a bitmap. After the pick, slide 08's donut
    is the next slice, measured the same way.
-2. Two severity palettes in use (Critical `#DC2626` or `#EF4444`, Medium `#FBBF24` or `#F59E0B`).
-3. Slide 16's footer sits about 17 px under the address grid, tighter than on other slides.
+2. Slide 16's footer sits about 17 px under the address grid, tighter than on other slides
+   (the maintainer is checking it).
