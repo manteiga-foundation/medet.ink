@@ -338,6 +338,12 @@
                 box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
             }
         }
+        @media print {
+            * {
+                box-shadow: none !important;
+                filter: none !important;
+            }
+        }
     </style>
 </head>
 <body>

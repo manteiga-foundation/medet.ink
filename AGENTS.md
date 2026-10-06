@@ -109,6 +109,9 @@ Run everything from the repository root. The demo GIF recipe is in `docs/templat
 - One `.slide` per archetype, 11in x 8.5in, with `@page { size: 11in 8.5in; margin: 0 }`; content
   stays inside it (the overflow probe allows 2 px). In print, slides sit a hair under the page
   (8.49in) with `overflow: hidden` and `page-break-after: always`, so no blank trailing pages.
+- Nothing casts a box shadow in print: every archetype's stylesheet ends with the print block that
+  removes them (macOS PDF viewers draw Chromium's printed shadows as grey boxes). Draw a hairline
+  with a border or an outline, never an inset shadow.
 - Archetype files are `NN-Slide-Name.html`, numbered from 01 without gaps, in the running order the
   consistency test lists (the company overview closes the report). A new or moved archetype also
   needs its gallery card and `assets/slide_NN.png` on the landing page, its place in the viewer's
@@ -192,7 +195,7 @@ table of contents that matches across them; one severity palette; sample content
 addresses only; the charts in inline SVG (slides 04 and 08) and one Chart.js radar (slide 09); the
 combined report, in which every slide looks exactly like its archetype; the 16-page sample PDF,
 thumbnails and demo GIF, all faithful renders; the landing page with gallery, viewer and social
-preview; the suite (44 tests, all passing, each seen failing for the right reason first). No known
+preview; the suite (46 tests, all passing, each seen failing for the right reason first). No known
 defects are open.
 
 Open, the maintainer decides:

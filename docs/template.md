@@ -70,6 +70,11 @@ pie label). The risk matrix's effort scale (slide 06) uses the blues `#4781C3`, 
   `page-break-after: always`: an exact 8.5in rounds over the boundary and adds a blank page.
 - Images in flex layouts need `flex: none`, a fixed height and `object-fit: contain`, or they
   stretch the page; long unbroken strings in flex children need `min-width: 0` and an overflow.
+- No box shadows in print: every archetype's stylesheet ends with `@media print { * { box-shadow:
+  none !important; filter: none !important; } }`. Chromium writes a blurred CSS shadow into the PDF
+  in a form macOS's PDF engine (Preview, Quick Look) draws as a hard-edged grey box behind the card
+  or badge; cards keep their 1 px borders. A hairline is an `outline` or a border, never an inset
+  shadow, so it survives the print rule.
 - On screen an archetype sits inside `body { padding: 0.5in }`: a capture of the slide is a capture
   of the `.slide` element, never of the viewport.
 
@@ -113,7 +118,7 @@ defines it), web fonts loaded before capture.
 
 ## Tests
 
-`python3 -m unittest discover -s tests -v`; 44 tests, about 40 s once the third-party cache is
+`python3 -m unittest discover -s tests -v`; 46 tests, about 100 s once the third-party cache is
 filled. The harness (`tests/harness.py`) serves the repository, drives Chromium through
 `scripts/browser.py`, and answers third-party requests from `tests/.cache`. Each test was seen
 failing for the right reason before it passed: against the defect it was written for, or against a
@@ -183,6 +188,10 @@ when".
   11, 12 and 14 to 16: 75, 88 or 90 px; then on all thirteen at 0.4in), carries one logo in its footer's bottom row, centred on
   the brand line and aligned with the footer text (failed on all fifteen: none), and no logo above
   the footer (failed on eleven).
+- `tests/test_print.py` - in print, nothing in a slide casts a box shadow (failed on 13 slides);
+  the sample PDF drawn by CoreGraphics (`sips`, as Preview draws it) shows no flat area darker
+  than the screen render, in 12 px blocks (failed on 12 pages, worst on 12: 44 levels darker behind
+  the Past Performance badge and the cards; skipped where `sips` is missing).
 - `tests/test_demo_gif.py` - no browser: the demo GIF has one frame per archetype, each within a
   mean difference of 6 of its thumbnail (the GIF is a dithered copy; failed at 19 to 45 with the old
   thumbnails, 0.6 to 0.9 when fresh).
@@ -194,7 +203,7 @@ the sample PDF; every combined slide drifting from its archetype through shared 
 on 09 and 16 and the Risk Matrix in the combined report; generated PDF and thumbnails without
 Highcharts charts; thumbnails offset and cropped by the screen padding; chart layout depending on
 font timing; another firm and out-of-sequence page numbers on some slides; a table of contents that
-did not match the report; two severity palettes; slide 08's donut shortening its labels.
+did not match the report; two severity palettes; card and badge shadows printing as grey boxes; slide 08's donut shortening its labels.
 
 ## Decisions and history
 
