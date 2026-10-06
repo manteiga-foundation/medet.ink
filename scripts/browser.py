@@ -1,8 +1,8 @@
 """Shared browser setup for the maintainer scripts and the tests.
 
 Serves the repository over HTTP on a free port and opens pages in headless Chromium the way a
-reader's browser shows them: a regular Chrome user agent (code.highcharts.com refuses
-HeadlessChrome), chart animations off (a capture must see the final state), web fonts loaded.
+reader's browser shows them: a regular Chrome user agent (some CDNs refuse HeadlessChrome),
+chart animations off (a capture must see the final state), web fonts loaded.
 """
 from __future__ import annotations
 
@@ -21,7 +21,6 @@ CHROMIUM_ARGS = ['--use-gl=egl', '--ignore-gpu-blocklist']
 # defines it, before any chart is created.
 NO_ANIMATIONS = """(() => {
   const configure = {
-    Highcharts: (H) => H.setOptions({ chart: { animation: false }, plotOptions: { series: { animation: false } } }),
     Chart: (C) => { C.defaults.animation = false; },
   };
   for (const [name, apply] of Object.entries(configure)) {

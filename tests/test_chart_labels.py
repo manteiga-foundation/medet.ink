@@ -5,9 +5,7 @@ import unittest
 
 from harness import Chromium, archetypes, slide_number
 
-# Known defect: slide 08's donut is too tight for its labels, so Highcharts shortens Medium and
-# Low to "Medi..." and "L...". Drawn in the real font since the charts wait for it.
-KNOWN_TRUNCATED = {'08'}
+# Highcharts shortened slide 08's labels ("Medi...", "L...") before the donut was inline SVG.
 
 PROBE = r"""() => [...document.querySelectorAll('.slide svg text')]
   .map(t => t.textContent).filter(t => t.includes('\u2026'))"""
@@ -30,15 +28,8 @@ class ChartLabelTests(unittest.TestCase):
 
     def test_no_chart_label_is_truncated(self):
         for number, labels in self.truncated.items():
-            if number in KNOWN_TRUNCATED:
-                continue
             with self.subTest(archetype=number):
                 self.assertEqual(labels, [])
-
-    @unittest.expectedFailure
-    def test_known_truncation_is_fixed(self):
-        for number in sorted(KNOWN_TRUNCATED):
-            self.assertEqual(self.truncated[number], [], f'slide {number}')
 
 
 if __name__ == '__main__':

@@ -19,7 +19,7 @@ This project provides a highly professional, easily modifiable deliverable forma
 - **Executive-Ready Presentation:** Designed to communicate complex security findings effectively to both technical stakeholders and executive leadership.
 - **Pixel-Perfect Export:** Engineered with rigorous `@media print` CSS directives ensuring a 1:1 translation from the browser to a perfectly paginated, landscape PDF without margin degradation or layout breaks.
 - **Comprehensive Template Suite:** Includes 16 pre-formatted layouts covering Executive Summaries, Risk Matrices, Detailed Findings, Proof of Concepts, and Capability Statements.
-- **Interactive Data Visualization:** Integrates industry-standard charting libraries (Chart.js / Highcharts) for dynamic presentation of metrics and maturity models.
+- **Interactive Data Visualization:** Charts drawn in inline SVG with no library to load or license, plus a Chart.js radar, for dynamic presentation of metrics and maturity models.
 - **Zero-Friction Deployment:** Pure HTML and CSS architecture. Requires no complex build pipelines or proprietary software to edit and deploy.
 
 ---

@@ -44,16 +44,6 @@ PROBE = r"""() => {
       if (c) found.push({ what: `.${[...el.classList].join('.')} ${prop}`, severity: token[1], rgb: c });
     }
   }
-  for (const chart of (window.Highcharts ? Highcharts.charts.filter(Boolean) : [])) {
-    for (const point of chart.series.flatMap(s => s.points)) {
-      const name = String(point.name || '').toLowerCase();
-      if (/^(critical|high|medium|low|info|informational)$/.test(name)) {
-        const h = point.color;
-        found.push({ what: `chart point ${point.name}`, severity: name,
-                     rgb: [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)) });
-      }
-    }
-  }
   return { found, effort };
 }"""
 

@@ -62,11 +62,10 @@ class ArchetypeTests(unittest.TestCase):
         for number, r in self.rendered.items():
             slide = r['slides'][0]
             drawn = (sum(1 for painted in slide['canvases'] if painted > 0)
-                     + sum(1 for series in slide['highcharts'] if series > 0)
                      + sum(1 for shapes in slide['svg'] if shapes > 0))
             with self.subTest(archetype=number):
                 self.assertEqual(drawn, r['charts'], 'a chart was not drawn: did its library load?')
-        # Slides 04 and 08 (Highcharts) and 09 (Chart.js radar) carry charts today.
+        # Slides 04 and 08 (inline SVG) and 09 (Chart.js radar) carry charts today.
         self.assertGreaterEqual(sum(r['charts'] for r in self.rendered.values()), 3)
 
     def test_each_gallery_thumbnail_is_a_render_of_its_archetype(self):

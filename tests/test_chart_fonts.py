@@ -1,7 +1,7 @@
 """Charts are laid out with the template's web fonts, however late the fonts arrive.
 
-A chart measures its text when it draws: Chart.js paints it once on a canvas, Highcharts places
-and truncates labels from the measured widths. A chart drawn before Montserrat has loaded keeps a
+A chart measures its text when it draws: Chart.js paints it once on a canvas, the inline SVG
+charts size their legends, label boxes and rings from measured text. A chart drawn before Montserrat has loaded keeps a
 fallback font's layout on screen and in print, and a first visit then differs from the gallery.
 The test holds the web fonts back until the page's scripts have run, then redraws every chart
 with the fonts loaded: nothing may move.
@@ -12,25 +12,16 @@ import unittest
 
 from harness import TOLERANCE_IMAGE, Chromium, archetypes, chart_calls, image_difference
 
-# Where each chart sits on the page: inline SVG containers, Chart.js canvases, Highcharts targets.
-CHART_AREAS = """() => [...document.querySelectorAll('[data-chart], canvas, [data-highcharts-chart]')].map(el => {
+# Where each chart sits on the page: inline SVG containers and Chart.js canvases.
+CHART_AREAS = """() => [...document.querySelectorAll('[data-chart], canvas')].map(el => {
   const r = el.getBoundingClientRect();
   return { x: r.x, y: r.y, width: r.width, height: r.height };
 })"""
 
-# Rebuilds every chart from its own options and callback, now that the fonts have loaded.
+# Redraws every chart now that the fonts have loaded.
 REDRAW = """async () => {
   await document.fonts.ready;
   let charts = 0;
-  if (window.Highcharts) {
-    for (const chart of Highcharts.charts.filter(Boolean)) {
-      // destroy() clears the chart's own options: copy them first.
-      const target = chart.renderTo, options = Highcharts.merge(chart.userOptions), callback = chart.callback;
-      chart.destroy();
-      Highcharts.chart(target, options, callback);
-      charts++;
-    }
-  }
   // Inline SVG charts: empty each container and run its script again (it keeps its variables in a
   // function, so it can run twice); the script draws once the fonts are ready.
   const svgScripts = [...document.querySelectorAll('script:not([src])')].filter(s => s.textContent.includes('[data-chart='));

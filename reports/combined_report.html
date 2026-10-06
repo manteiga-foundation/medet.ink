@@ -3,10 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>ACME - Full Penetration Testing Report</title>
-    <script src="https://cdn.jsdelivr.net/npm/highcharts@13.1.1/highcharts.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/highcharts@13.1.1/modules/exporting.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/highcharts@13.1.1/modules/export-data.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/highcharts@13.1.1/modules/offline-exporting.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
     <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
@@ -5675,8 +5671,7 @@ html, body { margin: 0; padding: 0; height: auto; overflow: visible; font-family
                         <div class="chart-title">Risk Rating Overview</div>
                     </div>
 
-                    <!-- Highcharts Container -->
-                    <div id="chart-08"></div>
+                    <div id="chart-08" data-chart="findings"></div>
 
                     <!-- Stat Boxes -->
                     <div class="stats-container">
@@ -5729,97 +5724,121 @@ html, body { margin: 0; padding: 0; height: auto; overflow: visible; font-family
     
 </div>
 
-<!-- Highcharts Implementation Script -->
+<!-- Findings donut: inline SVG, no library. It reads the counts from the stat boxes under it:
+     edit those numbers and the donut, its labels and the total follow. -->
 <script>
-    // Highcharts measures label text when it draws: draw after the web fonts have loaded, or a
-    // first visit lays the chart out with a fallback font's metrics.
-    document.fonts.ready.then(function() {
-    Highcharts.chart('chart-08', {
-        chart: {
-            type: 'pie',
-            backgroundColor: 'transparent',
-            style: {
-                fontFamily: 'Montserrat, sans-serif'
-            },
-            animation: false,
-            spacingTop: 0,
-            spacingBottom: 0
-        },
-        // Native Highcharts Centered Title
-        title: {
-            text: '<span style="font-size: 38px; font-weight: 900; color: #0A2540;">12</span><br><span style="font-size: 10px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 1px;">Total Findings</span>',
-            align: 'center',
-            verticalAlign: 'middle',
-            y: 10,
-            useHTML: true
-        },
-        credits: {
-            enabled: false
-        },
-        exporting: {
-            enabled: false
-        },
-        tooltip: {
-            enabled: false
-        },
-        plotOptions: {
-            pie: {
-                innerSize: '65%', // Creates the donut hole
-                depth: 45,
-                allowPointSelect: false,
-                cursor: 'default',
-                size: '95%',
-                states: {
-                    hover: {
-                        enabled: false
-                    }
-                },
-                dataLabels: {
-                    enabled: true,
-                    format: '<b>{point.name}</b><br>{point.y} ({point.percentage:.1f}%)',
-                    style: {
-                        fontSize: '11px',
-                        fontFamily: 'Montserrat, sans-serif',
-                        fontWeight: '700',
-                        textOutline: '2px white'
-                    },
-                    distance: 15,
-                    connectorWidth: 1.5,
-                    connectorPadding: 5
-                },
-                // Modern clean styling instead of broken slices
-                borderWidth: 4,
-                borderColor: '#ffffff',
-                shadow: false
+(function () {
+    // Severity colours (docs/template.md); amber text is darker so it reads on white.
+    const COLOURS = {
+        Critical: { fill: '#EF4444', text: '#EF4444' },
+        High: { fill: '#F97316', text: '#F97316' },
+        Medium: { fill: '#F59E0B', text: '#D97706' },
+        Low: { fill: '#10B981', text: '#10B981' },
+        Informational: { fill: '#0EA5E9', text: '#0EA5E9' }
+    };
+    const HOLE = 0.65;      // inner radius as a share of the outer radius
+    const DISTANCE = 15;    // from the ring to the label column
+    const PADDING = 5;      // between a connector and its label
+    const LINE = 14;        // label line height (11 px text)
+
+    // Labels are measured to size the ring around them: draw once the web fonts are ready.
+    document.fonts.ready.then(function () {
+        const el = document.querySelector('[data-chart="findings"]');
+        const data = [...el.closest('.slide').querySelectorAll('.stat-item')].map(item => ({
+            name: item.querySelector('.stat-label').textContent.trim(),
+            value: Number(item.querySelector('.stat-number').textContent.trim()) || 0
+        }));
+        const total = data.reduce((sum, d) => sum + d.value, 0);
+        const W = el.clientWidth, H = el.clientHeight, cx = W / 2, cy = H / 2;
+        const NS = 'http://www.w3.org/2000/svg';
+        const add = (tag, attrs, parent) => {
+            const node = document.createElementNS(NS, tag);
+            for (const key in attrs) node.setAttribute(key, attrs[key]);
+            parent.appendChild(node);
+            return node;
+        };
+        const svg = add('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}`,
+                                 style: 'display: block; font-family: Montserrat, sans-serif' }, el);
+        const point = (angle, radius) => [cx + radius * Math.cos(angle), cy + radius * Math.sin(angle)];
+
+        // Slices clockwise from the top; a slice of 0 keeps its label, at its starting angle.
+        let angle = -Math.PI / 2;
+        const slices = data.map(d => {
+            const sweep = total ? 2 * Math.PI * d.value / total : 0;
+            const slice = { d, start: angle, end: angle + sweep, mid: angle + sweep / 2 };
+            slice.right = Math.cos(slice.mid) > -1e-9;
+            angle += sweep;
+            return slice;
+        });
+
+        // Labels: bold name over count and share, outlined in white.
+        const connectors = add('g', {}, svg);
+        slices.forEach(s => {
+            const colour = (COLOURS[s.d.name] || { text: '#64748B' }).text;
+            s.label = add('g', { 'data-label': s.d.name }, svg);
+            const text = add('text', { 'font-size': 11, 'font-weight': 700, fill: colour, stroke: '#FFFFFF',
+                                       'stroke-width': 2, 'stroke-linejoin': 'round', 'paint-order': 'stroke',
+                                       'text-anchor': s.right ? 'start' : 'end' }, s.label);
+            add('tspan', { x: 0, y: -3 }, text).textContent = s.d.name;
+            text.appendChild(document.createTextNode(' '));
+            const share = total ? (100 * s.d.value / total).toFixed(1) : '0.0';
+            add('tspan', { x: 0, y: LINE - 3 }, text).textContent = `${s.d.value} (${share}%)`;
+            s.width = text.getBBox().width;
+        });
+
+        // The largest ring that leaves room for the labels on each side, above and below.
+        const widest = side => Math.max(0, ...slices.filter(s => s.right === side).map(s => s.width));
+        const R = Math.min(cx - DISTANCE - PADDING - widest(false) - 2,
+                           W - cx - DISTANCE - PADDING - widest(true) - 2,
+                           cy - DISTANCE / 2 - LINE - 2,
+                           H - cy - DISTANCE / 2 - LINE - 2,
+                           0.95 * Math.min(W, H) / 2);
+
+        // The ring: one annular sector per slice, separated by white borders.
+        const sector = (a0, a1) => {
+            if (a1 - a0 >= 2 * Math.PI - 1e-6) return sector(a0, a0 + Math.PI) + ' ' + sector(a0 + Math.PI, a1);
+            const large = a1 - a0 > Math.PI ? 1 : 0, r = R * HOLE;
+            const [x0, y0] = point(a0, R), [x1, y1] = point(a1, R), [x2, y2] = point(a1, r), [x3, y3] = point(a0, r);
+            return `M ${x0} ${y0} A ${R} ${R} 0 ${large} 1 ${x1} ${y1} L ${x2} ${y2} A ${r} ${r} 0 ${large} 0 ${x3} ${y3} Z`;
+        };
+        if (!total) {
+            add('path', { d: sector(0, 2 * Math.PI), fill: '#E2E8F0' }, svg);   // explicit empty state
+        }
+        slices.filter(s => s.d.value > 0).forEach(s => {
+            add('path', { d: sector(s.start, s.end), fill: (COLOURS[s.d.name] || { fill: '#94A3B8' }).fill,
+                          stroke: '#FFFFFF', 'stroke-width': 4, 'stroke-linejoin': 'round',
+                          class: `sev-${s.d.name.toLowerCase()}`, 'data-series': s.d.name }, svg);
+        });
+        svg.appendChild(connectors);
+        slices.forEach(s => svg.appendChild(s.label));
+
+        // Place the labels in a column on each side, pushed apart where they would overlap.
+        [true, false].forEach(side => {
+            const column = slices.filter(s => s.right === side)
+                .map(s => Object.assign(s, { y: point(s.mid, R + DISTANCE / 2)[1] }))
+                .sort((a, b) => a.y - b.y);
+            const gap = 2 * LINE + 4, low = LINE, high = H - LINE;
+            column.forEach((s, i) => { s.y = Math.max(s.y, low, i ? column[i - 1].y + gap : low); });
+            for (let i = column.length - 1; i >= 0; i--) {
+                column[i].y = Math.min(column[i].y, i < column.length - 1 ? column[i + 1].y - gap : high);
             }
-        },
-        series: [{
-            name: 'Vulnerabilities',
-            colorByPoint: true,
-            data: [{
-                name: 'Critical',
-                y: 0,
-                color: '#EF4444', // Critical red
-                dataLabels: { color: '#EF4444' }
-            }, {
-                name: 'High',
-                y: 2,
-                color: '#F97316', // Modern Orange
-                dataLabels: { color: '#F97316' }
-            }, {
-                name: 'Medium',
-                y: 4,
-                color: '#F59E0B', // Medium amber
-                dataLabels: { color: '#D97706' } // Slightly darker text for readability
-            }, {
-                name: 'Low',
-                y: 6,
-                color: '#10B981', // Modern Green
-                dataLabels: { color: '#10B981' }
-            }]
-        }]
+            column.forEach(s => {
+                const x = side ? cx + R + DISTANCE : cx - R - DISTANCE;
+                s.label.setAttribute('transform', `translate(${side ? x + PADDING : x - PADDING}, ${s.y})`);
+                const [px, py] = point(s.mid, R), [qx, qy] = point(s.mid, R + DISTANCE / 2);
+                const colour = (COLOURS[s.d.name] || { fill: '#94A3B8' }).fill;
+                add('path', { d: `M ${px} ${py} L ${qx} ${qy} L ${x} ${s.y}`, fill: 'none', stroke: colour,
+                              'stroke-width': 1.5 }, connectors);
+            });
+        });
+
+        // The total in the hole.
+        add('text', { x: cx, y: cy + 4, 'text-anchor': 'middle', 'font-size': 38, 'font-weight': 900,
+                      fill: '#0A2540', 'data-total': '' }, svg).textContent = total;
+        add('text', { x: cx, y: cy + 22, 'text-anchor': 'middle', 'font-size': 10, 'font-weight': 700,
+                      fill: '#64748B', 'letter-spacing': 1 }, svg).textContent = 'TOTAL FINDINGS';
     });
-    });
+})();
 </script>
 </div>
 

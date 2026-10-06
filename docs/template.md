@@ -11,11 +11,11 @@ working contract is `AGENTS.md`.
 | 01 | `01-Slide-Cover.html` | Cover | |
 | 02 | `02-Slide-Table-of-Content.html` | Table of contents | |
 | 03 | `03-Slide-Executive-Summary.html` | Executive summary | |
-| 04 | `04-Slide-Cybersecurity-Maturity.html` | Maturity score against peers, position marker | Highcharts stacked area |
+| 04 | `04-Slide-Cybersecurity-Maturity.html` | Maturity score against peers, position marker | inline SVG stacked area |
 | 05 | `05-Slide-Scope.html` | Scope and methodology | |
 | 06 | `06-Slide-Risk-Matrix.html` | Risk matrix | |
 | 07 | `07-Slide-Testing-Phases.html` | Testing phases | |
-| 08 | `08-Slide-Findings-Overview.html` | Findings by severity | Highcharts pie |
+| 08 | `08-Slide-Findings-Overview.html` | Findings by severity | inline SVG donut, read from the stat boxes |
 | 09 | `09-Slide-Technical-Details.html` | One technical finding | Chart.js radar |
 | 10 | `10-Slide-Proof-of-Concept.html` | Proof of concept | |
 | 11 | `11-Slide-Team.html` | Engagement team | |
@@ -75,18 +75,17 @@ pie label). The risk matrix's effort scale (slide 06) uses the blues `#4781C3`, 
 
 ## Charts
 
-- Slide 04's maturity chart is inline SVG drawn by the slide's own script, with no library (spike
-  001). An SVG chart's container carries `data-chart="name"` (unique across the report); its script
+- Slides 04 and 08 draw their charts in inline SVG with the slide's own script, no library (spike
+  001); slide 08's donut reads its counts from the stat boxes under it, sizes its ring so every
+  label fits, and draws a grey ring when every count is 0. An SVG chart's container carries `data-chart="name"` (unique across the report); its script
   finds the container by that attribute, keeps its variables inside a function, and draws inside
   `document.fonts.ready.then(...)`. Band polygons carry `data-series` with the band's name.
-- Libraries load from jsDelivr pinned to a version: Highcharts 13.1.1 (slide 08), Chart.js 4.5.1
-  (slide 09). Never an unpinned "latest", never code.highcharts.com (it refuses headless browsers
-  and rate-limits).
+- Chart.js 4.5.1 (slide 09's radar) loads from jsDelivr pinned to a version, never an unpinned
+  "latest". The template loads no Highcharts.
 - Charts are created inside `document.fonts.ready.then(...)`. A chart measures its text when it
   draws; drawn before Montserrat loads, it keeps a fallback font's layout (canvas text, label
   placement and truncation) on screen and in print.
 - Chart containers have ids unique across archetypes (`chart-04`, `chart-08`, `radarChart`).
-- Highcharts draws the first series of a stack on top (`yAxis.reversedStacks` defaults to true).
 
 ## Build pipeline
 
@@ -114,7 +113,7 @@ defines it), web fonts loaded before capture.
 
 ## Tests
 
-`python3 -m unittest discover -s tests -v`; 41 tests (one expected failure), about 40 s once the third-party cache is
+`python3 -m unittest discover -s tests -v`; 44 tests, about 40 s once the third-party cache is
 filled. The harness (`tests/harness.py`) serves the repository, drives Chromium through
 `scripts/browser.py`, and answers third-party requests from `tests/.cache`. Each test was seen
 failing for the right reason before it passed: against the defect it was written for, or against a
@@ -130,7 +129,7 @@ when".
     column and proves nothing);
   - no uncaught page errors (fails when a script calls an undefined function or a library is
     missing);
-  - every chart the archetype's script creates is drawn: painted canvas pixels, Highcharts series
+  - every chart the archetype's script creates is drawn: painted canvas pixels, shapes in each SVG chart
     (fails when Chart.js is not loaded; a canvas keeps a 300 x 150 default, so size proves nothing);
   - each gallery thumbnail is the archetype's slide, within 0.1% of its pixels (failed on 04 and 08
     without charts, then on all 16 offset by the screen padding).
@@ -165,7 +164,8 @@ when".
   thumbnail is deleted or a script points at a missing path); chart libraries load from jsDelivr
   pinned to a version (failed on code.highcharts.com and an unpinned Chart.js); the landing page
   links every archetype and thumbnail; the viewer and the gallery list the archetypes in order, each
-  card with its own thumbnail (failed when 13 to 16 were renamed); the social preview points at committed files on medet.ink.
+  card with its own thumbnail (failed when 13 to 16 were renamed); the social preview points at committed files on medet.ink; no page loads or calls Highcharts (fails
+  with the Highcharts slide 08 restored).
 - `tests/test_repository.py` - no browser: no `.DS_Store` is tracked (failed: one at the root);
   every file under `assets/` and `reports/` is generated or linked from the README, the landing
   page or the viewer (failed on `assets/sample-report.pdf` and `reports/data_uri.txt`).
@@ -173,8 +173,12 @@ when".
   colour of its severity (failed on 06 and 08: eleven elements); a slide that shows severities uses
   neither `#DC2626` nor `#FBBF24` (failed on 06, 08, 09); the effort levels use no severity colour
   (failed on 06's MEDIUM effort, `#10B981`, the colour of Low).
-- `tests/test_chart_labels.py` - no chart label is shortened with an ellipsis; slide 08 is a known
-  defect (expected failure).
+- `tests/test_chart_labels.py` - no chart label is shortened with an ellipsis (failed on 08 under
+  Highcharts: "Medi..." and "L...").
+- `tests/test_findings_chart.py` - slide 08's donut: each label reads the name, count and share of
+  the stat boxes under it, the centre shows their total, and the labels stay inside the chart and
+  apart (failed under Highcharts: Low's label empty, Medium shortened, Critical 3 px above the
+  chart).
 - `tests/test_layout.py` - every slide after the cover starts its title at 0.4in (failed on 02 to 08,
   11, 12 and 14 to 16: 75, 88 or 90 px), carries one logo in its footer's bottom row, centred on
   the brand line and aligned with the footer text (failed on all fifteen: none), and no logo above
@@ -185,17 +189,12 @@ when".
 
 ## Known defects
 
-1. Slide 08's donut shortens two labels: Highcharts draws "Medi..." for Medium and "L..." for Low
-   because the labels do not fit beside the donut in Montserrat. Before the charts waited for the
-   web font, the labels were measured in a narrower fallback font and only Low was shortened.
-   Held by `test_chart_labels.py` (expected failure); to be fixed with the donut's replacement.
-
-Fixed and held by the tests above: charts missing or on the wrong slide in the combined report and
+None open. Fixed and held by the tests above: charts missing or on the wrong slide in the combined report and
 the sample PDF; every combined slide drifting from its archetype through shared CSS; footers clipped
 on 09 and 16 and the Risk Matrix in the combined report; generated PDF and thumbnails without
 Highcharts charts; thumbnails offset and cropped by the screen padding; chart layout depending on
 font timing; another firm and out-of-sequence page numbers on some slides; a table of contents that
-did not match the report; two severity palettes.
+did not match the report; two severity palettes; slide 08's donut shortening its labels.
 
 ## Decisions and history
 
@@ -216,5 +215,6 @@ did not match the report; two severity palettes.
   0.096 to 0.104 apart (about five times a just-noticeable difference), and amber-400 text on white
   (1.67:1) became amber-500 (2.15:1). Trade-off: white text on `#EF4444` is 3.76:1 against 4.83:1
   on `#DC2626`, so slide 10's status pill (a status, not a severity, in small text) keeps `#DC2626`.
-- Open: replacing Highcharts (spike 001: inline SVG matches its stacked area chart to 0.02% of its
-  pixels, ECharts to 0.55%; Chart.js does not). The maintainer picks; slide 08's donut follows.
+- Highcharts removed (maintainer's decision after spike 001): both charts are inline SVG, vector in
+  print, with no library, CDN or licence. Slide 04 matches its Highcharts original to 0.02% of the
+  chart's pixels; slide 08's donut was redrawn to show every label whole, which Highcharts did not.

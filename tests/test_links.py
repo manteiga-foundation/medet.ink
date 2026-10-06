@@ -98,6 +98,14 @@ class LinkTests(unittest.TestCase):
             with self.subTest(card=href):
                 self.assertEqual(thumbnail, href[:2], 'each card shows its own thumbnail')
 
+    def test_no_page_loads_or_calls_highcharts(self):
+        # Charts are inline SVG (spike 001) or Chart.js; Highcharts is not open source.
+        pages = [f'archetypes/{p.name}' for p in archetypes()] + PUBLIC_PAGES
+        for page in pages:
+            with self.subTest(page=page):
+                source = (ROOT / page).read_text(encoding='utf-8')
+                self.assertIsNone(re.search(r'highcharts', source, re.I))
+
 
 if __name__ == '__main__':
     unittest.main()
