@@ -51,6 +51,7 @@ Lift these from the archetypes; do not restyle.
 | Left accent bar | `linear-gradient(180deg, #0A4B9F 0%, #4781C3 35%, #D82018 100%)`, 8 px |
 | Slate text | `#64748B`, `#94A3B8` |
 | Card | white, radius 12 px, border `#E2E8F0`, shadow `0 8px 30px rgba(0,0,0,0.04)` |
+| Slide frame (after the cover) | no header; content padding `0.4in 0.8in 0`, so titles start at 0.4in; the logo is a 90 x 24 px placeholder (`.footer-logo`, `#F1F5F9`, dashed `#94A3B8`) first in the footer's bottom row, beside the brand line |
 | Maturity bands (slide 04) | Poor `#8B5CF6`, Below Avg `#EF4444`, Average `#F59E0B`, Good `#10B981`, Excellent `#3B82F6` |
 
 Severity colours, one palette on every slide (the Tailwind 500 tier): Critical `#EF4444`, High
@@ -109,7 +110,7 @@ defines it), web fonts loaded before capture.
 
 ## Tests
 
-`python3 -m unittest discover -s tests -v`; 36 tests (one expected failure), about 40 s once the third-party cache is
+`python3 -m unittest discover -s tests -v`; 39 tests (one expected failure), about 40 s once the third-party cache is
 filled. The harness (`tests/harness.py`) serves the repository, drives Chromium through
 `scripts/browser.py`, and answers third-party requests from `tests/.cache`. Each test was seen
 failing for the right reason before it passed: against the defect it was written for, or against a
@@ -165,6 +166,10 @@ when".
   (failed on 06's MEDIUM effort, `#10B981`, the colour of Low).
 - `tests/test_chart_labels.py` - no chart label is shortened with an ellipsis; slide 08 is a known
   defect (expected failure).
+- `tests/test_layout.py` - every slide after the cover starts its title at 0.4in (failed on 02 to 08,
+  11, 12 and 14 to 16: 75, 88 or 90 px), carries one logo in its footer's bottom row, centred on
+  the brand line and aligned with the footer text (failed on all fifteen: none), and no logo above
+  the footer (failed on eleven).
 - `tests/test_demo_gif.py` - no browser: the demo GIF has one frame per archetype, each within a
   mean difference of 6 of its thumbnail (the GIF is a dithered copy; failed at 19 to 45 with the old
   thumbnails, 0.6 to 0.9 when fresh).
@@ -193,6 +198,10 @@ did not match the report; two severity palettes.
   contents rows have 6 px padding and the card 32 px, so fifteen rows fit.
 - The third-party cache in `tests/.cache` exists because code.highcharts.com refused the test
   browser (403) and then rate-limited it (429) within one afternoon of runs.
+- The logo moved from a header above the title into the footer (maintainer's decision): some slides
+  had no logo and others a 45 px block, which left the titles at three different heights. Titles now
+  start at 0.4in on every slide, 37 to 52 px higher; slide 09, which had no header, moved its finding
+  card up 0.1in to make room for the footer's logo row. The cover keeps its logos.
 - Severity palette: the Tailwind 500 tier, measured in OKLCH. Its five colours span 0.132 in
   lightness against 0.260 for the alternative (`#DC2626`, `#FBBF24`), adjacent severities stay
   0.096 to 0.104 apart (about five times a just-noticeable difference), and amber-400 text on white
