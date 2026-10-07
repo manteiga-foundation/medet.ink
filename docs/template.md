@@ -139,13 +139,21 @@ ffmpeg -framerate 1 -i assets/slide_%02d.png \
    and LICENSE into `reports/medet-ink-template.zip` (the landing page's Download HTML). Run it after
    any change to those files; `tests/test_template_download.py` fails on a stale zip.
 
+Every script works on the folder it runs in: from the repository root it builds the sample report;
+from a report folder laid out the same way (`archetypes/`, `reports/`, `assets/`) it builds that
+report. Client reports live in `projects/<Client>/<Report>/`, which git ignores, and are built
+with these scripts by path (`python3 ../../../scripts/merge_slides.py` from the report folder).
+The tests that apply to any report run against one with `MEDET_ROOT`: `test_archetypes`,
+`test_layout`, `test_print`, `test_chart_fonts`, `test_severity_palette`, `test_combined_report`
+(30 checks passed against a copy of the sample laid out as a client report).
+
 Steps 3 and 4 share `scripts/browser.py` with the tests: the repository served on a free port, a
 regular Chrome user agent, chart animations off (each library is configured the moment its script
 defines it), web fonts loaded before capture.
 
 ## Tests
 
-`python3 -m unittest discover -s tests -v`; 56 tests, about 115 s once the third-party cache is
+`python3 -m unittest discover -s tests -v`; 58 tests, about 115 s once the third-party cache is
 filled. The harness (`tests/harness.py`) serves the repository, drives Chromium through
 `scripts/browser.py`, and answers third-party requests from `tests/.cache`. Each test was seen
 failing for the right reason before it passed: against the defect it was written for, or against a
@@ -200,7 +208,9 @@ when".
   with the Highcharts slide 08 restored).
 - `tests/test_repository.py` - no browser: no `.DS_Store` is tracked (failed: one at the root);
   every file under `assets/` and `reports/` is generated or linked from the README, the landing
-  page or the viewer (failed on `assets/sample-report.pdf` and `reports/data_uri.txt`).
+  page or the viewer (failed on `assets/sample-report.pdf` and `reports/data_uri.txt`); `projects/`
+  is ignored and nothing under it is tracked, since client reports never enter this public
+  repository (failed: not ignored).
 - `tests/test_severity_palette.py` - every severity-coded element and chart point uses the palette
   colour of its severity (failed on 06 and 08: eleven elements); a slide that shows severities uses
   neither `#DC2626` nor `#FBBF24` (failed on 06, 08, 09); the effort levels use no severity colour
@@ -233,6 +243,10 @@ when".
 - `tests/test_template_download.py` - the zip holds the 16 archetypes, the viewer, the combined
   report, README and LICENSE, byte for byte as in the repository (failed: absent; fails when a file
   changes without `make_template.py`), and every relative link inside it resolves inside it.
+- `tests/test_scripts.py` - a report folder with one slide, built by `merge_slides.py`,
+  `make_pdf.py` and `make_images.py` run from it, gets its own one-page PDF and 1056 x 816
+  thumbnail, and the repository's are left alone (failed: the PDF and thumbnails were written to
+  the repository).
 - `tests/test_demo_gif.py` - no browser: the demo GIF has one frame per archetype, each within a
   mean difference of 6 of its thumbnail (the GIF is a dithered copy; failed at 19 to 45 with the old
   thumbnails, 0.6 to 0.9 when fresh).

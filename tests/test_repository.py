@@ -27,6 +27,16 @@ class RepositoryTests(unittest.TestCase):
             self.skipTest('not a git checkout')
         self.assertEqual([f for f in files if f.split('/')[-1] == '.DS_Store'], [])
 
+    def test_client_work_in_projects_is_never_tracked(self):
+        files = tracked_files()
+        if files is None:
+            self.skipTest('not a git checkout')
+        self.assertEqual([f for f in files if f.startswith('projects/')], [])
+        # Client reports live in projects/ on the maintainer's machine; this repository is public.
+        probe = 'projects/Client/Report/archetypes/01-Slide-Cover.html'
+        ignored = subprocess.run(['git', 'check-ignore', '-q', '--no-index', probe], cwd=ROOT).returncode
+        self.assertEqual(ignored, 0, 'projects/ must be ignored by git')
+
     def test_every_asset_and_report_is_derived_or_linked(self):
         files = tracked_files()
         if files is None:

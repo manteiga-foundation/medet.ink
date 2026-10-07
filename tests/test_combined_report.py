@@ -12,6 +12,7 @@ from harness import (PAGE_PT, ROOT, TOLERANCE_IMAGE, TOLERANCE_PX, Chromium, arc
                      chart_signature, image_difference, pdf_pages, pdf_texts)
 
 REPORT = 'reports/combined_report.html'
+CHECKOUT_SCRIPTS = Path(__file__).resolve().parent.parent / 'scripts'
 
 
 
@@ -40,7 +41,10 @@ class CombinedReportTests(unittest.TestCase):
     def test_committed_report_is_what_merge_slides_produces(self):
         with tempfile.TemporaryDirectory() as scratch:
             shutil.copytree(ROOT / 'archetypes', Path(scratch) / 'archetypes')
-            shutil.copytree(ROOT / 'scripts', Path(scratch) / 'scripts')
+            # The folder's own scripts (the repository, or a copy under test); a report folder has
+            # none and is built with this checkout's.
+            scripts = ROOT / 'scripts' if (ROOT / 'scripts').is_dir() else CHECKOUT_SCRIPTS
+            shutil.copytree(scripts, Path(scratch) / 'scripts')
             subprocess.run([sys.executable, 'scripts/merge_slides.py'], cwd=scratch, check=True,
                            stdout=subprocess.DEVNULL)
             for name in ('combined_report.html', 'merged_report.html'):

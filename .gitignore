@@ -2,3 +2,5 @@ __pycache__/
 *.pyc
 tests/.cache/
 .DS_Store
+# Client reports: kept on the maintainer's machine, never in this public repository.
+projects/

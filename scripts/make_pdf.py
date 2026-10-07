@@ -1,14 +1,21 @@
-"""Prints the combined report to the sample PDF: reports/merged_report.html -> reports/final_report.pdf."""
+"""Prints the combined report to PDF: reports/merged_report.html -> reports/final_report.pdf.
+
+Works on the folder it runs in: the repository root (the sample PDF) or a report folder laid out
+the same way.
+"""
+from pathlib import Path
+
 from playwright.sync_api import sync_playwright
 
-from browser import CHROMIUM_ARGS, REPOSITORY, load, new_page, serve
+from browser import CHROMIUM_ARGS, load, new_page, serve
 
+ROOT = Path.cwd()
 SOURCE = 'reports/merged_report.html'
-OUTPUT = REPOSITORY / 'reports' / 'final_report.pdf'
+OUTPUT = ROOT / 'reports' / 'final_report.pdf'
 
 
 def generate_pdf():
-    with serve() as url, sync_playwright() as p:
+    with serve(ROOT) as url, sync_playwright() as p:
         browser = p.chromium.launch(headless=True, args=CHROMIUM_ARGS)
         page = new_page(browser)
         print(f'Printing {url}/{SOURCE}...')
