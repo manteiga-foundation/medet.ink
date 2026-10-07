@@ -138,6 +138,11 @@ ffmpeg -framerate 1 -i assets/slide_%02d.png \
 6. `python3 scripts/make_template.py`: zips the archetypes, the viewer, the combined report, README
    and LICENSE into `reports/medet-ink-template.zip` (the landing page's Download HTML). Run it after
    any change to those files; `tests/test_template_download.py` fails on a stale zip.
+7. `python3 scripts/stamp_landing.py`: stamps the landing page's links to thumbnails, slides and
+   reports with `?v=` and the first 8 hex of each file's SHA-256. GitHub Pages lets browsers keep a
+   copy for four hours (`cache-control: max-age=14400`), so after the reorder a returning visitor saw
+   the old `slide_13.png` (then the company overview) and the old 04 and 08 thumbnails without their
+   charts. A changed file now gets a new address; run this last, after any step above.
 
 Every script works on the folder it runs in: from the repository root it builds the sample report;
 from a report folder laid out the same way (`archetypes/`, `reports/`, `assets/`) it builds that
@@ -158,7 +163,7 @@ defines it), web fonts loaded before capture.
 
 ## Tests
 
-`python3 -m unittest discover -s tests -v`; 58 tests, about 115 s once the third-party cache is
+`python3 -m unittest discover -s tests -v`; 60 tests, about 115 s once the third-party cache is
 filled. The harness (`tests/harness.py`) serves the repository, drives Chromium through
 `scripts/browser.py`, and answers third-party requests from `tests/.cache`. Each test was seen
 failing for the right reason before it passed: against the defect it was written for, or against a
@@ -242,7 +247,11 @@ when".
   prev, next, the ticks and the arrow keys, wrapping from 01 to 16, and holds under reduced motion
   (fails when reduced motion is ignored); it advances after one interval on a fake clock, holds
   while pointed at and on the pause key (fails when the hover is ignored: it reached 05); one link
-  downloads `reports/medet-ink-template.zip` (failed: absent). The band credits the foundation as
+  downloads `reports/medet-ink-template.zip` (failed: absent). Every link to a file under
+  `archetypes/`, `assets/` or `reports/` carries its content version (failed: 67 links without
+  one); every gallery card and slideshow slide is named by its slide's title, the cover's card
+  "Cover Page" (failed on 04, 05, 09 and 11: "Cybersecurity Maturity", "Scope", "Technical Details",
+  "The Team"). The band credits the foundation as
   a byline: "By Manteiga Foundation", at most 11 px and smaller than the wordmark, within 12 px of
   it and visible at the three sizes (failed: "MANTEIGA FOUNDATION" in capitals, hidden on phones).
 - `tests/test_template_download.py` - the zip holds the 16 archetypes, the viewer, the combined

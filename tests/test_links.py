@@ -68,7 +68,7 @@ class LinkTests(unittest.TestCase):
         self.assertGreater(scripts, 0)
 
     def test_landing_page_links_every_archetype_with_its_thumbnail(self):
-        links = set(references('index.html').links)
+        links = {urlparse(link).path for link in references('index.html').links}
         for path in archetypes():
             with self.subTest(archetype=path.name):
                 self.assertIn(f'archetypes/{path.name}', links)
@@ -92,7 +92,7 @@ class LinkTests(unittest.TestCase):
         viewer = (ROOT / 'archetypes' / 'index.html').read_text(encoding='utf-8')
         self.assertEqual(re.findall(r'"(\d{2}-Slide-[^"]+\.html)"', viewer), names, 'the viewer lists every archetype in order')
         landing = (ROOT / 'index.html').read_text(encoding='utf-8')
-        cards = re.findall(r'<a href="archetypes/(\d{2}-Slide-[^"]+\.html)"[^>]*>\s*<div[^>]*>\s*<img src="assets/slide_(\d{2})\.png"', landing)
+        cards = re.findall(r'<a href="archetypes/(\d{2}-Slide-[^"?]+\.html)(?:\?v=\w+)?"[^>]*>\s*<div[^>]*>\s*<img src="assets/slide_(\d{2})\.png(?:\?v=\w+)?"', landing)
         self.assertEqual([href for href, _ in cards], names, 'the gallery shows every archetype in order')
         for href, thumbnail in cards:
             with self.subTest(card=href):

@@ -5,13 +5,21 @@ from __future__ import annotations
 import re
 import unittest
 
+import hashlib
+import html
+
 from harness import ROOT, Chromium, archetypes
+from test_consistency import title_of
 from test_links import references
 
 REVIEW_SIZES = [(1440, 900), (1280, 800), (390, 844)]
 # The template serves any report or presentation; the sample content is a security assessment.
 NARROW_WORDS = re.compile(r'cyber|pentest|penetration', re.I)
 TEMPLATE_ZIP = 'reports/medet-ink-template.zip'
+# Links to files that change under the same name carry the start of the file's SHA-256 as ?v=, so a
+# browser holding an older copy (GitHub Pages lets it keep one for four hours) fetches the new one.
+VERSIONED = re.compile(r'(?:href|src|data-src)="((?:archetypes|assets|reports)/[^"?#]+)(?:\?v=([0-9a-f]*))?"')
+COVER_CARD = 'Cover Page'  # the cover's title is the report's name; its card names the page
 
 PAGE_STATE = r"""async () => {
   // Lazy images load when scrolled to: scroll through the page, then wait for every image.
@@ -41,7 +49,7 @@ SHOW_STATE = r"""async () => {
     total: show.querySelector('[data-total]').textContent.trim(),
     name: show.querySelector('[data-name]').textContent.trim(),
     state: show.dataset.state,
-    active: active.map(s => s.getAttribute('href')),
+    active: active.map(s => s.getAttribute('href').split('?')[0]),
     hiddenFromReaders: slides.filter(s => s.getAttribute('aria-hidden') === 'true').length,
     currentTicks: [...show.querySelectorAll('[data-go]')].filter(t => t.getAttribute('aria-current') === 'true')
       .map(t => t.dataset.go),
@@ -67,7 +75,7 @@ def slideshow_entries(source: str) -> list[tuple[str, str]]:
     block = re.search(r'<div[^>]*data-slideshow[^>]*>(.*?)<!-- /slideshow -->', source, re.S)
     if not block:
         return []
-    return re.findall(r'<a href="archetypes/([^"]+)"[^>]*data-slide[^>]*>\s*<img (?:src|data-src)="assets/slide_(\d{2})\.png"',
+    return re.findall(r'<a href="archetypes/([^"?]+)(?:\?v=\w+)?"[^>]*data-slide[^>]*>\s*<img (?:src|data-src)="assets/slide_(\d{2})\.png(?:\?v=\w+)?"',
                       block.group(1))
 
 
@@ -168,11 +176,30 @@ class LandingPageTests(unittest.TestCase):
             chromium.close()
 
     def test_the_html_template_can_be_downloaded(self):
-        links = re.findall(r'<a\b[^>]*href="' + re.escape(TEMPLATE_ZIP) + r'"[^>]*>(.*?)</a>', self.source, re.S)
+        target = re.escape(TEMPLATE_ZIP) + r'(?:\?v=\w+)?'
+        links = re.findall(r'<a\b[^>]*href="' + target + r'"[^>]*>(.*?)</a>', self.source, re.S)
         self.assertEqual(len(links), 1, f'one link to {TEMPLATE_ZIP}')
         self.assertIn('HTML', links[0])
-        self.assertRegex(re.search(r'<a\b[^>]*href="' + re.escape(TEMPLATE_ZIP) + r'"[^>]*>', self.source).group(0),
-                         r'\bdownload\b')
+        self.assertRegex(re.search(r'<a\b[^>]*href="' + target + r'"[^>]*>', self.source).group(0), r'\bdownload\b')
+
+    def test_links_to_changing_files_carry_their_content_version(self):
+        found = VERSIONED.findall(self.source)
+        self.assertGreater(len(found), 30, 'the thumbnails, slides and reports the page links')
+        for path, version in found:
+            with self.subTest(link=path):
+                expected = hashlib.sha256((ROOT / path).read_bytes()).hexdigest()[:8]
+                self.assertEqual(version, expected, 'stale or missing: run python3 scripts/stamp_landing.py')
+
+    def test_gallery_and_slideshow_name_each_slide_by_its_title(self):
+        cards = re.findall(r'<a href="archetypes/(\d{2})-[^"]*" class="card">.*?<div class="name"><b>\d{2}</b>(.*?)</div>', self.source, re.S)
+        slides = re.findall(r'<a href="archetypes/(\d{2})-[^"]*" class="slide[^"]*" data-slide data-name="([^"]*)"', self.source)
+        titles = {path.name[:2]: title_of(path.read_text(encoding='utf-8')) for path in archetypes()}
+        titles['01'] = COVER_CARD
+        for where, entries in (('gallery', cards), ('slideshow', slides)):
+            self.assertEqual(len(entries), len(titles), where)
+            for number, name in entries:
+                with self.subTest(where=where, slide=number):
+                    self.assertEqual(html.unescape(name), titles[number])
 
     def test_landing_page_holds_together_at_every_review_size(self):
         chromium = Chromium()
