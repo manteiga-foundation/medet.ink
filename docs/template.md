@@ -225,6 +225,12 @@ when".
   on an unlinked image when `img/` joined the check); `projects/`
   is ignored and nothing under it is tracked, since client reports never enter this public
   repository (failed: not ignored).
+- `tests/test_chart_severity.py` - one slide at a time: the colour family of every chart (a radar
+  canvas, an inline SVG chart, the risk-score bar) matches the risk level the slide declares on its
+  meta value. Red for Critical, orange for High, amber for Medium, green for Low, blue for
+  Informational. Measured from the rendered pixels and counted per family, not averaged, because a
+  canvas paints its label text over its fill (failed on a copy whose Low page drew the Critical reds:
+  "reads as critical but the slide states low"; a report with hand-set chart colours fails here first).
 - `tests/test_severity_palette.py` - every severity-coded element and chart point uses the palette
   colour of its severity (failed on 06 and 08: eleven elements); a slide that shows severities uses
   neither `#DC2626` nor `#FBBF24` (failed on 06, 08, 09); the effort levels use no severity colour
