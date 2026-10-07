@@ -145,7 +145,12 @@ report. Client reports live in `projects/<Client>/<Report>/`, which git ignores,
 with these scripts by path (`python3 ../../../scripts/merge_slides.py` from the report folder).
 The tests that apply to any report run against one with `MEDET_ROOT`: `test_archetypes`,
 `test_layout`, `test_print`, `test_chart_fonts`, `test_severity_palette`, `test_combined_report`
-(30 checks passed against a copy of the sample laid out as a client report).
+(30 checks passed against a copy of the sample laid out as a client report). A report folder has
+no `scripts/` of its own (`REPORT_FOLDER` in the harness): there the checks that only prove a probe
+found the sample's content (at least three charts, more than ten titles, more than twenty
+severity-coded elements, the effort levels) do not apply, so a partial report is judged on what it
+holds. In the repository and its copies they still apply (fails when the charts of 04, 08 and 09
+are unmarked in a copy).
 
 Steps 3 and 4 share `scripts/browser.py` with the tests: the repository served on a free port, a
 regular Chrome user agent, chart animations off (each library is configured the moment its script

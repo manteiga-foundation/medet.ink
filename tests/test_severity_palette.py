@@ -4,7 +4,7 @@ from __future__ import annotations
 import re
 import unittest
 
-from harness import Chromium, archetypes, slide_number
+from harness import REPORT_FOLDER, Chromium, archetypes, slide_number
 
 PALETTE = {
     'critical': '#EF4444',
@@ -81,7 +81,8 @@ class SeverityPaletteTests(unittest.TestCase):
                 severity = ALIASES.get(item['severity'], item['severity'])
                 with self.subTest(archetype=slide_number(path), element=item['what']):
                     self.assertEqual(hex_of(item['rgb']), PALETTE[severity], f'{severity} is {PALETTE[severity]}')
-        self.assertGreater(seen, 20, 'the probe found the severity-coded elements')
+        if not REPORT_FOLDER:  # proves the probe found the sample's content; a report may hold none
+            self.assertGreater(seen, 20, 'the probe found the severity-coded elements')
 
     def test_slides_that_show_severities_use_no_retired_colour(self):
         for path, result in self.probe().items():
@@ -95,7 +96,8 @@ class SeverityPaletteTests(unittest.TestCase):
 
     def test_effort_levels_use_no_severity_colour(self):
         effort = [(slide_number(p), e) for p, r in self.probe().items() for e in r['effort']]
-        self.assertGreater(len(effort), 0, 'the probe found the effort levels')
+        if not REPORT_FOLDER:  # proves the probe found the sample's content; a report may hold none
+            self.assertGreater(len(effort), 0, 'the probe found the effort levels')
         for number, item in effort:
             with self.subTest(archetype=number, element=item['what']):
                 self.assertNotIn(hex_of(item['rgb']), PALETTE.values())

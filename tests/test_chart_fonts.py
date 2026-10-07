@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import unittest
 
-from harness import TOLERANCE_IMAGE, Chromium, archetypes, chart_calls, image_difference
+from harness import REPORT_FOLDER, TOLERANCE_IMAGE, Chromium, archetypes, chart_calls, image_difference
 
 # Where each chart sits on the page: inline SVG containers and Chart.js canvases.
 CHART_AREAS = """() => [...document.querySelectorAll('[data-chart], canvas')].map(el => {
@@ -78,7 +78,8 @@ class ChartFontTests(unittest.TestCase):
                                          f'{difference:.2f}% of a chart moved when redrawn with the fonts loaded: '
                                          'the chart was laid out before the web fonts arrived')
             checked += 1
-        self.assertGreater(checked, 0, 'no archetype draws a chart')
+        if not REPORT_FOLDER:  # proves the probe found the sample's content; a report may hold none
+            self.assertGreater(checked, 0, 'no archetype draws a chart')
 
 
 if __name__ == '__main__':

@@ -29,6 +29,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / 'scripts'))
 from browser import CHROMIUM_ARGS, NO_ANIMATIONS, chrome_user_agent, serve  # noqa: E402
 
 ROOT = Path(os.environ.get('MEDET_ROOT') or Path(__file__).resolve().parent.parent)
+# A client report folder (projects/<Client>/<Report>/) is laid out like the repository but has no
+# scripts/ of its own. Checks that only prove a probe found the sample's content skip it.
+REPORT_FOLDER = not (ROOT / 'scripts').is_dir()
 
 # Third-party files (chart libraries, fonts, placeholder images) are fetched once and served
 # from here afterwards, so a run does not depend on a CDN's mood. Delete the folder to refresh.

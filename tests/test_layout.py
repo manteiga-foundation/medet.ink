@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import unittest
 
-from harness import Chromium, TOLERANCE_PX, archetypes, slide_number
+from harness import REPORT_FOLDER, Chromium, TOLERANCE_PX, archetypes, slide_number
 
 TITLE_TOP = 14.4  # 0.15in from the top of the slide, as slide 09's card
 COVER = '01'
@@ -47,7 +47,8 @@ class LayoutTests(unittest.TestCase):
 
     def test_titles_start_at_the_same_height(self):
         titled = {n: v['title'] for n, v in self.slides().items() if v['title'] is not None}
-        self.assertGreater(len(titled), 10)
+        if not REPORT_FOLDER:  # proves the probe found the sample's content; a report may hold none
+            self.assertGreater(len(titled), 10)
         for number, top in titled.items():
             with self.subTest(archetype=number):
                 self.assertAlmostEqual(top, TITLE_TOP, delta=TOLERANCE_PX)

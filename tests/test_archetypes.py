@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import unittest
 
-from harness import (PAGE_PT, SLIDE_PX, TOLERANCE_IMAGE, TOLERANCE_PX, ROOT, Chromium, archetypes, chart_calls,
+from harness import (PAGE_PT, REPORT_FOLDER, SLIDE_PX, TOLERANCE_IMAGE, TOLERANCE_PX, ROOT, Chromium, archetypes, chart_calls,
                      image_difference, pdf_pages, slide_number)
 
 class ArchetypeTests(unittest.TestCase):
@@ -66,7 +66,8 @@ class ArchetypeTests(unittest.TestCase):
             with self.subTest(archetype=number):
                 self.assertEqual(drawn, r['charts'], 'a chart was not drawn: did its library load?')
         # Slides 04 and 08 (inline SVG) and 09 (Chart.js radar) carry charts today.
-        self.assertGreaterEqual(sum(r['charts'] for r in self.rendered.values()), 3)
+        if not REPORT_FOLDER:  # proves the probe found the sample's content; a report may hold none
+            self.assertGreaterEqual(sum(r['charts'] for r in self.rendered.values()), 3)
 
     def test_each_gallery_thumbnail_is_a_render_of_its_archetype(self):
         for number, r in self.rendered.items():
