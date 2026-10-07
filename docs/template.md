@@ -217,8 +217,9 @@ when".
   card with its own thumbnail (failed when 13 to 16 were renamed); the social preview points at committed files on medet.ink; no page loads or calls Highcharts (fails
   with the Highcharts slide 08 restored).
 - `tests/test_repository.py` - no browser: no `.DS_Store` is tracked (failed: one at the root);
-  every file under `assets/` and `reports/` is generated or linked from the README, the landing
-  page or the viewer (failed on `assets/sample-report.pdf` and `reports/data_uri.txt`); `projects/`
+  every file under `assets/`, `reports/` and `img/` is generated or linked from the README, the
+  landing page or the viewer (failed on `assets/sample-report.pdf` and `reports/data_uri.txt`, and
+  on an unlinked image when `img/` joined the check); `projects/`
   is ignored and nothing under it is tracked, since client reports never enter this public
   repository (failed: not ignored).
 - `tests/test_severity_palette.py` - every severity-coded element and chart point uses the palette

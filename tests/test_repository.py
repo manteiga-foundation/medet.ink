@@ -10,6 +10,8 @@ from harness import ROOT, archetypes, slide_number
 DERIVED = {'assets/demo.gif', 'reports/combined_report.html', 'reports/merged_report.html',
            'reports/final_report.pdf'}
 REFERRERS = ['README.md', 'index.html', 'archetypes/index.html']
+# Folders whose files are published as the site's media: each must be generated or linked.
+PUBLISHED = ('assets', 'reports', 'img')
 
 
 def tracked_files() -> list[str] | None:
@@ -40,11 +42,11 @@ class RepositoryTests(unittest.TestCase):
     def test_every_asset_and_report_is_derived_or_linked(self):
         files = tracked_files()
         if files is None:
-            files = [str(p.relative_to(ROOT)) for d in ('assets', 'reports') for p in (ROOT / d).rglob('*') if p.is_file()]
+            files = [str(p.relative_to(ROOT)) for d in PUBLISHED for p in (ROOT / d).rglob('*') if p.is_file()]
         derived = DERIVED | {f'assets/slide_{slide_number(p)}.png' for p in archetypes()}
         text = ' '.join((ROOT / page).read_text(encoding='utf-8') for page in REFERRERS)
         for path in files:
-            if not re.match(r'(assets|reports)/', path) or path in derived:
+            if not re.match(r'(' + '|'.join(PUBLISHED) + r')/', path) or path in derived:
                 continue
             with self.subTest(file=path):
                 name = path.split('/')[-1]
