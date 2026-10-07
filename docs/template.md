@@ -179,6 +179,9 @@ when".
     column and proves nothing);
   - no uncaught page errors (fails when a script calls an undefined function or a library is
     missing);
+  - each slide prints its own number in the footer (failed on a report whose slides were renumbered
+    by file name only, leaving six footers claiming another page; this is the check client reports
+    get, since test_consistency does not run on a report folder);
   - every chart the archetype's script creates is drawn: painted canvas pixels, shapes in each SVG chart
     (fails when Chart.js is not loaded; a canvas keeps a 300 x 150 default, so size proves nothing);
   - each gallery thumbnail is the archetype's slide, within 0.1% of its pixels (failed on 04 and 08

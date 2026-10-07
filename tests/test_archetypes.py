@@ -1,6 +1,7 @@
 """Every archetype, rendered in Chromium: one landscape Letter page that holds its content."""
 from __future__ import annotations
 
+import re
 import unittest
 
 from harness import (PAGE_PT, REPORT_FOLDER, SLIDE_PX, TOLERANCE_IMAGE, TOLERANCE_PX, ROOT, Chromium, archetypes, chart_calls,
@@ -33,6 +34,16 @@ class ArchetypeTests(unittest.TestCase):
         numbers = list(self.rendered)
         self.assertGreater(len(numbers), 0, 'no archetypes found')
         self.assertEqual(numbers, [f'{n:02d}' for n in range(1, len(numbers) + 1)])
+
+    def test_each_slide_prints_its_own_number_in_the_footer(self):
+        # The list a report keeps for its own pages: if a slide is added or moved, the printed page
+        # number must follow the file name, or the footer contradicts the page it sits on.
+        for path in archetypes():
+            number = slide_number(path)
+            source = path.read_text(encoding='utf-8')
+            printed = re.findall(r'<span class="page-indicator">(.*?)</span>', source)
+            with self.subTest(archetype=number):
+                self.assertEqual(printed, [number], 'the footer prints a different page number')
 
     def test_each_archetype_is_one_slide_of_11_by_8_5_inches(self):
         for number, r in self.rendered.items():
