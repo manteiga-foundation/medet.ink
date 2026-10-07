@@ -45,43 +45,64 @@ VALUE = 0.35
 # At least this share of the chart must be coloured, or there is nothing to judge.
 MIN_SHARE = 0.004
 
-# Hue bands, in order. Red wraps through 0, so it is tested as a range at both ends.
-FAMILIES = (
-    ('critical', lambda hue: hue >= 345 or hue < 12),
-    ('high', lambda hue: 12 <= hue < 25),
-    ('medium', lambda hue: 25 <= hue < 58),
-    ('low', lambda hue: 58 <= hue < 180),
-    ('info', lambda hue: 180 <= hue < 260),
-)
+# Each severity's palette hue, which is what a chart of that severity must be drawn in:
+# #EF4444 red, #F97316 orange, #F59E0B amber, #10B981 green, #0EA5E9 blue.
+PALETTE_HUES = {'critical': 0.0, 'high': 25.0, 'medium': 38.0, 'low': 160.0, 'info': 199.0}
+# Violet only appears on a chart of a slide that states no risk level (the template's maturity
+# chart); kept in the wheel so every coloured pixel has a nearest family and none is dropped.
+EXTRA_HUE = 313.0
 ALIASES = {'med': 'medium', 'informational': 'info'}
+# How far a chart's hue may sit from its palette hue and still read as that severity. Measured:
+# the report's five pages sit at 3.2 degrees or less (antialiasing blends edges), while the older
+# browner shade #9A3412 lands at 6.7 and 8.6. Five separates the two with room on both sides.
+MAX_DRIFT = 5.0
 
 
-def family_of(hue: float) -> str | None:
-    for name, within in FAMILIES:
-        if within(hue):
-            return name
-    return None
+def circular_distance(a: float, b: float) -> float:
+    """The smaller angle between two hues, in degrees."""
+    return min((a - b) % 360, (b - a) % 360)
 
 
-def dominant_family(png: bytes) -> tuple[str | None, dict[str, int]]:
-    """The colour family most of a chart's coloured pixels belong to, and the counts per family.
+def nearest_family(hue: float) -> str:
+    """The palette colour a hue is closest to. Contiguous by construction, so no pixel is dropped."""
+    candidates = dict(PALETTE_HUES)
+    candidates['violet'] = EXTRA_HUE
+    return min(candidates, key=lambda name: circular_distance(hue, candidates[name]))
 
-    Counted per family rather than averaged: a Chart.js canvas paints its label text on the same
-    pixels as its fill, and an average of red fill and blue-grey text lands on neither.
+
+def drift_from_palette(hue: float, family: str) -> float:
+    return circular_distance(hue, PALETTE_HUES.get(family, EXTRA_HUE))
+
+
+# Kept for the docstring test below: the families a slide may state.
+SEVERITY_FAMILIES = tuple(PALETTE_HUES)
+# A chart must be dominated by its family this strongly, or the colours are mixed enough to read
+# as another risk: one stray band in a stack or legend must not decide the answer.
+MAJORITY = 0.6
+
+
+def measure_chart(png: bytes) -> dict:
+    """What a chart's colours look like: the family most pixels land in, the counts, and how far,
+    on average, those pixels sit from that family's palette hue.
     """
     image = Image.open(io.BytesIO(png)).convert('RGB')
     counts: dict[str, int] = {}
+    drift = 0.0
     for red, green, blue in image.getdata():
         hue, saturation, value = colorsys.rgb_to_hsv(red / 255, green / 255, blue / 255)
         if saturation < SATURATION or value < VALUE:
             continue
-        name = family_of(hue * 360)
-        if name:
-            counts[name] = counts.get(name, 0) + 1
+        degrees = hue * 360
+        name = nearest_family(degrees)
+        counts[name] = counts.get(name, 0) + 1
+        drift += drift_from_palette(degrees, name)
     total = sum(counts.values())
-    if total < MIN_SHARE * image.width * image.height:
-        return None, counts
-    return max(counts, key=counts.get), counts
+    if not total:
+        return {'family': None, 'counts': counts, 'share': 0.0, 'drift': 0.0, 'coloured': 0}
+    family = max(counts, key=counts.get)
+    return {'family': family, 'counts': counts, 'share': counts[family] / total,
+            'drift': drift / total, 'coloured': total,
+            'enough': total >= MIN_SHARE * image.width * image.height}
 
 
 class ChartSeverityTests(unittest.TestCase):
@@ -104,14 +125,25 @@ class ChartSeverityTests(unittest.TestCase):
                 level = ALIASES.get(stated['level'], stated['level'])
                 charts = opened.page.locator(CHART_SELECTOR)
                 for index in range(charts.count()):
-                    family, counts = dominant_family(charts.nth(index).screenshot())
+                    chart = measure_chart(charts.nth(index).screenshot())
                     with self.subTest(archetype=slide_number(path), chart=index, level=level):
-                        self.assertIsNotNone(
-                            family, f'chart {index} shows no coloured pixels ({counts})')
+                        self.assertTrue(
+                            chart['enough'],
+                            f"chart {index} shows almost no colour ({chart['counts']})")
                         self.assertEqual(
-                            family, level,
-                            f'chart {index} reads as {family} ({counts}) but the slide states '
-                            f'{level}: use the {level} palette colours')
+                            chart['family'], level,
+                            f"chart {index} reads as {chart['family']} ({chart['counts']}) but the "
+                            f"slide states {level}: use the {level} palette colours")
+                        self.assertGreaterEqual(
+                            chart['share'], MAJORITY,
+                            f"chart {index} is only {chart['share']:.0%} {chart['family']} "
+                            f"({chart['counts']}): its colours are mixed enough to read as another "
+                            f'risk level')
+                        self.assertLessEqual(
+                            chart['drift'], MAX_DRIFT,
+                            f"chart {index} sits {chart['drift']:.0f} degrees off {level}'s palette "
+                            f"hue: a darker shade must keep the hue (darken the palette colour, do "
+                            f"not pick a browner one)")
                     checked += 1
             finally:
                 opened.close()

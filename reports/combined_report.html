@@ -6053,11 +6053,12 @@ html, body { margin: 0; padding: 0; height: auto; overflow: visible; font-family
     document.fonts.ready.then(function() {
         const ctx = document.getElementById('radarChart').getContext('2d');
         
-        // Medium Risk Gradient (Yellow/Amber)
+        // Medium Risk Gradient: the palette amber (#F59E0B, hue 38) darkened, so the chart keeps
+        // the Medium hue instead of drifting to yellow (a chart's colour must match its risk level).
         const gradient = ctx.createLinearGradient(0, ctx.canvas.height, ctx.canvas.width, 0);
-        gradient.addColorStop(0, '#f57f17');
-        gradient.addColorStop(0.5, '#fbc02d');
-        gradient.addColorStop(1, '#ffeb3b');
+        gradient.addColorStop(0, '#9E6607');
+        gradient.addColorStop(0.5, '#C27C08');
+        gradient.addColorStop(1, '#F59E0B');
         
         // Plugin to draw alternating hexagon backgrounds
         const alternatingHexagonPlugin = {
