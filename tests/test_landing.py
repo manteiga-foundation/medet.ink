@@ -50,6 +50,18 @@ SHOW_STATE = r"""async () => {
 }"""
 
 
+# The foundation's credit in the navigation band, beside the wordmark.
+BYLINE = r"""() => {
+  const by = document.querySelector('.band .by'), mark = document.querySelector('.band .wordmark');
+  const b = by.getBoundingClientRect(), m = mark.getBoundingClientRect();
+  return {
+    text: by.innerText.trim(), href: by.getAttribute('href'),
+    size: parseFloat(getComputedStyle(by).fontSize), wordmarkSize: parseFloat(getComputedStyle(mark).fontSize),
+    visible: b.width > 0 && b.right <= innerWidth, gap: Math.round(b.left - m.right),
+  };
+}"""
+
+
 def slideshow_entries(source: str) -> list[tuple[str, str]]:
     """(archetype file, thumbnail number) for each slide of the hero slideshow, in markup order."""
     block = re.search(r'<div[^>]*data-slideshow[^>]*>(.*?)<!-- /slideshow -->', source, re.S)
@@ -135,6 +147,23 @@ class LandingPageTests(unittest.TestCase):
             self.assertEqual((state()['page'], state()['state']), ('03', 'paused'), 'the pause key holds it')
             self.assertEqual(opened.errors, [])
             opened.close()
+        finally:
+            chromium.close()
+
+    def test_the_band_credits_the_foundation_as_a_small_byline(self):
+        chromium = Chromium()
+        try:
+            for width, height in REVIEW_SIZES:
+                opened = chromium.open('index.html', viewport=(width, height))
+                found = opened.page.evaluate(BYLINE)
+                opened.close()
+                with self.subTest(size=f'{width}x{height}'):
+                    self.assertEqual(found['text'], 'By Manteiga Foundation')
+                    self.assertEqual(found['href'], 'https://manteiga.org')
+                    self.assertLessEqual(found['size'], 11)
+                    self.assertLess(found['size'], found['wordmarkSize'])
+                    self.assertTrue(found['visible'])
+                    self.assertLessEqual(found['gap'], 12, 'sits beside the wordmark')
         finally:
             chromium.close()
 

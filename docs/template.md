@@ -70,6 +70,10 @@ text, IBM Plex Mono for labels; 2 px ink borders with hard 4 px offset shadows. 
 Google Fonts and one inline script, no external script. The copy presents the template for any
 report or presentation; the sample content is a fictional security assessment.
 
+The navigation band carries the wordmark with a byline beside it on its baseline, "By Manteiga
+Foundation" at 11 px in soft ink, sentence case (the wordmark is 14 px), shown at every size; the
+status read-outs follow, then GitHub.
+
 The hero plays the archetypes as a slideshow in the window frame: the title bar shows `NN / 16`, the
 slide name and a PLAYING/PAUSED LED; slides wipe in (left to right forward, right to left back,
 0.55 s); the pagination strip has prev and next keys, 16 ticks (past ones sage, the current one
@@ -141,7 +145,7 @@ defines it), web fonts loaded before capture.
 
 ## Tests
 
-`python3 -m unittest discover -s tests -v`; 55 tests, about 115 s once the third-party cache is
+`python3 -m unittest discover -s tests -v`; 56 tests, about 115 s once the third-party cache is
 filled. The harness (`tests/harness.py`) serves the repository, drives Chromium through
 `scripts/browser.py`, and answers third-party requests from `tests/.cache`. Each test was seen
 failing for the right reason before it passed: against the defect it was written for, or against a
@@ -223,7 +227,9 @@ when".
   prev, next, the ticks and the arrow keys, wrapping from 01 to 16, and holds under reduced motion
   (fails when reduced motion is ignored); it advances after one interval on a fake clock, holds
   while pointed at and on the pause key (fails when the hover is ignored: it reached 05); one link
-  downloads `reports/medet-ink-template.zip` (failed: absent).
+  downloads `reports/medet-ink-template.zip` (failed: absent). The band credits the foundation as
+  a byline: "By Manteiga Foundation", at most 11 px and smaller than the wordmark, within 12 px of
+  it and visible at the three sizes (failed: "MANTEIGA FOUNDATION" in capitals, hidden on phones).
 - `tests/test_template_download.py` - the zip holds the 16 archetypes, the viewer, the combined
   report, README and LICENSE, byte for byte as in the repository (failed: absent; fails when a file
   changes without `make_template.py`), and every relative link inside it resolves inside it.

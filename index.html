@@ -44,7 +44,8 @@ a { color: inherit; }
 .band { border-bottom: 2px solid var(--ink); background: var(--paper); position: sticky; top: 0; z-index: 10; }
 .band .wrap { display: flex; align-items: center; gap: 28px; height: 52px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
 .wordmark { font-weight: 600; font-size: 14px; letter-spacing: 0.12em; text-decoration: none; }
-.band .by { color: var(--ink-soft); text-decoration: none; }
+.brand { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
+.band .by { color: var(--ink-soft); text-decoration: none; font-size: 11px; letter-spacing: 0.02em; text-transform: none; white-space: nowrap; }
 .band .by:hover, .band nav a:hover { text-decoration: underline; text-underline-offset: 4px; }
 .status { display: flex; gap: 18px; margin-left: auto; color: var(--ink-soft); }
 .status span { display: inline-flex; align-items: center; gap: 7px; }
@@ -139,7 +140,6 @@ footer .wrap { display: flex; justify-content: space-between; gap: 20px; padding
 @media (max-width: 560px) {
     .wrap { padding: 0 18px; }
     .band .wrap { gap: 14px; }
-    .band .by { display: none; }
     .window .bar .state span { display: none; }
     .pager { gap: 6px; padding: 10px; }
     .ticks { gap: 3px; }
@@ -156,8 +156,10 @@ footer .wrap { display: flex; justify-content: space-between; gap: 20px; padding
 <body>
     <header class="band">
         <div class="wrap">
-            <a class="wordmark" href="#">medet.ink</a>
-            <a class="by" href="https://manteiga.org" target="_blank" rel="noopener">Manteiga Foundation</a>
+            <div class="brand">
+                <a class="wordmark" href="#">medet.ink</a>
+                <a class="by" href="https://manteiga.org" target="_blank" rel="noopener">By Manteiga Foundation</a>
+            </div>
             <div class="status"><span><i class="led"></i>Ready</span><span>16 archetypes</span><span>PDF 16 pp</span></div>
             <nav><a href="https://github.com/manteiga-foundation/medet.ink" target="_blank" rel="noopener">GitHub</a></nav>
         </div>
