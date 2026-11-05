@@ -1,8 +1,6 @@
 # Beautiful HTML Penetration Testing Report Template
 
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
-![Format](https://img.shields.io/badge/Format-HTML5%20%26%20CSS3-orange.svg)
-![Print](https://img.shields.io/badge/Print-Perfect%20PDF-success.svg)
 
 Beautiful, interactive HTML penetrations and professional report templates that prints to a perfect pixel PDF.
 
@@ -44,9 +42,6 @@ A selection of included page layouts:
 | Technical Finding | Assessment Finding | Evidence |
 |:---:|:---:|:---:|
 | <img src="assets/slide_09.png" width="300"/> | <img src="assets/slide_11.png" width="300"/> | <img src="assets/slide_12.png" width="300"/> |
-
----:|:---:|:---:|
-| <img src="assets/slide_08.png" width="300"/> | <img src="assets/slide_09.png" width="300"/> | <img src="assets/slide_12.png" width="300"/> |
 
 ---
 
