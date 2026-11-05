@@ -806,7 +806,7 @@
 }
 }
 
-/* --- 04-Slide-Cybersecurity-Maturity.html --- */
+/* --- 04-Slide-Maturity-Scorecard.html --- */
 .archetype-04 {
 * {
             margin: 0;
@@ -893,90 +893,41 @@
             display: flex;
             flex-direction: column;
         }
-.exec-takeaway {
-            background: #F1F5F9;
-            border-left: 4px solid #0A4B9F;
-            padding: 16px 20px;
-            border-radius: 0 8px 8px 0;
-            margin-bottom: 24px;
-        }
-.exec-takeaway-label {
-            font-size: 9px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: #0A4B9F;
-            margin-bottom: 6px;
-        }
-.exec-takeaway-text {
-            font-size: 14px;
-            font-weight: 600;
-            color: #0A2540;
-            line-height: 1.5;
-        }
-.exec-text {
-            font-size: 12px; 
-            line-height: 1.6;
-            color: #475569;
-            margin-bottom: 24px;
-            text-align: justify;
-        }
-.chart-explainer {
-            background: white;
-            border: 1px dashed #CBD5E1;
-            padding: 16px;
-            border-radius: 8px;
-            margin-top: auto; 
-        }
-.explainer-title {
-            font-size: 10px;
-            font-weight: 700;
-            color: #64748B;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-.explainer-text {
-            font-size: 11px;
-            color: #475569;
-            line-height: 1.5;
-        }
-.chart-card {
-            background: white;
-            padding: 24px 20px 24px 24px; 
-            border-radius: 12px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.04);
-            border: 1px solid #E2E8F0;
-            display: flex;
-            flex-direction: column;
-            height: 100%; 
-            width: 100%;
-        }
-.chart-header {
-            text-align: center;
-            margin-bottom: 12px;
-        }
-.chart-title {
-            color: #0A2540;
-            font-size: 14px;
-            font-weight: 700;
-            letter-spacing: -0.2px;
-            margin-bottom: 4px;
-        }
-.chart-subtitle {
-            color: #64748B;
-            font-size: 10px;
-            font-weight: 500;
-        }
-#chart-04 {
-            width: 100%;
-            flex: 1; 
-            min-height: 250px;
-            position: relative;
-        }
+.takeaway { background: rgba(10, 75, 159, 0.06); border-left: 4px solid #0A4B9F; border-radius: 0 8px 8px 0; padding: 14px 18px; margin-bottom: 18px; }
+.takeaway .lab { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #0A4B9F; margin-bottom: 6px; }
+.takeaway .txt { font-size: 13px; font-weight: 500; line-height: 1.5; color: #0A2540; }
+.overall { background: white; border: 1px solid #E2E8F0; border-radius: 12px; padding: 18px 22px; box-shadow: 0 8px 30px rgba(0,0,0,0.04); display: grid; grid-template-columns: auto 1fr; gap: 22px; align-items: center; margin-bottom: 16px; }
+.overall .score { font-size: 56px; font-weight: 900; line-height: 1; color: #0A2540; letter-spacing: -2px; }
+.overall .score small { font-size: 20px; font-weight: 600; color: #94A3B8; letter-spacing: 0; }
+.overall .lab { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #64748B; margin-bottom: 6px; }
+.overall p { font-size: 11px; line-height: 1.5; color: #475569; margin-top: 8px; }
+.bands { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+.pill { display: inline-block; font-size: 8px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; padding: 3px 8px; border-radius: 10px; border: 1px solid transparent; white-space: nowrap; }
+.pill.poor { color: #6D28D9; background: rgba(139, 92, 246, 0.12); border-color: rgba(139, 92, 246, 0.35); }
+.pill.below { color: #B91C1C; background: rgba(239, 68, 68, 0.10); border-color: rgba(239, 68, 68, 0.35); }
+.pill.average { color: #B45309; background: rgba(245, 158, 11, 0.12); border-color: rgba(245, 158, 11, 0.4); }
+.pill.good { color: #047857; background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.4); }
+.pill.excellent { color: #1D4ED8; background: rgba(59, 130, 246, 0.12); border-color: rgba(59, 130, 246, 0.4); }
+.bands .pill::before { content: attr(data-range) ' '; font-weight: 600; opacity: 0.8; }
+.explainer { margin-top: auto; font-size: 10px; color: #64748B; line-height: 1.5; padding-top: 12px; border-top: 1px solid #E2E8F0; }
+.explainer strong { color: #0A2540; }
+.scorecard { background: white; border: 1px solid #E2E8F0; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.04); padding: 16px 20px 12px; display: flex; flex-direction: column; }
+.scorecard .head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+.scorecard .title { font-size: 14px; font-weight: 700; color: #0A2540; }
+.scorecard .sub { font-size: 10px; color: #64748B; }
+table.sc { width: 100%; border-collapse: collapse; }
+table.sc th { text-align: left; font-size: 8px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #94A3B8; padding: 0 6px 6px; border-bottom: 1px solid #E2E8F0; }
+table.sc th.n, table.sc td.n { text-align: right; }
+table.sc td { padding: 7px 6px; border-bottom: 1px solid #F1F5F9; vertical-align: middle; font-size: 11px; color: #0A2540; }
+table.sc tr:last-child td { border-bottom: 0; }
+table.sc td.dom { font-weight: 600; white-space: nowrap; }
+table.sc td.dom small { display: block; font-weight: 400; font-size: 9px; color: #64748B; }
+table.sc td.bar { width: 42%; }
+table.sc td.bar svg { display: block; width: 100%; height: 12px; }
+table.sc td.n.score { font-weight: 800; font-size: 13px; width: 48px; }
+table.sc td.checks { font-size: 9.5px; color: #64748B; white-space: nowrap; }
+table.sc td.checks b { color: #0A2540; font-weight: 700; }
+.two-col-grid { grid-template-columns: 4fr 6fr; gap: 28px; }
 .footer {
             padding: 0.15in 0.8in 0.3in 0.8in;
             display: flex;
@@ -3088,8 +3039,450 @@
 }
 }
 
-/* --- 11-Slide-Team.html --- */
+/* --- 11-Slide-Assessment-Finding.html --- */
 .archetype-11 {
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+& { font-family: 'Montserrat', sans-serif; font-size: 12px; line-height: 1.4; }
+.slide {
+            width: 11in;
+            height: 8.5in;
+            position: relative;
+            overflow: hidden;
+            page-break-after: always;
+            page-break-inside: avoid;
+            background: linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 50%, #F1F5F9 100%);
+            color: #0A2540;
+            display: flex;
+            flex-direction: column;
+        }
+.slide::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(180deg, #0A4B9F 0%, #4781C3 35%, #D82018 100%);
+        }
+.slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(10, 75, 159, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(10, 75, 159, 0.03) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+        }
+.content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 0.15in 0.8in 0;
+            position: relative;
+            z-index: 1;
+        }
+.section-title {
+            font-size: 32px; 
+            font-weight: 300;
+            color: #0A2540;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+            line-height: 1.1;
+        }
+.section-title strong {
+            font-weight: 900;
+        }
+.divider {
+            width: 60px;
+            height: 5px;
+            background: linear-gradient(90deg, #D82018, #0A4B9F);
+            border-radius: 2.5px;
+            margin-bottom: 24px;
+        }
+.two-col-grid {
+            display: grid;
+            grid-template-columns: 4.5fr 5.5fr; 
+            gap: 40px;
+            flex: 1;
+            align-items: stretch; 
+            margin-bottom: 10px;
+        }
+.left-col {
+            display: flex;
+            flex-direction: column;
+        }
+.right-col {
+            display: flex;
+            flex-direction: column;
+        }
+.finding-card { position: relative; background: white; border: 1px solid #E2E8F0; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.04); padding: 18px 22px 12px; margin-top: 10px; margin-bottom: 12px; }
+.finding-tab { position: absolute; top: -11px; left: 22px; background: #0A2540; color: white; font-size: 9px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; padding: 4px 12px; border-radius: 6px; }
+.finding-title { font-size: 19px; font-weight: 700; color: #0A2540; line-height: 1.25; margin: 2px 0 14px; }
+.finding-grid { display: grid; grid-template-columns: 24fr 46fr 18fr; gap: 20px; align-items: stretch; }
+.meta .lab { font-size: 8px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; color: #94A3B8; margin-bottom: 3px; }
+.meta .val { font-size: 11.5px; font-weight: 700; color: #0A2540; margin-bottom: 10px; line-height: 1.35; }
+.pill { display: inline-block; font-size: 8.5px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; padding: 3px 9px; border-radius: 10px; border: 1px solid transparent; }
+.pill.medium { color: #F59E0B; background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.45); }
+.chip { display: inline-block; font-family: 'Fira Code', 'Courier New', monospace; font-size: 9.5px; font-weight: 600; color: #0A4B9F; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 4px; padding: 2px 7px; }
+.radar { position: relative; }
+.radar svg { display: block; width: 100%; height: 196px; }
+.score { border-left: 1px solid #E2E8F0; padding-left: 18px; display: grid; grid-template-columns: auto auto; gap: 10px; align-items: center; justify-content: start; }
+.score .num { font-size: 40px; font-weight: 900; color: #0A2540; line-height: 1; letter-spacing: -1px; grid-column: 1 / -1; }
+.score .gauge { width: 14px; height: 110px; background: #F1F5F9; border-radius: 7px; position: relative; overflow: hidden; }
+.score .gauge i { position: absolute; left: 0; right: 0; bottom: 0; background: #F59E0B; border-radius: 7px; }
+.score .cap { writing-mode: vertical-rl; transform: rotate(180deg); font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #94A3B8; }
+.body { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; flex: 1; min-height: 0; }
+.body h3 { font-size: 11.5px; font-weight: 700; color: #0A2540; padding-bottom: 5px; border-bottom: 1px solid #E2E8F0; margin: 0 0 8px; }
+.body h3 + * { margin-bottom: 12px; }
+.body p { font-size: 10.2px; line-height: 1.5; color: #334155; text-align: justify; }
+.body p code { font-family: 'Fira Code', 'Courier New', monospace; font-size: 9.5px; color: #0A4B9F; }
+.resources { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+.resources .chip { align-self: flex-start; font-size: 9px; }
+.steps { display: flex; flex-direction: column; gap: 6px; }
+.step { background: #F8FAFC; border-left: 3px solid #0A4B9F; border-radius: 0 6px 6px 0; padding: 6px 10px; font-size: 9.8px; line-height: 1.45; color: #334155; }
+.step b { color: #0A2540; margin-right: 4px; }
+.refs { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.refs li { font-size: 10px; color: #334155; display: grid; grid-template-columns: 92px 1fr; gap: 8px; }
+.refs li b { font-family: 'Fira Code', 'Courier New', monospace; font-size: 9px; color: #0A4B9F; font-weight: 600; }
+.footer {
+            padding: 0.15in 0.8in 0.3in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            position: relative;
+            z-index: 1;
+        }
+.footer-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 700px;
+        }
+.confidential-block {
+            font-size: 9px;
+            color: #64748B;
+            line-height: 1.5;
+        }
+.confidential-block strong {
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+.footer-bottom-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+.footer-logo {
+            flex: none;
+            width: 90px;
+            height: 24px;
+            background: #F1F5F9;
+            border: 1px dashed #94A3B8;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            color: #64748B;
+            font-weight: 600;
+        }
+.footer-line {
+            font-size: 10px;
+            color: #94A3B8;
+        }
+.footer-line strong {
+            font-weight: 600;
+            color: #0A4B9F;
+        }
+.footer-tags {
+            display: flex;
+            gap: 8px;
+        }
+.tag {
+            font-size: 7px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 3px 6px;
+            border-radius: 3px;
+        }
+.tag-draft {
+            background: rgba(100, 116, 139, 0.1);
+            color: #475569;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+        }
+.tag-tlp {
+            background: rgba(217, 119, 6, 0.1);
+            color: #B45309;
+            border: 1px solid rgba(217, 119, 6, 0.2);
+        }
+.footer-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2px;
+        }
+.page-indicator {
+            font-size: 12px;
+            font-weight: 700;
+            color: #0A4B9F;
+        }
+.page-total {
+            font-size: 12px;
+            font-weight: 400;
+            color: #94A3B8;
+        }
+@media screen {
+.slide {
+                margin: 0 auto;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
+            }
+}
+@media print {
+* {
+                box-shadow: none !important;
+                filter: none !important;
+            }
+}
+}
+
+/* --- 12-Slide-Evidence.html --- */
+.archetype-12 {
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+& { font-family: 'Montserrat', sans-serif; font-size: 12px; line-height: 1.4; }
+.slide {
+            width: 11in;
+            height: 8.5in;
+            position: relative;
+            overflow: hidden;
+            page-break-after: always;
+            page-break-inside: avoid;
+            background: linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 50%, #F1F5F9 100%);
+            color: #0A2540;
+            display: flex;
+            flex-direction: column;
+        }
+.slide::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(180deg, #0A4B9F 0%, #4781C3 35%, #D82018 100%);
+        }
+.slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(10, 75, 159, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(10, 75, 159, 0.03) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+        }
+.content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 0.15in 0.8in 0;
+            position: relative;
+            z-index: 1;
+        }
+.section-title {
+            font-size: 32px; 
+            font-weight: 300;
+            color: #0A2540;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+            line-height: 1.1;
+        }
+.section-title strong {
+            font-weight: 900;
+        }
+.divider {
+            width: 60px;
+            height: 5px;
+            background: linear-gradient(90deg, #D82018, #0A4B9F);
+            border-radius: 2.5px;
+            margin-bottom: 24px;
+        }
+.two-col-grid {
+            display: grid;
+            grid-template-columns: 4.5fr 5.5fr; 
+            gap: 40px;
+            flex: 1;
+            align-items: stretch; 
+            margin-bottom: 10px;
+        }
+.left-col {
+            display: flex;
+            flex-direction: column;
+        }
+.right-col {
+            display: flex;
+            flex-direction: column;
+        }
+.ev-head { display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center; margin-bottom: 12px; }
+.badge { background: #0A2540; color: white; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; padding: 5px 10px; border-radius: 6px; }
+.ev-title { font-size: 15px; font-weight: 700; color: #0A2540; line-height: 1.3; }
+.pill { display: inline-block; font-size: 8.5px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; padding: 3px 9px; border-radius: 10px; border: 1px solid transparent; }
+.pill.medium { color: #F59E0B; background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.45); }
+.capture { background: white; border: 1px solid #E2E8F0; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.04); padding: 12px 14px 10px; margin-bottom: 12px; }
+.shot { border: 1px solid #CBD5E1; border-radius: 6px; overflow: hidden; background: #FFFFFF; font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; color: #323130; font-size: 9.5px; }
+.shot .top { background: #0F3159; color: white; padding: 6px 12px; font-size: 9px; display: flex; gap: 18px; }
+.shot .crumb { padding: 6px 12px; font-size: 8.5px; color: #605E5C; border-bottom: 1px solid #EDEBE9; }
+.shot .blade { display: grid; grid-template-columns: 150px 1fr; min-height: 186px; }
+.shot .nav { border-right: 1px solid #EDEBE9; padding: 8px 0; }
+.shot .nav div { padding: 4px 12px; font-size: 8.5px; color: #323130; }
+.shot .nav div.on { background: #EFF6FC; border-left: 3px solid #0078D4; padding-left: 9px; font-weight: 600; }
+.shot .main { padding: 10px 14px; }
+.shot .main h4 { font-size: 11px; font-weight: 600; margin-bottom: 8px; color: #201F1E; }
+.shot .row { display: grid; grid-template-columns: 160px 1fr; gap: 8px; padding: 5px 0; border-bottom: 1px solid #F3F2F1; font-size: 8.8px; }
+.shot .row b { font-weight: 600; }
+.shot .opt { display: inline-flex; align-items: center; gap: 5px; margin-right: 14px; }
+.shot .opt i { width: 10px; height: 10px; border: 1.5px solid #605E5C; border-radius: 50%; display: inline-block; position: relative; }
+.shot .opt i.on { border-color: #0078D4; }
+.shot .opt i.on::after { content: ''; position: absolute; inset: 2px; background: #0078D4; border-radius: 50%; }
+.shot .warn { margin-top: 10px; background: #FFF4CE; border: 1px solid #F5D77B; border-radius: 3px; padding: 5px 8px; font-size: 8.5px; color: #323130; }
+.caption { font-size: 9.5px; color: #475569; line-height: 1.45; margin-top: 8px; }
+.caption b { color: #0A2540; }
+.caption .mono { font-family: 'Fira Code', 'Courier New', monospace; font-size: 9px; }
+.ev-body { display: grid; grid-template-columns: 11fr 9fr; gap: 28px; flex: 1; min-height: 0; }
+.ev-body h3 { font-size: 11.5px; font-weight: 700; color: #0A2540; padding-bottom: 5px; border-bottom: 1px solid #E2E8F0; margin: 0 0 8px; }
+.where { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.where li { border-left: 3px solid #0A4B9F; padding: 2px 0 2px 10px; }
+.where b { display: block; font-size: 10px; color: #0A2540; }
+.where span { display: block; font-family: 'Fira Code', 'Courier New', monospace; font-size: 8.5px; color: #0A4B9F; word-break: break-all; }
+.ev-body p { font-size: 10.5px; line-height: 1.55; color: #334155; text-align: justify; }
+.ev-body p code { font-family: 'Fira Code', 'Courier New', monospace; font-size: 9.5px; color: #0A4B9F; }
+.footer {
+            padding: 0.15in 0.8in 0.3in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            position: relative;
+            z-index: 1;
+        }
+.footer-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 700px;
+        }
+.confidential-block {
+            font-size: 9px;
+            color: #64748B;
+            line-height: 1.5;
+        }
+.confidential-block strong {
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+.footer-bottom-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+.footer-logo {
+            flex: none;
+            width: 90px;
+            height: 24px;
+            background: #F1F5F9;
+            border: 1px dashed #94A3B8;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            color: #64748B;
+            font-weight: 600;
+        }
+.footer-line {
+            font-size: 10px;
+            color: #94A3B8;
+        }
+.footer-line strong {
+            font-weight: 600;
+            color: #0A4B9F;
+        }
+.footer-tags {
+            display: flex;
+            gap: 8px;
+        }
+.tag {
+            font-size: 7px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 3px 6px;
+            border-radius: 3px;
+        }
+.tag-draft {
+            background: rgba(100, 116, 139, 0.1);
+            color: #475569;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+        }
+.tag-tlp {
+            background: rgba(217, 119, 6, 0.1);
+            color: #B45309;
+            border: 1px solid rgba(217, 119, 6, 0.2);
+        }
+.footer-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2px;
+        }
+.page-indicator {
+            font-size: 12px;
+            font-weight: 700;
+            color: #0A4B9F;
+        }
+.page-total {
+            font-size: 12px;
+            font-weight: 400;
+            color: #94A3B8;
+        }
+@media screen {
+.slide {
+                margin: 0 auto;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
+            }
+}
+@media print {
+* {
+                box-shadow: none !important;
+                filter: none !important;
+            }
+}
+}
+
+/* --- 13-Slide-Team.html --- */
+.archetype-13 {
 * {
             margin: 0;
             padding: 0;
@@ -3355,8 +3748,8 @@
 }
 }
 
-/* --- 12-Slide-Capability-Statement.html --- */
-.archetype-12 {
+/* --- 14-Slide-Capability-Statement.html --- */
+.archetype-14 {
 * {
             margin: 0;
             padding: 0;
@@ -3652,572 +4045,572 @@
 }
 }
 
-/* --- 13-Slide-Vulnerabilities-Overview.html --- */
-.archetype-13 {
-* {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-        }
-& { font-family: 'Montserrat', sans-serif; font-size: 12px; line-height: 1.4; }
-.slide {
-            width: 11in;
-            height: 8.5in;
-            position: relative;
-            overflow: hidden;
-            page-break-after: always;
-            page-break-inside: avoid;
-            background: linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 50%, #F1F5F9 100%);
-            color: #0A2540;
-            display: flex;
-            flex-direction: column;
-        }
-.slide::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 8px;
-            height: 100%;
-            background: linear-gradient(180deg, #0A4B9F 0%, #4781C3 35%, #D82018 100%);
-        }
-.slide::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: 
-                linear-gradient(rgba(10, 75, 159, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(10, 75, 159, 0.03) 1px, transparent 1px);
-            background-size: 48px 48px;
-            pointer-events: none;
-        }
-.content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 0.15in 0.8in 0;
-            position: relative;
-            z-index: 1;
-        }
-.section-title {
-            font-size: 34px; 
-            font-weight: 300;
-            color: #0A2540;
-            margin-bottom: 16px;
-            letter-spacing: -0.5px;
-            text-transform: uppercase;
-        }
-.section-title strong {
-            font-weight: 900;
-        }
-.divider {
-            width: 80px;
-            height: 5px;
-            background: linear-gradient(90deg, #D82018, #0A4B9F);
-            border-radius: 2.5px;
-            margin-bottom: 24px;
-        }
-.summary-statement {
-            background: #F0FDF4;
-            border: 1px solid #BBF7D0;
-            color: #166534;
-            padding: 12px 20px;
-            border-radius: 6px;
-            font-size: 13px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-        }
-.summary-statement strong {
-            font-weight: 800;
-            margin-right: 6px;
-        }
-.slide-intro {
-            font-size: 13px;
-            color: #475569;
-            line-height: 1.6;
-            margin-bottom: 24px;
-            text-align: justify;
-        }
-.table-container {
-            background: white;
-            border-radius: 8px;
-            border: 1px solid #E2E8F0;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.04);
-            overflow: hidden;
-        }
-.vuln-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 11.5px;
-            line-height: 1.5;
-        }
-.vuln-table th {
-            background: #0A2540;
-            color: white;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 700;
-            padding: 12px 16px;
-            text-align: left;
-            font-size: 10px;
-            border-bottom: 2px solid #0A4B9F;
-        }
-.vuln-table td {
-            padding: 16px;
-            border-bottom: 1px solid #E2E8F0;
-            vertical-align: top;
-            color: #475569;
-        }
-.vuln-table tr:nth-child(even) td {
-            background: #F8FAFC;
-        }
-.vuln-table tr:last-child td {
-            border-bottom: none;
-        }
-.vuln-table td strong {
-            color: #0A2540;
-            font-weight: 700;
-            font-size: 12.5px;
-            display: block;
-            margin-bottom: 4px;
-        }
-.vuln-desc {
-            text-align: justify;
-        }
-.subtext {
-            font-size: 9.5px;
-            color: #94A3B8;
-            display: block;
-            margin-top: 4px;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-.sev-pill {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 26px;
-            height: 26px;
-            border-radius: 4px;
-            font-weight: 800;
-            color: white;
-            font-size: 13px;
-        }
-.sev-pill.critical { background: #EF4444; }
-.sev-pill.high { background: #F97316; }
-.sev-pill.medium { background: #F59E0B; }
-.sev-pill.low { background: #10B981; }
-.sev-pill.info { background: #0EA5E9; }
-.empty-state-cell {
-            color: #10B981 !important;
-            font-weight: 600;
-            vertical-align: middle !important;
-        }
-.empty-check {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 16px;
-            height: 16px;
-            background: #10B981;
-            color: white;
-            border-radius: 50%;
-            font-size: 9px;
-            margin-right: 8px;
-            vertical-align: middle;
-        }
-.footer {
-            padding: 0.1in 0.8in 0.25in 0.8in;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            position: relative;
-            z-index: 1;
-            margin-top: auto;
-        }
-.footer-info {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            max-width: 700px;
-        }
-.confidential-block {
-            font-size: 9px;
-            color: #64748B;
-            line-height: 1.5;
-        }
-.confidential-block strong {
-            color: #475569;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-.footer-bottom-row {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-.footer-logo {
-            flex: none;
-            width: 90px;
-            height: 24px;
-            background: #F1F5F9;
-            border: 1px dashed #94A3B8;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 8px;
-            color: #64748B;
-            font-weight: 600;
-        }
-.footer-line {
-            font-size: 10px;
-            color: #94A3B8;
-        }
-.footer-line strong {
-            font-weight: 600;
-            color: #0A4B9F;
-        }
-.tag {
-            font-size: 8px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            padding: 3px 8px;
-            border-radius: 4px;
-        }
-.tag-draft {
-            background: rgba(100, 116, 139, 0.1);
-            color: #475569;
-            border: 1px solid rgba(100, 116, 139, 0.2);
-        }
-.tag-tlp {
-            background: rgba(217, 119, 6, 0.1);
-            color: #B45309;
-            border: 1px solid rgba(217, 119, 6, 0.2);
-        }
-.footer-right {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 2px;
-        }
-.page-indicator {
-            font-size: 12px;
-            font-weight: 700;
-            color: #0A4B9F;
-        }
-.page-total {
-            font-size: 12px;
-            font-weight: 400;
-            color: #94A3B8;
-        }
-@media screen {
-.slide {
-                margin: 0 auto;
-                box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
-            }
-}
-@media print {
-* {
-                box-shadow: none !important;
-                filter: none !important;
-            }
-}
-}
-
-/* --- 14-Slide-Exploitability-Overview.html --- */
-.archetype-14 {
-* {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-        }
-& { font-family: 'Montserrat', sans-serif; font-size: 12px; line-height: 1.4; }
-.slide {
-            width: 11in;
-            height: 8.5in;
-            position: relative;
-            overflow: hidden;
-            page-break-after: always;
-            page-break-inside: avoid;
-            background: linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 50%, #F1F5F9 100%);
-            color: #0A2540;
-            display: flex;
-            flex-direction: column;
-        }
-.slide::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 8px;
-            height: 100%;
-            background: linear-gradient(180deg, #0A4B9F 0%, #4781C3 35%, #D82018 100%);
-        }
-.slide::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: 
-                linear-gradient(rgba(10, 75, 159, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(10, 75, 159, 0.03) 1px, transparent 1px);
-            background-size: 48px 48px;
-            pointer-events: none;
-        }
-.content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 0.15in 0.8in 0;
-            position: relative;
-            z-index: 1;
-        }
-.section-title {
-            font-size: 34px; 
-            font-weight: 300;
-            color: #0A2540;
-            margin-bottom: 16px;
-            letter-spacing: -0.5px;
-            text-transform: uppercase;
-        }
-.section-title strong {
-            font-weight: 900;
-        }
-.divider {
-            width: 80px;
-            height: 5px;
-            background: linear-gradient(90deg, #D82018, #0A4B9F);
-            border-radius: 2.5px;
-            margin-bottom: 24px;
-        }
-.summary-statement {
-            background: #F0FDF4;
-            border: 1px solid #BBF7D0;
-            color: #166534;
-            padding: 12px 20px;
-            border-radius: 6px;
-            font-size: 13px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-        }
-.summary-statement strong {
-            font-weight: 800;
-            margin-right: 6px;
-        }
-.slide-intro {
-            font-size: 13px;
-            color: #475569;
-            line-height: 1.6;
-            margin-bottom: 24px;
-            text-align: justify;
-        }
-.table-container {
-            background: white;
-            border-radius: 8px;
-            border: 1px solid #E2E8F0;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.04);
-            overflow: hidden;
-        }
-.vuln-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 11.5px;
-            line-height: 1.5;
-        }
-.vuln-table th {
-            background: #0A2540;
-            color: white;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 700;
-            padding: 12px 16px;
-            text-align: left;
-            font-size: 10px;
-            border-bottom: 2px solid #0A4B9F;
-        }
-.vuln-table td {
-            padding: 16px;
-            border-bottom: 1px solid #E2E8F0;
-            vertical-align: top;
-            color: #475569;
-        }
-.vuln-table tr:nth-child(even) td {
-            background: #F8FAFC;
-        }
-.vuln-table tr:last-child td {
-            border-bottom: none;
-        }
-.vuln-table td strong {
-            color: #0A2540;
-            font-weight: 700;
-            font-size: 12.5px;
-            display: block;
-            margin-bottom: 4px;
-        }
-.vuln-desc {
-            text-align: justify;
-        }
-.subtext {
-            font-size: 9.5px;
-            color: #94A3B8;
-            display: block;
-            margin-top: 4px;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-.sev-pill {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 26px;
-            height: 26px;
-            border-radius: 4px;
-            font-weight: 800;
-            color: white;
-            font-size: 13px;
-        }
-.sev-pill.critical { background: #EF4444; }
-.sev-pill.high { background: #F97316; }
-.sev-pill.medium { background: #F59E0B; }
-.sev-pill.low { background: #10B981; }
-.sev-pill.info { background: #0EA5E9; }
-.empty-state-cell {
-            color: #10B981 !important;
-            font-weight: 600;
-            vertical-align: middle !important;
-        }
-.empty-check {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 16px;
-            height: 16px;
-            background: #10B981;
-            color: white;
-            border-radius: 50%;
-            font-size: 9px;
-            margin-right: 8px;
-            vertical-align: middle;
-        }
-.footer {
-            padding: 0.1in 0.8in 0.25in 0.8in;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            position: relative;
-            z-index: 1;
-            margin-top: auto;
-        }
-.footer-info {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            max-width: 700px;
-        }
-.confidential-block {
-            font-size: 9px;
-            color: #64748B;
-            line-height: 1.5;
-        }
-.confidential-block strong {
-            color: #475569;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-.footer-bottom-row {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-.footer-logo {
-            flex: none;
-            width: 90px;
-            height: 24px;
-            background: #F1F5F9;
-            border: 1px dashed #94A3B8;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 8px;
-            color: #64748B;
-            font-weight: 600;
-        }
-.footer-line {
-            font-size: 10px;
-            color: #94A3B8;
-        }
-.footer-line strong {
-            font-weight: 600;
-            color: #0A4B9F;
-        }
-.tag {
-            font-size: 8px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            padding: 3px 8px;
-            border-radius: 4px;
-        }
-.tag-draft {
-            background: rgba(100, 116, 139, 0.1);
-            color: #475569;
-            border: 1px solid rgba(100, 116, 139, 0.2);
-        }
-.tag-tlp {
-            background: rgba(217, 119, 6, 0.1);
-            color: #B45309;
-            border: 1px solid rgba(217, 119, 6, 0.2);
-        }
-.footer-right {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 2px;
-        }
-.page-indicator {
-            font-size: 12px;
-            font-weight: 700;
-            color: #0A4B9F;
-        }
-.page-total {
-            font-size: 12px;
-            font-weight: 400;
-            color: #94A3B8;
-        }
-@media screen {
-.slide {
-                margin: 0 auto;
-                box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
-            }
-}
-@media print {
-* {
-                box-shadow: none !important;
-                filter: none !important;
-            }
-}
-}
-
-/* --- 15-Slide-Appendix-A.html --- */
+/* --- 15-Slide-Vulnerabilities-Overview.html --- */
 .archetype-15 {
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+& { font-family: 'Montserrat', sans-serif; font-size: 12px; line-height: 1.4; }
+.slide {
+            width: 11in;
+            height: 8.5in;
+            position: relative;
+            overflow: hidden;
+            page-break-after: always;
+            page-break-inside: avoid;
+            background: linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 50%, #F1F5F9 100%);
+            color: #0A2540;
+            display: flex;
+            flex-direction: column;
+        }
+.slide::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(180deg, #0A4B9F 0%, #4781C3 35%, #D82018 100%);
+        }
+.slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(10, 75, 159, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(10, 75, 159, 0.03) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+        }
+.content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 0.15in 0.8in 0;
+            position: relative;
+            z-index: 1;
+        }
+.section-title {
+            font-size: 34px; 
+            font-weight: 300;
+            color: #0A2540;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+.section-title strong {
+            font-weight: 900;
+        }
+.divider {
+            width: 80px;
+            height: 5px;
+            background: linear-gradient(90deg, #D82018, #0A4B9F);
+            border-radius: 2.5px;
+            margin-bottom: 24px;
+        }
+.summary-statement {
+            background: #F0FDF4;
+            border: 1px solid #BBF7D0;
+            color: #166534;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+.summary-statement strong {
+            font-weight: 800;
+            margin-right: 6px;
+        }
+.slide-intro {
+            font-size: 13px;
+            color: #475569;
+            line-height: 1.6;
+            margin-bottom: 24px;
+            text-align: justify;
+        }
+.table-container {
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.04);
+            overflow: hidden;
+        }
+.vuln-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11.5px;
+            line-height: 1.5;
+        }
+.vuln-table th {
+            background: #0A2540;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 10px;
+            border-bottom: 2px solid #0A4B9F;
+        }
+.vuln-table td {
+            padding: 16px;
+            border-bottom: 1px solid #E2E8F0;
+            vertical-align: top;
+            color: #475569;
+        }
+.vuln-table tr:nth-child(even) td {
+            background: #F8FAFC;
+        }
+.vuln-table tr:last-child td {
+            border-bottom: none;
+        }
+.vuln-table td strong {
+            color: #0A2540;
+            font-weight: 700;
+            font-size: 12.5px;
+            display: block;
+            margin-bottom: 4px;
+        }
+.vuln-desc {
+            text-align: justify;
+        }
+.subtext {
+            font-size: 9.5px;
+            color: #94A3B8;
+            display: block;
+            margin-top: 4px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+.sev-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            border-radius: 4px;
+            font-weight: 800;
+            color: white;
+            font-size: 13px;
+        }
+.sev-pill.critical { background: #EF4444; }
+.sev-pill.high { background: #F97316; }
+.sev-pill.medium { background: #F59E0B; }
+.sev-pill.low { background: #10B981; }
+.sev-pill.info { background: #0EA5E9; }
+.empty-state-cell {
+            color: #10B981 !important;
+            font-weight: 600;
+            vertical-align: middle !important;
+        }
+.empty-check {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            background: #10B981;
+            color: white;
+            border-radius: 50%;
+            font-size: 9px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+.footer {
+            padding: 0.1in 0.8in 0.25in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            position: relative;
+            z-index: 1;
+            margin-top: auto;
+        }
+.footer-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 700px;
+        }
+.confidential-block {
+            font-size: 9px;
+            color: #64748B;
+            line-height: 1.5;
+        }
+.confidential-block strong {
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+.footer-bottom-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+.footer-logo {
+            flex: none;
+            width: 90px;
+            height: 24px;
+            background: #F1F5F9;
+            border: 1px dashed #94A3B8;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            color: #64748B;
+            font-weight: 600;
+        }
+.footer-line {
+            font-size: 10px;
+            color: #94A3B8;
+        }
+.footer-line strong {
+            font-weight: 600;
+            color: #0A4B9F;
+        }
+.tag {
+            font-size: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+.tag-draft {
+            background: rgba(100, 116, 139, 0.1);
+            color: #475569;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+        }
+.tag-tlp {
+            background: rgba(217, 119, 6, 0.1);
+            color: #B45309;
+            border: 1px solid rgba(217, 119, 6, 0.2);
+        }
+.footer-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2px;
+        }
+.page-indicator {
+            font-size: 12px;
+            font-weight: 700;
+            color: #0A4B9F;
+        }
+.page-total {
+            font-size: 12px;
+            font-weight: 400;
+            color: #94A3B8;
+        }
+@media screen {
+.slide {
+                margin: 0 auto;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
+            }
+}
+@media print {
+* {
+                box-shadow: none !important;
+                filter: none !important;
+            }
+}
+}
+
+/* --- 16-Slide-Exploitability-Overview.html --- */
+.archetype-16 {
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+& { font-family: 'Montserrat', sans-serif; font-size: 12px; line-height: 1.4; }
+.slide {
+            width: 11in;
+            height: 8.5in;
+            position: relative;
+            overflow: hidden;
+            page-break-after: always;
+            page-break-inside: avoid;
+            background: linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 50%, #F1F5F9 100%);
+            color: #0A2540;
+            display: flex;
+            flex-direction: column;
+        }
+.slide::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(180deg, #0A4B9F 0%, #4781C3 35%, #D82018 100%);
+        }
+.slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(10, 75, 159, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(10, 75, 159, 0.03) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+        }
+.content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 0.15in 0.8in 0;
+            position: relative;
+            z-index: 1;
+        }
+.section-title {
+            font-size: 34px; 
+            font-weight: 300;
+            color: #0A2540;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+.section-title strong {
+            font-weight: 900;
+        }
+.divider {
+            width: 80px;
+            height: 5px;
+            background: linear-gradient(90deg, #D82018, #0A4B9F);
+            border-radius: 2.5px;
+            margin-bottom: 24px;
+        }
+.summary-statement {
+            background: #F0FDF4;
+            border: 1px solid #BBF7D0;
+            color: #166534;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+.summary-statement strong {
+            font-weight: 800;
+            margin-right: 6px;
+        }
+.slide-intro {
+            font-size: 13px;
+            color: #475569;
+            line-height: 1.6;
+            margin-bottom: 24px;
+            text-align: justify;
+        }
+.table-container {
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.04);
+            overflow: hidden;
+        }
+.vuln-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11.5px;
+            line-height: 1.5;
+        }
+.vuln-table th {
+            background: #0A2540;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 10px;
+            border-bottom: 2px solid #0A4B9F;
+        }
+.vuln-table td {
+            padding: 16px;
+            border-bottom: 1px solid #E2E8F0;
+            vertical-align: top;
+            color: #475569;
+        }
+.vuln-table tr:nth-child(even) td {
+            background: #F8FAFC;
+        }
+.vuln-table tr:last-child td {
+            border-bottom: none;
+        }
+.vuln-table td strong {
+            color: #0A2540;
+            font-weight: 700;
+            font-size: 12.5px;
+            display: block;
+            margin-bottom: 4px;
+        }
+.vuln-desc {
+            text-align: justify;
+        }
+.subtext {
+            font-size: 9.5px;
+            color: #94A3B8;
+            display: block;
+            margin-top: 4px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+.sev-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            border-radius: 4px;
+            font-weight: 800;
+            color: white;
+            font-size: 13px;
+        }
+.sev-pill.critical { background: #EF4444; }
+.sev-pill.high { background: #F97316; }
+.sev-pill.medium { background: #F59E0B; }
+.sev-pill.low { background: #10B981; }
+.sev-pill.info { background: #0EA5E9; }
+.empty-state-cell {
+            color: #10B981 !important;
+            font-weight: 600;
+            vertical-align: middle !important;
+        }
+.empty-check {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            background: #10B981;
+            color: white;
+            border-radius: 50%;
+            font-size: 9px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+.footer {
+            padding: 0.1in 0.8in 0.25in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            position: relative;
+            z-index: 1;
+            margin-top: auto;
+        }
+.footer-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 700px;
+        }
+.confidential-block {
+            font-size: 9px;
+            color: #64748B;
+            line-height: 1.5;
+        }
+.confidential-block strong {
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+.footer-bottom-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+.footer-logo {
+            flex: none;
+            width: 90px;
+            height: 24px;
+            background: #F1F5F9;
+            border: 1px dashed #94A3B8;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            color: #64748B;
+            font-weight: 600;
+        }
+.footer-line {
+            font-size: 10px;
+            color: #94A3B8;
+        }
+.footer-line strong {
+            font-weight: 600;
+            color: #0A4B9F;
+        }
+.tag {
+            font-size: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+.tag-draft {
+            background: rgba(100, 116, 139, 0.1);
+            color: #475569;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+        }
+.tag-tlp {
+            background: rgba(217, 119, 6, 0.1);
+            color: #B45309;
+            border: 1px solid rgba(217, 119, 6, 0.2);
+        }
+.footer-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2px;
+        }
+.page-indicator {
+            font-size: 12px;
+            font-weight: 700;
+            color: #0A4B9F;
+        }
+.page-total {
+            font-size: 12px;
+            font-weight: 400;
+            color: #94A3B8;
+        }
+@media screen {
+.slide {
+                margin: 0 auto;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
+            }
+}
+@media print {
+* {
+                box-shadow: none !important;
+                filter: none !important;
+            }
+}
+}
+
+/* --- 17-Slide-Appendix-A.html --- */
+.archetype-17 {
 * {
             margin: 0;
             padding: 0;
@@ -4443,8 +4836,8 @@
 }
 }
 
-/* --- 16-Slide-Company-Overview.html --- */
-.archetype-16 {
+/* --- 18-Slide-Company-Overview.html --- */
+.archetype-18 {
 * {
             margin: 0;
             padding: 0;
@@ -4830,7 +5223,7 @@ html, body { margin: 0; padding: 0; height: auto; overflow: visible; font-family
         </div>
         <div class="footer-right">
             <span class="page-indicator">01</span>
-            <span class="page-total">/ 16</span>
+            <span class="page-total">/ 18</span>
         </div>
     </div>
     
@@ -4851,98 +5244,88 @@ html, body { margin: 0; padding: 0; height: auto; overflow: visible; font-family
         <!-- White shadow card holding the 2-Column TOC -->
         <div class="toc-card">
             <div class="toc-grid">
-                
                 <!-- Left Column -->
                 <div class="toc-column">
                     <div class="toc-list-header">
                         <div>Page</div>
                         <div>Section</div>
                     </div>
-
                     <div class="toc-row">
                         <div class="toc-page">02</div>
                         <div class="toc-section">Table of Contents</div>
                     </div>
-
                     <div class="toc-row">
                         <div class="toc-page">03</div>
                         <div class="toc-section">Executive Summary</div>
                     </div>
-
                     <div class="toc-row">
                         <div class="toc-page">04</div>
-                        <div class="toc-section">Cybersecurity Maturity Score</div>
+                        <div class="toc-section">Maturity Scorecard</div>
                     </div>
-
                     <div class="toc-row">
                         <div class="toc-page">05</div>
                         <div class="toc-section">Scope &amp; Methodology</div>
                     </div>
-
                     <div class="toc-row">
                         <div class="toc-page">06</div>
                         <div class="toc-section">Risk Matrix</div>
                     </div>
-
                     <div class="toc-row">
                         <div class="toc-page">07</div>
                         <div class="toc-section">Testing Phases</div>
                     </div>
-
                     <div class="toc-row">
                         <div class="toc-page">08</div>
                         <div class="toc-section">Findings Overview</div>
                     </div>
-
                     <div class="toc-row">
                         <div class="toc-page">09</div>
                         <div class="toc-section">Technical Finding</div>
                     </div>
+                    <div class="toc-row">
+                        <div class="toc-page">10</div>
+                        <div class="toc-section">Proof of Concept</div>
+                    </div>
                 </div>
-                
                 <!-- Right Column -->
                 <div class="toc-column">
                     <div class="toc-list-header">
                         <div>Page</div>
                         <div>Section</div>
                     </div>
-
-                    <div class="toc-row">
-                        <div class="toc-page">10</div>
-                        <div class="toc-section">Proof of Concept</div>
-                    </div>
-
                     <div class="toc-row">
                         <div class="toc-page">11</div>
-                        <div class="toc-section">Engagement Team</div>
+                        <div class="toc-section">Assessment Finding</div>
                     </div>
-
                     <div class="toc-row">
                         <div class="toc-page">12</div>
-                        <div class="toc-section">Capability Statement</div>
+                        <div class="toc-section">Evidence</div>
                     </div>
-
                     <div class="toc-row">
                         <div class="toc-page">13</div>
-                        <div class="toc-section">Vulnerabilities Overview</div>
+                        <div class="toc-section">Engagement Team</div>
                     </div>
-
                     <div class="toc-row">
                         <div class="toc-page">14</div>
-                        <div class="toc-section">Exploitability Overview</div>
+                        <div class="toc-section">Capability Statement</div>
                     </div>
-
                     <div class="toc-row">
                         <div class="toc-page">15</div>
-                        <div class="toc-section">Appendix A</div>
+                        <div class="toc-section">Vulnerabilities Overview</div>
                     </div>
-
                     <div class="toc-row">
                         <div class="toc-page">16</div>
+                        <div class="toc-section">Exploitability Overview</div>
+                    </div>
+                    <div class="toc-row">
+                        <div class="toc-page">17</div>
+                        <div class="toc-section">Appendix A</div>
+                    </div>
+                    <div class="toc-row">
+                        <div class="toc-page">18</div>
                         <div class="toc-section">Company Overview</div>
                     </div>
                 </div>
-                
             </div>
         </div>
     </div>
@@ -4967,7 +5350,7 @@ html, body { margin: 0; padding: 0; height: auto; overflow: visible; font-family
         </div>
         <div class="footer-right">
             <span class="page-indicator">02</span>
-            <span class="page-total">/ 16</span>
+            <span class="page-total">/ 18</span>
         </div>
     </div>
     
@@ -5083,74 +5466,112 @@ html, body { margin: 0; padding: 0; height: auto; overflow: visible; font-family
         </div>
         <div class="footer-right">
             <span class="page-indicator">03</span>
-            <span class="page-total">/ 16</span>
+            <span class="page-total">/ 18</span>
         </div>
     </div>
     
 </div>
 </div>
 
-<!-- --- 04-Slide-Cybersecurity-Maturity.html --- -->
+<!-- --- 04-Slide-Maturity-Scorecard.html --- -->
 <div class="archetype archetype-04">
-<!-- SLIDE 04: CYBERSECURITY MATURITY SCORE -->
+<!-- SLIDE 04: MATURITY SCORECARD -->
 <div class="slide">
-    
-    
-    <!-- Main Content -->
     <div class="content">
-        
-        <!-- Top Title and Divider (Full width over the grid) -->
-        <h2 class="section-title">Cybersecurity<br><strong>Maturity Score</strong></h2>
+        <h2 class="section-title">Maturity<br><strong>Scorecard</strong></h2>
         <div class="divider"></div>
-        
         <div class="two-col-grid">
-            
-            <!-- LEFT COLUMN: Text & Explanations -->
             <div class="left-col">
-                
-                <!-- Executive Sentence Callout -->
-                <div class="exec-takeaway">
-                    <div class="exec-takeaway-label">Executive Takeaway</div>
-                    <div class="exec-takeaway-text">
-                        Your external network security is fundamentally sound, placing you in the upper "Average" tier. With targeted remediation, achieving a "Good" rating is highly attainable.
+                <div class="takeaway">
+                    <div class="lab">Executive Takeaway</div>
+                    <div class="txt">Global Finance Corp scores <strong>55 of 100</strong> across the eight domains assessed: an Average posture with two domains, Logging and Network, well below the rest. Closing those two moves the organization into the Good tier.</div>
+                </div>
+                <div class="overall">
+                    <div class="score">55<small>/100</small></div>
+                    <div>
+                        <div class="lab">Overall maturity</div>
+                        <span class="pill average">Average</span>
+                        <p>The mean of the eight domain scores. A domain's score is its passed checks plus half of its partial checks, over the checks assessed.</p>
                     </div>
                 </div>
-
-                <!-- Text Paragraph -->
-                <div class="exec-text">
-                    Global Finance Corp's external network cybersecurity maturity places the organization in the upper range of the Average tier relative to its enterprise-size peers, positioned just below the threshold of the Good tier. This reflects a security posture that is consistent with industry norms for organizations of comparable scale, while highlighting a clear opportunity for advancement. By addressing the findings identified in this assessment, Global Finance Corp is well-positioned to close the remaining gap, strengthening its resilience against external threats.
+                <div class="bands">
+                    <span class="pill poor" data-range="0-19">Poor</span>
+                    <span class="pill below" data-range="20-39">Below Avg</span>
+                    <span class="pill average" data-range="40-59">Average</span>
+                    <span class="pill good" data-range="60-79">Good</span>
+                    <span class="pill excellent" data-range="80-100">Excellent</span>
                 </div>
-
-                <!-- Single Sentence Chart Explanation (Pushed to bottom) -->
-                <div class="chart-explainer">
-                    <div class="explainer-title">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="12" y1="16" x2="12" y2="12"></line>
-                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                        </svg>
-                        Understanding This Chart
-                    </div>
-                    <div class="explainer-text">
-                        This chart compares cybersecurity maturity across varying company sizes, with the indicator dot marking your organization's exact position based on current assessment findings.
-                    </div>
-                </div>
+                <div class="explainer"><strong>Reading the scorecard.</strong> Each domain maps to a CSA Cloud Controls Matrix v4 domain; the bar is the score, the pill its band, and the counts are the checks behind it. Every failed check appears as a finding in this report.</div>
             </div>
-
-            <!-- RIGHT COLUMN: Chart -->
             <div class="right-col">
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <div class="chart-title">Maturity Scores by Company Size</div>
-                        <div class="chart-subtitle">2026 Assessment across organization sizes with Global Finance Corp positioning</div>
-                    </div>
-                    <div id="chart-04" data-chart="maturity"></div>
+                <div class="scorecard">
+                    <div class="head"><div class="title">Scores by domain</div><div class="sub">Q3 2026 assessment · 92 checks across 8 domains</div></div>
+                    <table class="sc">
+                        <thead><tr><th>Domain</th><th>Score</th><th class="n"></th><th>Band</th><th>Checks</th></tr></thead>
+                        <tbody>
+                            <tr data-score="62">
+                                <td class="dom">Identity & Access<small>CCM v4 domain IAM</small></td>
+                                <td class="bar" data-chart="maturity" data-domain="IAM" data-score="62"></td>
+                                <td class="n score">62%</td>
+                                <td><span class="pill good">Good</span></td>
+                                <td class="checks"><b>6</b> pass, <b>3</b> partial, <b>3</b> fail</td>
+                            </tr>
+                            <tr data-score="58">
+                                <td class="dom">Data Security & Encryption<small>CCM v4 domain DSP</small></td>
+                                <td class="bar" data-chart="maturity" data-domain="DSP" data-score="58"></td>
+                                <td class="n score">58%</td>
+                                <td><span class="pill average">Average</span></td>
+                                <td class="checks"><b>5</b> pass, <b>4</b> partial, <b>3</b> fail</td>
+                            </tr>
+                            <tr data-score="33">
+                                <td class="dom">Network & Infrastructure<small>CCM v4 domain IVS</small></td>
+                                <td class="bar" data-chart="maturity" data-domain="IVS" data-score="33"></td>
+                                <td class="n score">33%</td>
+                                <td><span class="pill below">Below Avg</span></td>
+                                <td class="checks"><b>3</b> pass, <b>2</b> partial, <b>7</b> fail</td>
+                            </tr>
+                            <tr data-score="23">
+                                <td class="dom">Logging & Monitoring<small>CCM v4 domain LOG</small></td>
+                                <td class="bar" data-chart="maturity" data-domain="LOG" data-score="23"></td>
+                                <td class="n score">23%</td>
+                                <td><span class="pill below">Below Avg</span></td>
+                                <td class="checks"><b>2</b> pass, <b>1</b> partial, <b>8</b> fail</td>
+                            </tr>
+                            <tr data-score="55">
+                                <td class="dom">Threat & Vulnerability Mgmt<small>CCM v4 domain TVM</small></td>
+                                <td class="bar" data-chart="maturity" data-domain="TVM" data-score="55"></td>
+                                <td class="n score">55%</td>
+                                <td><span class="pill average">Average</span></td>
+                                <td class="checks"><b>5</b> pass, <b>2</b> partial, <b>4</b> fail</td>
+                            </tr>
+                            <tr data-score="70">
+                                <td class="dom">Change Control<small>CCM v4 domain CCC</small></td>
+                                <td class="bar" data-chart="maturity" data-domain="CCC" data-score="70"></td>
+                                <td class="n score">70%</td>
+                                <td><span class="pill good">Good</span></td>
+                                <td class="checks"><b>6</b> pass, <b>2</b> partial, <b>2</b> fail</td>
+                            </tr>
+                            <tr data-score="50">
+                                <td class="dom">Business Continuity<small>CCM v4 domain BCR</small></td>
+                                <td class="bar" data-chart="maturity" data-domain="BCR" data-score="50"></td>
+                                <td class="n score">50%</td>
+                                <td><span class="pill average">Average</span></td>
+                                <td class="checks"><b>5</b> pass, <b>2</b> partial, <b>5</b> fail</td>
+                            </tr>
+                            <tr data-score="88">
+                                <td class="dom">Governance & Risk<small>CCM v4 domain GRC</small></td>
+                                <td class="bar" data-chart="maturity" data-domain="GRC" data-score="88"></td>
+                                <td class="n score">88%</td>
+                                <td><span class="pill excellent">Excellent</span></td>
+                                <td class="checks"><b>10</b> pass, <b>1</b> partial, <b>1</b> fail</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            
         </div>
+
     </div>
-    
     <!-- Footer -->
     <div class="footer">
         <div class="footer-info">
@@ -5170,96 +5591,24 @@ html, body { margin: 0; padding: 0; height: auto; overflow: visible; font-family
         </div>
         <div class="footer-right">
             <span class="page-indicator">04</span>
-            <span class="page-total">/ 16</span>
+            <span class="page-total">/ 18</span>
         </div>
     </div>
-    
 </div>
-
-<!-- Maturity chart: inline SVG, no library. Edit chartData to change the bands. -->
+<!-- Scorecard bars: inline SVG drawn from each row's data-score, no library. Edit the rows to change the scores. -->
 <script>
-(function () {
-    const chartData = {
-        categories: ['Startups', 'Small Biz', 'Mid-Market', 'Enterprise', 'Large Ent.', 'Fortune 500'],
-        series: {
-            poor: [20, 15, 8, 5, 2, 0],
-            belowAverage: [35, 30, 22, 15, 8, 3],
-            average: [30, 35, 35, 30, 25, 15],
-            good: [12, 15, 25, 35, 40, 42],
-            excellent: [3, 5, 10, 15, 25, 40]
-        }
+(() => {
+    const draw = () => {
+        document.querySelectorAll('[data-chart="maturity"]').forEach(cell => {
+            const score = Math.max(0, Math.min(100, +cell.dataset.score));
+            const fill = score < 20 ? '#8B5CF6' : score < 40 ? '#EF4444' : score < 60 ? '#F59E0B' : score < 80 ? '#10B981' : '#3B82F6';
+            cell.innerHTML = `<svg viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true">
+                <rect x="0" y="2" width="100" height="8" rx="4" fill="#F1F5F9"></rect>
+                <rect x="0" y="2" width="${score}" height="8" rx="4" fill="${fill}" data-domain="${cell.dataset.domain}" data-score="${score}"></rect>
+            </svg>`;
+        });
     };
-    // Bands from the bottom of the stack to the top; each category's values sum to 100.
-    const bands = [
-        ['Poor', chartData.series.poor, '#8B5CF6'],
-        ['Below Avg', chartData.series.belowAverage, '#EF4444'],
-        ['Average', chartData.series.average, '#F59E0B'],
-        ['Good', chartData.series.good, '#10B981'],
-        ['Excellent', chartData.series.excellent, '#3B82F6']
-    ];
-    // The client's position: between Enterprise and Large Ent., 16 points into the Average band.
-    const marker = {
-        category: 3.5,
-        value: chartData.series.poor[3] + chartData.series.belowAverage[3] + 16,
-        title: 'Global Finance Corp',
-        subtitle: 'Maturity Score'
-    };
-
-    // The legend and the label box are sized from measured text: draw once the web fonts are ready.
-    document.fonts.ready.then(function () {
-        const el = document.querySelector('[data-chart="maturity"]');
-        const W = el.clientWidth, H = el.clientHeight, n = chartData.categories.length;
-        const top = 10, plotH = H - top - 50;
-        const x = i => (i + 0.5) * W / n;
-        const y = v => top + plotH * (1 - v / 100);
-        const NS = 'http://www.w3.org/2000/svg';
-        const add = (tag, attrs, parent) => {
-            const node = document.createElementNS(NS, tag);
-            for (const key in attrs) node.setAttribute(key, attrs[key]);
-            parent.appendChild(node);
-            return node;
-        };
-        const svg = add('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}`,
-                                 style: 'display: block; font-family: Montserrat, sans-serif' }, el);
-
-        // Each band: its upper edge left to right, then its lower edge right to left.
-        let base = chartData.categories.map(() => 0);
-        bands.forEach(([name, values, color]) => {
-            const tops = values.map((v, i) => base[i] + v);
-            const points = tops.map((t, i) => `${x(i)},${y(t)}`)
-                .concat(base.map((b, i) => `${x(i)},${y(b)}`).reverse());
-            add('polygon', { points: points.join(' '), fill: color, 'fill-opacity': 0.95, 'data-series': name }, svg);
-            base = tops;
-        });
-
-        chartData.categories.forEach((label, i) => {
-            add('text', { x: x(i), y: top + plotH + 25, 'text-anchor': 'middle', fill: '#64748B',
-                          'font-size': 9, 'font-weight': 600 }, svg).textContent = label;
-        });
-
-        // Legend, top band first, centred under the chart.
-        const legend = add('g', {}, svg);
-        let cursor = 0;
-        bands.slice().reverse().forEach(([name, , color]) => {
-            add('rect', { x: cursor, y: H - 14, width: 16, height: 4, fill: color, 'fill-opacity': 0.95 }, legend);
-            const text = add('text', { x: cursor + 21, y: H - 10, fill: '#475569', 'font-size': 9.5,
-                                       'font-weight': 600 }, legend);
-            text.textContent = name;
-            cursor += 21 + text.getComputedTextLength() + 12;
-        });
-        legend.setAttribute('transform', `translate(${Math.round((W - (cursor - 12)) / 2)}, 0)`);
-
-        // Position marker and its label box.
-        const mx = (marker.category + 0.5) * W / n, my = y(marker.value);
-        add('circle', { cx: mx - 5, cy: my - 5, r: 5, fill: '#0A2540', stroke: '#FFFFFF', 'stroke-width': 2 }, svg);
-        const box = add('g', { transform: `translate(${Math.round(mx + 6)}, ${Math.round(my - 16)})` }, svg);
-        const rect = add('rect', { x: 0.5, y: 0.5, height: 33, rx: 4, fill: 'rgba(255, 255, 255, 0.95)',
-                                   stroke: '#E2E8F0', 'stroke-width': 1 }, box);
-        const label = add('text', { x: 5, y: 15, fill: '#0A2540', 'font-size': 9 }, box);
-        add('tspan', { 'font-weight': 'bold' }, label).textContent = marker.title;
-        add('tspan', { x: 5, dy: 12 }, label).textContent = marker.subtitle;
-        rect.setAttribute('width', Math.ceil(label.getBBox().width) + 10);
-    });
+    document.fonts.ready.then(draw);
 })();
 </script>
 </div>
@@ -5435,7 +5784,7 @@ html, body { margin: 0; padding: 0; height: auto; overflow: visible; font-family
         </div>
         <div class="footer-right">
             <span class="page-indicator">05</span>
-            <span class="page-total">/ 16</span>
+            <span class="page-total">/ 18</span>
         </div>
     </div>
     
@@ -5581,7 +5930,7 @@ html, body { margin: 0; padding: 0; height: auto; overflow: visible; font-family
         </div>
         <div class="footer-right">
             <span class="page-indicator">06</span>
-            <span class="page-total">/ 16</span>
+            <span class="page-total">/ 18</span>
         </div>
     </div>
     
@@ -5701,7 +6050,7 @@ html, body { margin: 0; padding: 0; height: auto; overflow: visible; font-family
         </div>
         <div class="footer-right">
             <span class="page-indicator">07</span>
-            <span class="page-total">/ 16</span>
+            <span class="page-total">/ 18</span>
         </div>
     </div>
     
@@ -5797,7 +6146,7 @@ html, body { margin: 0; padding: 0; height: auto; overflow: visible; font-family
         </div>
         <div class="footer-right">
             <span class="page-indicator">08</span>
-            <span class="page-total">/ 16</span>
+            <span class="page-total">/ 18</span>
         </div>
     </div>
     
@@ -6040,7 +6389,7 @@ html, body { margin: 0; padding: 0; height: auto; overflow: visible; font-family
         </div>
         <div class="footer-right">
             <span class="page-indicator">09</span>
-            <span class="page-total">/ 16</span>
+            <span class="page-total">/ 18</span>
         </div>
     </div>
     
@@ -6383,15 +6732,183 @@ html, body { margin: 0; padding: 0; height: auto; overflow: visible; font-family
         </div>
         <div class="footer-right">
             <span class="page-indicator">10</span>
-            <span class="page-total">/ 16</span>
+            <span class="page-total">/ 18</span>
         </div>
     </div>
     
 </div>
 </div>
 
-<!-- --- 11-Slide-Team.html --- -->
+<!-- --- 11-Slide-Assessment-Finding.html --- -->
 <div class="archetype archetype-11">
+<!-- SLIDE 11: ASSESSMENT FINDING -->
+<div class="slide">
+    <div class="content">
+        <div class="finding-card">
+            <div class="finding-tab">Finding F-02</div>
+            <div class="finding-title">Eight storage accounts accept connections from any network; account keys are enabled on all of them.</div>
+            <div class="finding-grid">
+                <div class="meta">
+                    <div class="lab">Risk Level</div><div class="val"><span class="pill medium">Medium</span></div>
+                    <div class="lab">Framework Domain</div><div class="val">Data Security &amp; Encryption</div>
+                    <div class="lab">CSA CCM v4 Control</div><div class="val"><span class="chip">DSP-07; DSP-17; IVS-03</span></div>
+                    <div class="lab">Control Title</div><div class="val">Data Protection by Design; Sensitive Data Protection; Network Security</div>
+                </div>
+                <div class="radar" data-chart="assessment-radar" data-fill="#F59E0B"></div>
+                <div class="score">
+                    <div class="num">5.8</div>
+                    <div class="gauge"><i style="height: 58%"></i></div>
+                    <div class="cap">Risk score</div>
+                </div>
+            </div>
+        </div>
+        <div class="body">
+            <div>
+                <h3>Finding Description</h3>
+                <p>Eight of the twelve storage accounts in the production subscription have <code>publicNetworkAccess</code> set to <code>Enabled</code> with the default rule <code>Allow</code>, so any address on the internet may attempt to reach their endpoints. On the same eight accounts <code>allowSharedKeyAccess</code> is true: a leaked account key grants full data-plane access without an identity, a sign-in or a conditional-access policy in the path. Three of the accounts hold exported customer statements; the others hold build artefacts and diagnostics.</p>
+                <h3>Impact</h3>
+                <p>A single leaked key, for example in a build log or a decommissioned laptop, reads or deletes every blob in the account from anywhere, and the access leaves no sign-in record because keys are not identities. The exposure is not exploitable by itself; it removes the two controls that would contain a credential leak.</p>
+                <h3>References</h3>
+                <ul class="refs">
+                    <li><b>CCM v4 DSP-07</b><span>Data protection by design and by default</span></li>
+                    <li><b>CCM v4 IVS-03</b><span>Network security: restrict access to the services needed</span></li>
+                    <li><b>CIS Azure 3.8, 3.9</b><span>Default network access rule set to Deny; shared key authorization disabled</span></li>
+                    <li><b>Evidence</b><span>Page 12, capture 1 and the Resource Graph query</span></li>
+                </ul>
+            </div>
+            <div>
+                <h3>Affected Resources</h3>
+                <div class="resources">
+                    <span class="chip">8 of 12 storage accounts, sub-corporate-prod, public network access Enabled</span>
+                    <span class="chip">stcorpstatements01, stcorpstatements02, stcorpexports (customer data)</span>
+                    <span class="chip">allowSharedKeyAccess: true on all eight</span>
+                </div>
+                <h3>Remediation &amp; Solution Strategy</h3>
+                <div class="steps">
+                    <div class="step"><b>1.</b> Set public network access to Disabled, or to Selected networks with the application subnets and the office egress address listed; expose the three customer-data accounts through private endpoints only.</div>
+                    <div class="step"><b>2.</b> Disable shared-key authorization (<code>allowSharedKeyAccess: false</code>) and move the two services that still use keys to managed identities with the Storage Blob Data Contributor role.</div>
+                    <div class="step"><b>3.</b> Enforce both settings with an Azure Policy assignment at the subscription scope in Deny mode, so a new account cannot recreate the exposure; see F-11 for the policy baseline.</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-info">
+            <div class="confidential-block">
+                <strong>Strictly Confidential</strong> — This document contains sensitive security and technical information. Reproduction, distribution, or disclosure to unauthorized parties without explicit written consent is strictly prohibited.
+            </div>
+            <div class="footer-bottom-row">
+                <div class="footer-logo">[ACME Logo]</div>
+                <div class="footer-line">
+                    <span>Property of &nbsp;<strong>ACME Consulting</strong> &nbsp;|&nbsp; acmecyber.com</span>
+                </div>
+                <div class="footer-tags">
+                    <span class="tag tag-draft">Draft</span>
+                    <span class="tag tag-tlp">TLP:AMBER</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-right">
+            <span class="page-indicator">11</span>
+            <span class="page-total">/ 18</span>
+        </div>
+    </div>
+</div>
+<!-- Risk radar: inline SVG, no library. Edit the six values (0 to 10) in data-values to change the shape. -->
+<script>
+(() => {
+    const el = document.querySelector('[data-chart="assessment-radar"]');
+    const axes = [["Business Impact", "Revenue & ops at risk", 6], ["Exploitation Prob.", "Likelihood to target", 7], ["Attack Complexity", "Easier attacks score higher", 8], ["Remediation Effort", "Effort to fix scores higher", 3], ["Integrity Impact", "Damage to system trust", 5], ["Data Sensitivity", "Customer & compliance", 7]];
+    const draw = () => {
+        const W = 420, H = 196, cx = W / 2, cy = H / 2 - 2, R = 58, n = axes.length, fill = el.dataset.fill || '#F59E0B';
+        const pt = (i, r) => { const a = -Math.PI / 2 + i * 2 * Math.PI / n; return [cx + r * Math.cos(a), cy + r * Math.sin(a)]; };
+        let s = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" aria-label="Risk factors">`;
+        for (const k of [0.25, 0.5, 0.75, 1]) s += `<polygon points="${axes.map((_, i) => pt(i, R * k).join(',')).join(' ')}" fill="none" stroke="#E2E8F0" stroke-width="1"/>`;
+        axes.forEach((_, i) => { const [x, y] = pt(i, R); s += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#E2E8F0" stroke-width="1"/>`; });
+        s += `<polygon data-series="risk" points="${axes.map((a, i) => pt(i, R * a[2] / 10).join(',')).join(' ')}" fill="${fill}" fill-opacity="0.35" stroke="${fill}" stroke-width="2" stroke-linejoin="round"/>`;
+        axes.forEach((a, i) => { const [x, y] = pt(i, R + 14); const anchor = Math.abs(x - cx) < 6 ? 'middle' : x < cx ? 'end' : 'start'; const dy = y < cy - 6 ? -4 : y > cy + 6 ? 10 : 3;
+            s += `<text x="${x}" y="${y + dy}" text-anchor="${anchor}" font-family="Montserrat, sans-serif" font-size="9" font-weight="700" fill="#0A2540">${a[0]}</text>`;
+            s += `<text x="${x}" y="${y + dy + 10}" text-anchor="${anchor}" font-family="Montserrat, sans-serif" font-size="7.5" fill="#64748B">${a[1]}</text>`; });
+        s += '</svg>';
+        el.innerHTML = s;
+    };
+    document.fonts.ready.then(draw);
+})();
+</script>
+</div>
+
+<!-- --- 12-Slide-Evidence.html --- -->
+<div class="archetype archetype-12">
+<!-- SLIDE 12: EVIDENCE -->
+<div class="slide">
+    <div class="content">
+        <div class="ev-head">
+            <div class="badge">F-02</div>
+            <div class="ev-title">Evidence and validation: eight storage accounts accept connections from any network; account keys are enabled on all of them.</div>
+            <span class="pill medium">Medium</span>
+        </div>
+        <div class="capture">
+            <div class="shot" role="img" aria-label="Capture 1: the storage account's Networking blade, public network access enabled from all networks">
+                <div class="top"><span>Microsoft Azure</span><span>Search resources, services, and docs (G+/)</span></div>
+                <div class="crumb">Home &gt; Storage accounts &gt; stcorpstatements01</div>
+                <div class="blade">
+                    <div class="nav"><div>Overview</div><div>Activity log</div><div>Access control (IAM)</div><div>Tags</div><div>Diagnose and solve problems</div><div>Access keys</div><div class="on">Networking</div><div>Front Door and CDN</div><div>Security</div><div>Data protection</div><div>Encryption</div></div>
+                    <div class="main">
+                        <h4>stcorpstatements01 | Networking</h4>
+                        <div class="row"><b>Public network access</b><span><span class="opt"><i class="on"></i>Enabled from all networks</span><span class="opt"><i></i>Enabled from selected virtual networks and IP addresses</span><span class="opt"><i></i>Disabled</span></span></div>
+                        <div class="row"><b>Network routing</b><span>Microsoft network routing</span></div>
+                        <div class="row"><b>Private endpoint connections</b><span>0</span></div>
+                        <div class="warn">All networks, including the internet, can access this storage account. Consider restricting access to selected networks or private endpoints.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="caption"><b>Capture 1.</b> Storage account <span class="mono">stcorpstatements01</span>, Networking blade: public network access <span class="mono">Enabled from all networks</span>, no private endpoint connection (2026-09-23 14:05 UTC, review account with the Reader role); the key-access setting is on the Configuration blade, item 2. Identifiers withheld from this edition: subscription and tenant IDs.</div>
+        </div>
+        <div class="ev-body">
+            <div>
+                <h3>Where to see it in the Azure portal</h3>
+                <ul class="where">
+                    <li><b>1. Storage account, Networking: Public network access, Enabled from all networks</b><span>https://portal.azure.com/#@example.onmicrosoft.com/resource/subscriptions/&lt;subscription-id&gt;/resourceGroups/rg-corp-data/providers/Microsoft.Storage/storageAccounts/stcorpstatements01/networking</span></li>
+                    <li><b>2. Storage account, Configuration: Allow storage account key access, Enabled</b><span>https://portal.azure.com/#@example.onmicrosoft.com/resource/.../storageAccounts/stcorpstatements01/configuration</span></li>
+                    <li><b>3. Resource Graph: every storage account with public access and shared keys on (expect 8 rows)</b><span>resources | where type == "microsoft.storage/storageaccounts" | where properties.publicNetworkAccess == "Enabled" and properties.allowSharedKeyAccess != false | project name, resourceGroup</span></li>
+                </ul>
+            </div>
+            <div>
+                <h3>How to validate</h3>
+                <p>Open any of the eight accounts named in the finding, select <code>Networking</code> and confirm the public network access setting reads Enabled from all networks with zero private endpoint connections; under <code>Configuration</code>, confirm Allow storage account key access is Enabled. The Resource Graph query in item 3 lists all eight in one view and returns no rows once the remediation is complete, which is the retest. The capture was taken with a Reader-only account; nothing was changed.</p>
+            </div>
+        </div>
+
+    </div>
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-info">
+            <div class="confidential-block">
+                <strong>Strictly Confidential</strong> — This document contains sensitive security and technical information. Reproduction, distribution, or disclosure to unauthorized parties without explicit written consent is strictly prohibited.
+            </div>
+            <div class="footer-bottom-row">
+                <div class="footer-logo">[ACME Logo]</div>
+                <div class="footer-line">
+                    <span>Property of &nbsp;<strong>ACME Consulting</strong> &nbsp;|&nbsp; acmecyber.com</span>
+                </div>
+                <div class="footer-tags">
+                    <span class="tag tag-draft">Draft</span>
+                    <span class="tag tag-tlp">TLP:AMBER</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-right">
+            <span class="page-indicator">12</span>
+            <span class="page-total">/ 18</span>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- --- 13-Slide-Team.html --- -->
+<div class="archetype archetype-13">
 <!-- SLIDE 11: ENGAGEMENT TEAM -->
 <div class="slide">
     
@@ -6520,16 +7037,16 @@ html, body { margin: 0; padding: 0; height: auto; overflow: visible; font-family
             </div>
         </div>
         <div class="footer-right">
-            <span class="page-indicator">11</span>
-            <span class="page-total">/ 16</span>
+            <span class="page-indicator">13</span>
+            <span class="page-total">/ 18</span>
         </div>
     </div>
     
 </div>
 </div>
 
-<!-- --- 12-Slide-Capability-Statement.html --- -->
-<div class="archetype archetype-12">
+<!-- --- 14-Slide-Capability-Statement.html --- -->
+<div class="archetype archetype-14">
 <!-- SLIDE 17: CAPABILITY STATEMENT -->
 <div class="slide">
     
@@ -6642,16 +7159,16 @@ html, body { margin: 0; padding: 0; height: auto; overflow: visible; font-family
             </div>
         </div>
         <div class="footer-right">
-            <span class="page-indicator">12</span>
-            <span class="page-total">/ 16</span>
+            <span class="page-indicator">14</span>
+            <span class="page-total">/ 18</span>
         </div>
     </div>
     
 </div>
 </div>
 
-<!-- --- 13-Slide-Vulnerabilities-Overview.html --- -->
-<div class="archetype archetype-13">
+<!-- --- 15-Slide-Vulnerabilities-Overview.html --- -->
+<div class="archetype archetype-15">
 <!-- SLIDE: VULNERABILITIES OVERVIEW -->
 <div class="slide">
     
@@ -6760,16 +7277,16 @@ html, body { margin: 0; padding: 0; height: auto; overflow: visible; font-family
             </div>
         </div>
         <div class="footer-right">
-            <span class="page-indicator">13</span>
-            <span class="page-total">/ 16</span>
+            <span class="page-indicator">15</span>
+            <span class="page-total">/ 18</span>
         </div>
     </div>
     
 </div>
 </div>
 
-<!-- --- 14-Slide-Exploitability-Overview.html --- -->
-<div class="archetype archetype-14">
+<!-- --- 16-Slide-Exploitability-Overview.html --- -->
+<div class="archetype archetype-16">
 <!-- SLIDE: VULNERABILITIES OVERVIEW -->
 <div class="slide">
     
@@ -6856,16 +7373,16 @@ html, body { margin: 0; padding: 0; height: auto; overflow: visible; font-family
             </div>
         </div>
         <div class="footer-right">
-            <span class="page-indicator">14</span>
-            <span class="page-total">/ 16</span>
+            <span class="page-indicator">16</span>
+            <span class="page-total">/ 18</span>
         </div>
     </div>
     
 </div>
 </div>
 
-<!-- --- 15-Slide-Appendix-A.html --- -->
-<div class="archetype archetype-15">
+<!-- --- 17-Slide-Appendix-A.html --- -->
+<div class="archetype archetype-17">
 <!-- SLIDE: APPENDIX A -->
 <div class="slide">
     
@@ -6941,16 +7458,16 @@ html, body { margin: 0; padding: 0; height: auto; overflow: visible; font-family
             </div>
         </div>
         <div class="footer-right">
-            <span class="page-indicator">15</span>
-            <span class="page-total">/ 16</span>
+            <span class="page-indicator">17</span>
+            <span class="page-total">/ 18</span>
         </div>
     </div>
     
 </div>
 </div>
 
-<!-- --- 16-Slide-Company-Overview.html --- -->
-<div class="archetype archetype-16">
+<!-- --- 18-Slide-Company-Overview.html --- -->
+<div class="archetype archetype-18">
 <!-- SLIDE 18: COMPANY OVERVIEW (CLOSING SLIDE) -->
 <div class="slide">
     
@@ -7032,8 +7549,8 @@ html, body { margin: 0; padding: 0; height: auto; overflow: visible; font-family
             </div>
         </div>
         <div class="footer-right">
-            <span class="page-indicator">16</span>
-            <span class="page-total">/ 16</span>
+            <span class="page-indicator">18</span>
+            <span class="page-total">/ 18</span>
         </div>
     </div>
     

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ACME - Assessment Finding</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap');
+        
+        /* ============================================
+           SHARED SLIDE SETTINGS
+           ============================================ */
+        
+        @page {
+            size: 11in 8.5in;
+            margin: 0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        
+        html, body {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            background: white;
+            height: 100%;
+        }
+        
+        .slide {
+            width: 11in;
+            height: 8.5in;
+            position: relative;
+            overflow: hidden;
+            page-break-after: always;
+            page-break-inside: avoid;
+            background: linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 50%, #F1F5F9 100%);
+            color: #0A2540;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Accent Bar */
+        .slide::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(180deg, #0A4B9F 0%, #4781C3 35%, #D82018 100%);
+        }
+        
+        /* Subtle Grid */
+        .slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(10, 75, 159, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(10, 75, 159, 0.03) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+        }
+
+        /* ============================================
+           LAYOUT SECTIONS
+           ============================================ */
+
+        /* Header */
+        
+
+        /* Main Content Layout */
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 0.15in 0.8in 0;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Top Level Titles */
+        .section-title {
+            font-size: 32px; 
+            font-weight: 300;
+            color: #0A2540;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+            line-height: 1.1;
+        }
+
+        .section-title strong {
+            font-weight: 900;
+        }
+
+        .divider {
+            width: 60px;
+            height: 5px;
+            background: linear-gradient(90deg, #D82018, #0A4B9F);
+            border-radius: 2.5px;
+            margin-bottom: 24px;
+        }
+
+        /* 2-Column Grid exactly matching heights */
+        .two-col-grid {
+            display: grid;
+            grid-template-columns: 4.5fr 5.5fr; /* 45% Left, 55% Right */
+            gap: 40px;
+            flex: 1;
+            align-items: stretch; /* Stretches both columns to the same height */
+            margin-bottom: 10px;
+        }
+
+        .left-col {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .right-col {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ============================================
+           THIS PAGE
+           ============================================ */
+        .finding-card { position: relative; background: white; border: 1px solid #E2E8F0; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.04); padding: 18px 22px 12px; margin-top: 10px; margin-bottom: 12px; }
+        .finding-tab { position: absolute; top: -11px; left: 22px; background: #0A2540; color: white; font-size: 9px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; padding: 4px 12px; border-radius: 6px; }
+        .finding-title { font-size: 19px; font-weight: 700; color: #0A2540; line-height: 1.25; margin: 2px 0 14px; }
+        .finding-grid { display: grid; grid-template-columns: 24fr 46fr 18fr; gap: 20px; align-items: stretch; }
+        .meta .lab { font-size: 8px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; color: #94A3B8; margin-bottom: 3px; }
+        .meta .val { font-size: 11.5px; font-weight: 700; color: #0A2540; margin-bottom: 10px; line-height: 1.35; }
+        .pill { display: inline-block; font-size: 8.5px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; padding: 3px 9px; border-radius: 10px; border: 1px solid transparent; }
+        .pill.medium { color: #F59E0B; background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.45); }
+        .chip { display: inline-block; font-family: 'Fira Code', 'Courier New', monospace; font-size: 9.5px; font-weight: 600; color: #0A4B9F; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 4px; padding: 2px 7px; }
+        .radar { position: relative; }
+        .radar svg { display: block; width: 100%; height: 196px; }
+        .score { border-left: 1px solid #E2E8F0; padding-left: 18px; display: grid; grid-template-columns: auto auto; gap: 10px; align-items: center; justify-content: start; }
+        .score .num { font-size: 40px; font-weight: 900; color: #0A2540; line-height: 1; letter-spacing: -1px; grid-column: 1 / -1; }
+        .score .gauge { width: 14px; height: 110px; background: #F1F5F9; border-radius: 7px; position: relative; overflow: hidden; }
+        .score .gauge i { position: absolute; left: 0; right: 0; bottom: 0; background: #F59E0B; border-radius: 7px; }
+        .score .cap { writing-mode: vertical-rl; transform: rotate(180deg); font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #94A3B8; }
+        .body { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; flex: 1; min-height: 0; }
+        .body h3 { font-size: 11.5px; font-weight: 700; color: #0A2540; padding-bottom: 5px; border-bottom: 1px solid #E2E8F0; margin: 0 0 8px; }
+        .body h3 + * { margin-bottom: 12px; }
+        .body p { font-size: 10.2px; line-height: 1.5; color: #334155; text-align: justify; }
+        .body p code { font-family: 'Fira Code', 'Courier New', monospace; font-size: 9.5px; color: #0A4B9F; }
+        .resources { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+        .resources .chip { align-self: flex-start; font-size: 9px; }
+        .steps { display: flex; flex-direction: column; gap: 6px; }
+        .step { background: #F8FAFC; border-left: 3px solid #0A4B9F; border-radius: 0 6px 6px 0; padding: 6px 10px; font-size: 9.8px; line-height: 1.45; color: #334155; }
+        .step b { color: #0A2540; margin-right: 4px; }
+        .refs { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+        .refs li { font-size: 10px; color: #334155; display: grid; grid-template-columns: 92px 1fr; gap: 8px; }
+        .refs li b { font-family: 'Fira Code', 'Courier New', monospace; font-size: 9px; color: #0A4B9F; font-weight: 600; }
+
+        /* Footer */
+        .footer {
+            padding: 0.15in 0.8in 0.3in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .footer-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 700px;
+        }
+        
+        .confidential-block {
+            font-size: 9px;
+            color: #64748B;
+            line-height: 1.5;
+        }
+
+        .confidential-block strong {
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .footer-bottom-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .footer-logo {
+            flex: none;
+            width: 90px;
+            height: 24px;
+            background: #F1F5F9;
+            border: 1px dashed #94A3B8;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            color: #64748B;
+            font-weight: 600;
+        }
+
+        .footer-line {
+            font-size: 10px;
+            color: #94A3B8;
+        }
+        
+        .footer-line strong {
+            font-weight: 600;
+            color: #0A4B9F;
+        }
+
+        .footer-tags {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tag {
+            font-size: 7px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 3px 6px;
+            border-radius: 3px;
+        }
+
+        .tag-draft {
+            background: rgba(100, 116, 139, 0.1);
+            color: #475569;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+        }
+
+        .tag-tlp {
+            background: rgba(217, 119, 6, 0.1);
+            color: #B45309;
+            border: 1px solid rgba(217, 119, 6, 0.2);
+        }
+        
+        .footer-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2px;
+        }
+        
+        .page-indicator {
+            font-size: 12px;
+            font-weight: 700;
+            color: #0A4B9F;
+        }
+        
+        .page-total {
+            font-size: 12px;
+            font-weight: 400;
+            color: #94A3B8;
+        }
+
+        /* ============================================
+           BROWSER PREVIEW
+           ============================================ */
+        
+        @media screen {
+            html { background: #64748B; height: auto; }
+            body { padding: 0.5in; background: #64748B; }
+            .slide {
+                margin: 0 auto;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
+            }
+        }
+        @media print {
+            * {
+                box-shadow: none !important;
+                filter: none !important;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- SLIDE 11: ASSESSMENT FINDING -->
+<div class="slide">
+    <div class="content">
+        <div class="finding-card">
+            <div class="finding-tab">Finding F-02</div>
+            <div class="finding-title">Eight storage accounts accept connections from any network; account keys are enabled on all of them.</div>
+            <div class="finding-grid">
+                <div class="meta">
+                    <div class="lab">Risk Level</div><div class="val"><span class="pill medium">Medium</span></div>
+                    <div class="lab">Framework Domain</div><div class="val">Data Security &amp; Encryption</div>
+                    <div class="lab">CSA CCM v4 Control</div><div class="val"><span class="chip">DSP-07; DSP-17; IVS-03</span></div>
+                    <div class="lab">Control Title</div><div class="val">Data Protection by Design; Sensitive Data Protection; Network Security</div>
+                </div>
+                <div class="radar" data-chart="assessment-radar" data-fill="#F59E0B"></div>
+                <div class="score">
+                    <div class="num">5.8</div>
+                    <div class="gauge"><i style="height: 58%"></i></div>
+                    <div class="cap">Risk score</div>
+                </div>
+            </div>
+        </div>
+        <div class="body">
+            <div>
+                <h3>Finding Description</h3>
+                <p>Eight of the twelve storage accounts in the production subscription have <code>publicNetworkAccess</code> set to <code>Enabled</code> with the default rule <code>Allow</code>, so any address on the internet may attempt to reach their endpoints. On the same eight accounts <code>allowSharedKeyAccess</code> is true: a leaked account key grants full data-plane access without an identity, a sign-in or a conditional-access policy in the path. Three of the accounts hold exported customer statements; the others hold build artefacts and diagnostics.</p>
+                <h3>Impact</h3>
+                <p>A single leaked key, for example in a build log or a decommissioned laptop, reads or deletes every blob in the account from anywhere, and the access leaves no sign-in record because keys are not identities. The exposure is not exploitable by itself; it removes the two controls that would contain a credential leak.</p>
+                <h3>References</h3>
+                <ul class="refs">
+                    <li><b>CCM v4 DSP-07</b><span>Data protection by design and by default</span></li>
+                    <li><b>CCM v4 IVS-03</b><span>Network security: restrict access to the services needed</span></li>
+                    <li><b>CIS Azure 3.8, 3.9</b><span>Default network access rule set to Deny; shared key authorization disabled</span></li>
+                    <li><b>Evidence</b><span>Page 12, capture 1 and the Resource Graph query</span></li>
+                </ul>
+            </div>
+            <div>
+                <h3>Affected Resources</h3>
+                <div class="resources">
+                    <span class="chip">8 of 12 storage accounts, sub-corporate-prod, public network access Enabled</span>
+                    <span class="chip">stcorpstatements01, stcorpstatements02, stcorpexports (customer data)</span>
+                    <span class="chip">allowSharedKeyAccess: true on all eight</span>
+                </div>
+                <h3>Remediation &amp; Solution Strategy</h3>
+                <div class="steps">
+                    <div class="step"><b>1.</b> Set public network access to Disabled, or to Selected networks with the application subnets and the office egress address listed; expose the three customer-data accounts through private endpoints only.</div>
+                    <div class="step"><b>2.</b> Disable shared-key authorization (<code>allowSharedKeyAccess: false</code>) and move the two services that still use keys to managed identities with the Storage Blob Data Contributor role.</div>
+                    <div class="step"><b>3.</b> Enforce both settings with an Azure Policy assignment at the subscription scope in Deny mode, so a new account cannot recreate the exposure; see F-11 for the policy baseline.</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-info">
+            <div class="confidential-block">
+                <strong>Strictly Confidential</strong> — This document contains sensitive security and technical information. Reproduction, distribution, or disclosure to unauthorized parties without explicit written consent is strictly prohibited.
+            </div>
+            <div class="footer-bottom-row">
+                <div class="footer-logo">[ACME Logo]</div>
+                <div class="footer-line">
+                    <span>Property of &nbsp;<strong>ACME Consulting</strong> &nbsp;|&nbsp; acmecyber.com</span>
+                </div>
+                <div class="footer-tags">
+                    <span class="tag tag-draft">Draft</span>
+                    <span class="tag tag-tlp">TLP:AMBER</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-right">
+            <span class="page-indicator">11</span>
+            <span class="page-total">/ 18</span>
+        </div>
+    </div>
+</div>
+<!-- Risk radar: inline SVG, no library. Edit the six values (0 to 10) in data-values to change the shape. -->
+<script>
+(() => {
+    const el = document.querySelector('[data-chart="assessment-radar"]');
+    const axes = [["Business Impact", "Revenue & ops at risk", 6], ["Exploitation Prob.", "Likelihood to target", 7], ["Attack Complexity", "Easier attacks score higher", 8], ["Remediation Effort", "Effort to fix scores higher", 3], ["Integrity Impact", "Damage to system trust", 5], ["Data Sensitivity", "Customer & compliance", 7]];
+    const draw = () => {
+        const W = 420, H = 196, cx = W / 2, cy = H / 2 - 2, R = 58, n = axes.length, fill = el.dataset.fill || '#F59E0B';
+        const pt = (i, r) => { const a = -Math.PI / 2 + i * 2 * Math.PI / n; return [cx + r * Math.cos(a), cy + r * Math.sin(a)]; };
+        let s = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" aria-label="Risk factors">`;
+        for (const k of [0.25, 0.5, 0.75, 1]) s += `<polygon points="${axes.map((_, i) => pt(i, R * k).join(',')).join(' ')}" fill="none" stroke="#E2E8F0" stroke-width="1"/>`;
+        axes.forEach((_, i) => { const [x, y] = pt(i, R); s += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#E2E8F0" stroke-width="1"/>`; });
+        s += `<polygon data-series="risk" points="${axes.map((a, i) => pt(i, R * a[2] / 10).join(',')).join(' ')}" fill="${fill}" fill-opacity="0.35" stroke="${fill}" stroke-width="2" stroke-linejoin="round"/>`;
+        axes.forEach((a, i) => { const [x, y] = pt(i, R + 14); const anchor = Math.abs(x - cx) < 6 ? 'middle' : x < cx ? 'end' : 'start'; const dy = y < cy - 6 ? -4 : y > cy + 6 ? 10 : 3;
+            s += `<text x="${x}" y="${y + dy}" text-anchor="${anchor}" font-family="Montserrat, sans-serif" font-size="9" font-weight="700" fill="#0A2540">${a[0]}</text>`;
+            s += `<text x="${x}" y="${y + dy + 10}" text-anchor="${anchor}" font-family="Montserrat, sans-serif" font-size="7.5" fill="#64748B">${a[1]}</text>`; });
+        s += '</svg>';
+        el.innerHTML = s;
+    };
+    document.fonts.ready.then(draw);
+})();
+</script>
+</body>
+</html>

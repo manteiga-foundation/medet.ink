@@ -11,10 +11,10 @@ from harness import ROOT, archetypes, slide_number
 BRAND_LINE = 'Property of ACME Consulting | acmecyber.com'
 # The running order of the report, by archetype title: the company overview closes it.
 REPORT_ORDER = ['External Network Penetration Testing Report', 'Table of Contents', 'Executive Summary',
-                'Cybersecurity Maturity Score', 'Scope & Methodology', 'Risk Matrix', 'Testing Phases',
-                'Findings Overview', 'Technical Finding', 'Proof of Concept', 'Engagement Team',
-                'Capability Statement', 'Vulnerabilities Overview', 'Exploitability Overview', 'Appendix A',
-                'Company Overview']
+                'Maturity Scorecard', 'Scope & Methodology', 'Risk Matrix', 'Testing Phases',
+                'Findings Overview', 'Technical Finding', 'Proof of Concept', 'Assessment Finding', 'Evidence',
+                'Engagement Team', 'Capability Statement', 'Vulnerabilities Overview', 'Exploitability Overview',
+                'Appendix A', 'Company Overview']
 # RFC 5737: the only address ranges sample content may use.
 DOCUMENTATION = [ipaddress.ip_network(n) for n in ('192.0.2.0/24', '198.51.100.0/24', '203.0.113.0/24')]
 # A dotted quad that is not part of a version string (Chrome/120.0.0.0) or a longer number.

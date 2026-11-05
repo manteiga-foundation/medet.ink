@@ -11,20 +11,27 @@ working contract is `AGENTS.md`.
 | 01 | `01-Slide-Cover.html` | Cover | |
 | 02 | `02-Slide-Table-of-Content.html` | Table of contents | |
 | 03 | `03-Slide-Executive-Summary.html` | Executive summary | |
-| 04 | `04-Slide-Cybersecurity-Maturity.html` | Maturity score against peers, position marker | inline SVG stacked area |
+| 04 | `04-Slide-Maturity-Scorecard.html` | Maturity scorecard: an overall score and band, eight domains with a bar, score, band pill and the checks behind it | inline SVG bar per domain, drawn from the row's data |
 | 05 | `05-Slide-Scope.html` | Scope and methodology | |
 | 06 | `06-Slide-Risk-Matrix.html` | Risk matrix | |
 | 07 | `07-Slide-Testing-Phases.html` | Testing phases | |
 | 08 | `08-Slide-Findings-Overview.html` | Findings by severity | inline SVG donut, read from the stat boxes |
-| 09 | `09-Slide-Technical-Details.html` | One technical finding | Chart.js radar |
+| 09 | `09-Slide-Technical-Details.html` | One technical finding (a pentest finding) | Chart.js radar |
 | 10 | `10-Slide-Proof-of-Concept.html` | Proof of concept | |
-| 11 | `11-Slide-Team.html` | Engagement team | |
-| 12 | `12-Slide-Capability-Statement.html` | Capability statement | |
-| 13 | `13-Slide-Vulnerabilities-Overview.html` | Vulnerabilities overview | |
-| 14 | `14-Slide-Exploitability-Overview.html` | Exploitability overview | |
-| 15 | `15-Slide-Appendix-A.html` | Appendix A | |
-| 16 | `16-Slide-Company-Overview.html` | Company overview | closing page |
+| 11 | `11-Slide-Assessment-Finding.html` | One assessment finding: ID tab, meta stack (risk level, framework domain, control IDs, control title), risk radar, score gauge; description, impact, references; affected resources, numbered remediation | inline SVG radar |
+| 12 | `12-Slide-Evidence.html` | Evidence and validation for a finding: one framed capture with a dated caption, where to see it (numbered, monospace links), how to validate | the capture is drawn in HTML so the sample needs no image |
+| 13 | `13-Slide-Team.html` | Engagement team | |
+| 14 | `14-Slide-Capability-Statement.html` | Capability statement | |
+| 15 | `15-Slide-Vulnerabilities-Overview.html` | Vulnerabilities overview | |
+| 16 | `16-Slide-Exploitability-Overview.html` | Exploitability overview | |
+| 17 | `17-Slide-Appendix-A.html` | Appendix A | |
+| 18 | `18-Slide-Company-Overview.html` | Company overview | closing page |
 
+Pages 04, 11 and 12 (5 November 2026) are the three page types every client engagement built on the
+template needed and the public sixteen did not have; they are ported from those reports with the
+sample's fictional content. The spiral "maturity against peers" chart that 04 carried is retired: a
+scorecard is what the engagements used, and the spiral was the one element on the page that read as
+decorative. 04's sample data reconciles: each score is (pass + half the partials) / checks, 92 checks.
 Every archetype is a complete HTML document: `@page { size: 11in 8.5in; margin: 0 }`, a reset with
 `print-color-adjust: exact`, one `.slide` (11in x 8.5in, `overflow: hidden`), a left accent bar
 (`.slide::before`), a faint 48 px grid (`.slide::after`, no pointer events), then header, content
@@ -35,7 +42,7 @@ and footer (confidentiality block on the left, page indicator `NN / TOTAL` on th
 - Finding page: a floating ID tab, centred title, three columns (metadata, radar chart, vertical
   risk-score bar), then two columns (description, remediation).
 - Replication page: numbered steps beside a dark raw request and response block, one per finding.
-- Evidence page: one large screenshot per page, framed with browser chrome, captioned.
+- Evidence page: one capture per page, framed and captioned with the date, the account used and what was withheld; where to see it and how to validate under it (archetype 12).
 
 ## Design tokens
 
@@ -198,9 +205,10 @@ when".
   Chart.js canvas text, then on 04 and 08 for Highcharts label layout: 0.13% and 0.30% of the
   slide; an SVG chart drawn before the fonts moves 0.51% of its area). SVG charts are redrawn by
   running their script again.
-- `tests/test_maturity_chart.py` - slide 04's bands, read from the drawn SVG polygons: Poor at the
-  bottom up to Excellent on top, at every category (fails when the bands array is reversed; failed
-  before the chart was SVG: no polygons).
+- `tests/test_maturity_chart.py` - slide 04's scorecard, read from the drawn bars and the pills: each
+  domain's bar is its score's share of the track, in the band's colour, and the pill names the band
+  the score falls in; the spiral's polygons no longer exist. Fails when a score, a bar and a pill
+  disagree, or a band threshold moves without the data.
 - `tests/test_combined_report.py` - the combined report:
   - the committed file is byte for byte what `merge_slides.py` produces (fails when an archetype is
     edited without regenerating);

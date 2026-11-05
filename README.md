@@ -18,7 +18,7 @@ This project provides a highly professional, easily modifiable deliverable forma
 
 - **Executive-Ready Presentation:** Designed to communicate complex security findings effectively to both technical stakeholders and executive leadership.
 - **Pixel-Perfect Export:** Engineered with rigorous `@media print` CSS directives ensuring a 1:1 translation from the browser to a perfectly paginated, landscape PDF without margin degradation or layout breaks.
-- **Comprehensive Template Suite:** Includes 16 pre-formatted layouts covering Executive Summaries, Risk Matrices, Detailed Findings, Proof of Concepts, and Capability Statements.
+- **Comprehensive Template Suite:** Includes 18 pre-formatted layouts covering Executive Summaries, a Maturity Scorecard, Risk Matrices, Technical and Assessment Findings with their Evidence, Proof of Concepts, and Capability Statements.
 - **Interactive Data Visualization:** Charts drawn in inline SVG with no library to load or license, plus a Chart.js radar, for dynamic presentation of metrics and maturity models.
 - **Zero-Friction Deployment:** Pure HTML and CSS architecture. Requires no complex build pipelines or proprietary software to edit and deploy.
 
@@ -29,7 +29,7 @@ This project provides a highly professional, easily modifiable deliverable forma
 1. **Get the Template:** Download [medet-ink-template.zip](reports/medet-ink-template.zip) (Download HTML on the landing page), or clone the repository.
 2. **Edit the Content:** Open `combined_report.html` in your preferred code or text editor to populate your specific assessment data, client branding, and vulnerability metrics.
 3. **Preview:** Open the file in a modern web browser to review the interactive layout.
-4. **Generate PDF:** Use the browser's native print function (Ctrl+P / Cmd+P) and save as PDF. The document will automatically format into a 16-page, landscape executive report.
+4. **Generate PDF:** Use the browser's native print function (Ctrl+P / Cmd+P) and save as PDF. The document will automatically format into an 18-page, landscape executive report.
 
 ---
 
@@ -37,12 +37,15 @@ This project provides a highly professional, easily modifiable deliverable forma
 
 A selection of included page layouts:
 
-| Cover Page | Executive Summary | Risk Matrix |
+| Cover Page | Executive Summary | Maturity Scorecard |
 |:---:|:---:|:---:|
-| <img src="assets/slide_01.png" width="300"/> | <img src="assets/slide_03.png" width="300"/> | <img src="assets/slide_06.png" width="300"/> |
+| <img src="assets/slide_01.png" width="300"/> | <img src="assets/slide_03.png" width="300"/> | <img src="assets/slide_04.png" width="300"/> |
 
-| Findings Overview | Technical Details | Capability Statement |
+| Technical Finding | Assessment Finding | Evidence |
 |:---:|:---:|:---:|
+| <img src="assets/slide_09.png" width="300"/> | <img src="assets/slide_11.png" width="300"/> | <img src="assets/slide_12.png" width="300"/> |
+
+---:|:---:|:---:|
 | <img src="assets/slide_08.png" width="300"/> | <img src="assets/slide_09.png" width="300"/> | <img src="assets/slide_12.png" width="300"/> |
 
 ---

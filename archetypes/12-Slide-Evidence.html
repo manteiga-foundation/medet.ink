@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ACME - Evidence</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap');
+        
+        /* ============================================
+           SHARED SLIDE SETTINGS
+           ============================================ */
+        
+        @page {
+            size: 11in 8.5in;
+            margin: 0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        
+        html, body {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            background: white;
+            height: 100%;
+        }
+        
+        .slide {
+            width: 11in;
+            height: 8.5in;
+            position: relative;
+            overflow: hidden;
+            page-break-after: always;
+            page-break-inside: avoid;
+            background: linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 50%, #F1F5F9 100%);
+            color: #0A2540;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Accent Bar */
+        .slide::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(180deg, #0A4B9F 0%, #4781C3 35%, #D82018 100%);
+        }
+        
+        /* Subtle Grid */
+        .slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(10, 75, 159, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(10, 75, 159, 0.03) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+        }
+
+        /* ============================================
+           LAYOUT SECTIONS
+           ============================================ */
+
+        /* Header */
+        
+
+        /* Main Content Layout */
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 0.15in 0.8in 0;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Top Level Titles */
+        .section-title {
+            font-size: 32px; 
+            font-weight: 300;
+            color: #0A2540;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+            line-height: 1.1;
+        }
+
+        .section-title strong {
+            font-weight: 900;
+        }
+
+        .divider {
+            width: 60px;
+            height: 5px;
+            background: linear-gradient(90deg, #D82018, #0A4B9F);
+            border-radius: 2.5px;
+            margin-bottom: 24px;
+        }
+
+        /* 2-Column Grid exactly matching heights */
+        .two-col-grid {
+            display: grid;
+            grid-template-columns: 4.5fr 5.5fr; /* 45% Left, 55% Right */
+            gap: 40px;
+            flex: 1;
+            align-items: stretch; /* Stretches both columns to the same height */
+            margin-bottom: 10px;
+        }
+
+        .left-col {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .right-col {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ============================================
+           THIS PAGE
+           ============================================ */
+        .ev-head { display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center; margin-bottom: 12px; }
+        .badge { background: #0A2540; color: white; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; padding: 5px 10px; border-radius: 6px; }
+        .ev-title { font-size: 15px; font-weight: 700; color: #0A2540; line-height: 1.3; }
+        .pill { display: inline-block; font-size: 8.5px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; padding: 3px 9px; border-radius: 10px; border: 1px solid transparent; }
+        .pill.medium { color: #F59E0B; background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.45); }
+        .capture { background: white; border: 1px solid #E2E8F0; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.04); padding: 12px 14px 10px; margin-bottom: 12px; }
+        /* The capture itself, drawn here in HTML so the sample needs no image. For a real report replace the .shot block with an img of the capture at the same width and keep the caption. */
+        .shot { border: 1px solid #CBD5E1; border-radius: 6px; overflow: hidden; background: #FFFFFF; font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; color: #323130; font-size: 9.5px; }
+        .shot .top { background: #0F3159; color: white; padding: 6px 12px; font-size: 9px; display: flex; gap: 18px; }
+        .shot .crumb { padding: 6px 12px; font-size: 8.5px; color: #605E5C; border-bottom: 1px solid #EDEBE9; }
+        .shot .blade { display: grid; grid-template-columns: 150px 1fr; min-height: 186px; }
+        .shot .nav { border-right: 1px solid #EDEBE9; padding: 8px 0; }
+        .shot .nav div { padding: 4px 12px; font-size: 8.5px; color: #323130; }
+        .shot .nav div.on { background: #EFF6FC; border-left: 3px solid #0078D4; padding-left: 9px; font-weight: 600; }
+        .shot .main { padding: 10px 14px; }
+        .shot .main h4 { font-size: 11px; font-weight: 600; margin-bottom: 8px; color: #201F1E; }
+        .shot .row { display: grid; grid-template-columns: 160px 1fr; gap: 8px; padding: 5px 0; border-bottom: 1px solid #F3F2F1; font-size: 8.8px; }
+        .shot .row b { font-weight: 600; }
+        .shot .opt { display: inline-flex; align-items: center; gap: 5px; margin-right: 14px; }
+        .shot .opt i { width: 10px; height: 10px; border: 1.5px solid #605E5C; border-radius: 50%; display: inline-block; position: relative; }
+        .shot .opt i.on { border-color: #0078D4; }
+        .shot .opt i.on::after { content: ''; position: absolute; inset: 2px; background: #0078D4; border-radius: 50%; }
+        .shot .warn { margin-top: 10px; background: #FFF4CE; border: 1px solid #F5D77B; border-radius: 3px; padding: 5px 8px; font-size: 8.5px; color: #323130; }
+        .caption { font-size: 9.5px; color: #475569; line-height: 1.45; margin-top: 8px; }
+        .caption b { color: #0A2540; }
+        .caption .mono { font-family: 'Fira Code', 'Courier New', monospace; font-size: 9px; }
+        .ev-body { display: grid; grid-template-columns: 11fr 9fr; gap: 28px; flex: 1; min-height: 0; }
+        .ev-body h3 { font-size: 11.5px; font-weight: 700; color: #0A2540; padding-bottom: 5px; border-bottom: 1px solid #E2E8F0; margin: 0 0 8px; }
+        .where { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+        .where li { border-left: 3px solid #0A4B9F; padding: 2px 0 2px 10px; }
+        .where b { display: block; font-size: 10px; color: #0A2540; }
+        .where span { display: block; font-family: 'Fira Code', 'Courier New', monospace; font-size: 8.5px; color: #0A4B9F; word-break: break-all; }
+        .ev-body p { font-size: 10.5px; line-height: 1.55; color: #334155; text-align: justify; }
+        .ev-body p code { font-family: 'Fira Code', 'Courier New', monospace; font-size: 9.5px; color: #0A4B9F; }
+
+        /* Footer */
+        .footer {
+            padding: 0.15in 0.8in 0.3in 0.8in;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .footer-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 700px;
+        }
+        
+        .confidential-block {
+            font-size: 9px;
+            color: #64748B;
+            line-height: 1.5;
+        }
+
+        .confidential-block strong {
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .footer-bottom-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .footer-logo {
+            flex: none;
+            width: 90px;
+            height: 24px;
+            background: #F1F5F9;
+            border: 1px dashed #94A3B8;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            color: #64748B;
+            font-weight: 600;
+        }
+
+        .footer-line {
+            font-size: 10px;
+            color: #94A3B8;
+        }
+        
+        .footer-line strong {
+            font-weight: 600;
+            color: #0A4B9F;
+        }
+
+        .footer-tags {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tag {
+            font-size: 7px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 3px 6px;
+            border-radius: 3px;
+        }
+
+        .tag-draft {
+            background: rgba(100, 116, 139, 0.1);
+            color: #475569;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+        }
+
+        .tag-tlp {
+            background: rgba(217, 119, 6, 0.1);
+            color: #B45309;
+            border: 1px solid rgba(217, 119, 6, 0.2);
+        }
+        
+        .footer-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2px;
+        }
+        
+        .page-indicator {
+            font-size: 12px;
+            font-weight: 700;
+            color: #0A4B9F;
+        }
+        
+        .page-total {
+            font-size: 12px;
+            font-weight: 400;
+            color: #94A3B8;
+        }
+
+        /* ============================================
+           BROWSER PREVIEW
+           ============================================ */
+        
+        @media screen {
+            html { background: #64748B; height: auto; }
+            body { padding: 0.5in; background: #64748B; }
+            .slide {
+                margin: 0 auto;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15);
+            }
+        }
+        @media print {
+            * {
+                box-shadow: none !important;
+                filter: none !important;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- SLIDE 12: EVIDENCE -->
+<div class="slide">
+    <div class="content">
+        <div class="ev-head">
+            <div class="badge">F-02</div>
+            <div class="ev-title">Evidence and validation: eight storage accounts accept connections from any network; account keys are enabled on all of them.</div>
+            <span class="pill medium">Medium</span>
+        </div>
+        <div class="capture">
+            <div class="shot" role="img" aria-label="Capture 1: the storage account's Networking blade, public network access enabled from all networks">
+                <div class="top"><span>Microsoft Azure</span><span>Search resources, services, and docs (G+/)</span></div>
+                <div class="crumb">Home &gt; Storage accounts &gt; stcorpstatements01</div>
+                <div class="blade">
+                    <div class="nav"><div>Overview</div><div>Activity log</div><div>Access control (IAM)</div><div>Tags</div><div>Diagnose and solve problems</div><div>Access keys</div><div class="on">Networking</div><div>Front Door and CDN</div><div>Security</div><div>Data protection</div><div>Encryption</div></div>
+                    <div class="main">
+                        <h4>stcorpstatements01 | Networking</h4>
+                        <div class="row"><b>Public network access</b><span><span class="opt"><i class="on"></i>Enabled from all networks</span><span class="opt"><i></i>Enabled from selected virtual networks and IP addresses</span><span class="opt"><i></i>Disabled</span></span></div>
+                        <div class="row"><b>Network routing</b><span>Microsoft network routing</span></div>
+                        <div class="row"><b>Private endpoint connections</b><span>0</span></div>
+                        <div class="warn">All networks, including the internet, can access this storage account. Consider restricting access to selected networks or private endpoints.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="caption"><b>Capture 1.</b> Storage account <span class="mono">stcorpstatements01</span>, Networking blade: public network access <span class="mono">Enabled from all networks</span>, no private endpoint connection (2026-09-23 14:05 UTC, review account with the Reader role); the key-access setting is on the Configuration blade, item 2. Identifiers withheld from this edition: subscription and tenant IDs.</div>
+        </div>
+        <div class="ev-body">
+            <div>
+                <h3>Where to see it in the Azure portal</h3>
+                <ul class="where">
+                    <li><b>1. Storage account, Networking: Public network access, Enabled from all networks</b><span>https://portal.azure.com/#@example.onmicrosoft.com/resource/subscriptions/&lt;subscription-id&gt;/resourceGroups/rg-corp-data/providers/Microsoft.Storage/storageAccounts/stcorpstatements01/networking</span></li>
+                    <li><b>2. Storage account, Configuration: Allow storage account key access, Enabled</b><span>https://portal.azure.com/#@example.onmicrosoft.com/resource/.../storageAccounts/stcorpstatements01/configuration</span></li>
+                    <li><b>3. Resource Graph: every storage account with public access and shared keys on (expect 8 rows)</b><span>resources | where type == "microsoft.storage/storageaccounts" | where properties.publicNetworkAccess == "Enabled" and properties.allowSharedKeyAccess != false | project name, resourceGroup</span></li>
+                </ul>
+            </div>
+            <div>
+                <h3>How to validate</h3>
+                <p>Open any of the eight accounts named in the finding, select <code>Networking</code> and confirm the public network access setting reads Enabled from all networks with zero private endpoint connections; under <code>Configuration</code>, confirm Allow storage account key access is Enabled. The Resource Graph query in item 3 lists all eight in one view and returns no rows once the remediation is complete, which is the retest. The capture was taken with a Reader-only account; nothing was changed.</p>
+            </div>
+        </div>
+
+    </div>
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-info">
+            <div class="confidential-block">
+                <strong>Strictly Confidential</strong> — This document contains sensitive security and technical information. Reproduction, distribution, or disclosure to unauthorized parties without explicit written consent is strictly prohibited.
+            </div>
+            <div class="footer-bottom-row">
+                <div class="footer-logo">[ACME Logo]</div>
+                <div class="footer-line">
+                    <span>Property of &nbsp;<strong>ACME Consulting</strong> &nbsp;|&nbsp; acmecyber.com</span>
+                </div>
+                <div class="footer-tags">
+                    <span class="tag tag-draft">Draft</span>
+                    <span class="tag tag-tlp">TLP:AMBER</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-right">
+            <span class="page-indicator">12</span>
+            <span class="page-total">/ 18</span>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
