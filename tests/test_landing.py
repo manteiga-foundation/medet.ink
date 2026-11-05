@@ -58,6 +58,32 @@ SHOW_STATE = r"""async () => {
 }"""
 
 
+# The page's design language, read from computed styles: the template's own type and ink, one primary
+# action among the four, and no hard offset shadow or thick ink border anywhere (the report's language,
+# not a sticker's).
+LANGUAGE = r"""() => {
+  const all = [...document.querySelectorAll('body *')];
+  const shadows = all.map(e => [e.className && String(e.className), getComputedStyle(e).boxShadow]).filter(([, s]) => s && s !== 'none');
+  // 'rgba(...) x y blur spread': a hard shadow has an offset and no blur.
+  const hard = shadows.filter(([, s]) => { const m = s.match(/\)\s*(-?[\d.]+)px\s+(-?[\d.]+)px\s+(-?[\d.]+)px/); return m && (+m[1] || +m[2]) && +m[3] === 0; });
+  const thick = all.filter(e => { const s = getComputedStyle(e); return parseFloat(s.borderTopWidth) >= 2 && s.borderTopStyle === 'solid'; }).map(e => e.tagName + '.' + e.className);
+  const btns = [...document.querySelectorAll('.actions .btn')];
+  const bg = e => getComputedStyle(e).backgroundColor;
+  return {
+    bodyFont: getComputedStyle(document.body).fontFamily,
+    h1Font: getComputedStyle(document.querySelector('h1')).fontFamily,
+    h1Weight: +getComputedStyle(document.querySelector('h1')).fontWeight,
+    labelFont: getComputedStyle(document.querySelector('.label')).fontFamily,
+    ink: getComputedStyle(document.querySelector('h1')).color,
+    hard: hard.map(([c]) => c), thick,
+    buttons: btns.length, primary: btns.filter(b => b.classList.contains('primary')).length,
+    primaryBg: btns.filter(b => b.classList.contains('primary')).map(bg),
+    quietBgs: [...new Set(btns.filter(b => !b.classList.contains('primary')).map(bg))],
+    leds: document.querySelectorAll('.led').length,
+    fakeControls: document.querySelectorAll('.window .bar > i').length,
+  };
+}"""
+
 # The foundation's credit in the navigation band, beside the wordmark.
 BYLINE = r"""() => {
   const by = document.querySelector('.band .by'), mark = document.querySelector('.band .wordmark');
@@ -157,6 +183,26 @@ class LandingPageTests(unittest.TestCase):
             opened.close()
         finally:
             chromium.close()
+
+    def test_the_page_speaks_the_template_s_own_language(self):
+        chromium = Chromium()
+        try:
+            opened = chromium.open('index.html', viewport=(1440, 900))
+            found = opened.page.evaluate(LANGUAGE)
+            opened.close()
+        finally:
+            chromium.close()
+        self.assertIn('Montserrat', found['bodyFont'], 'the text font of the archetypes')
+        self.assertIn('Montserrat', found['h1Font'])
+        self.assertLessEqual(found['h1Weight'], 800)
+        self.assertIn('Fira Code', found['labelFont'], 'the code font of the archetypes for labels')
+        self.assertEqual(found['ink'], 'rgb(10, 37, 64)', 'the archetypes\' ink #0A2540')
+        self.assertEqual(found['hard'], [], 'no hard offset shadows')
+        self.assertEqual(found['thick'], [], 'no 2 px ink borders')
+        self.assertEqual((found['buttons'], found['primary']), (4, 1), 'four actions, one primary')
+        self.assertEqual(found['primaryBg'], ['rgb(10, 37, 64)'], 'the primary is ink')
+        self.assertEqual(len(found['quietBgs']), 1, 'the other three share one quiet style')
+        self.assertEqual((found['leds'], found['fakeControls']), (0, 0), 'no status LED, no mock window controls')
 
     def test_the_band_credits_the_foundation_as_a_small_byline(self):
         chromium = Chromium()

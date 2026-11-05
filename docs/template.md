@@ -63,26 +63,33 @@ pie label). The risk matrix's effort scale (slide 06) uses the blues `#4781C3`, 
 
 ## Landing page
 
-`index.html`, design A of spike 002 (Terminal Paper): cream paper `#F2EFE6` with a faint 24 px
-grid, ink `#2B2B2B`, soft ink `#5B5850`, accents sage `#8FB3A8` (primary button), peach `#D9A877`
-(secondary), lavender `#A99BC2` (focus ring), status LED `#3E9B4F`; Space Grotesk for headings and
-text, IBM Plex Mono for labels; 2 px ink borders with hard 4 px offset shadows. HTML and CSS with
-Google Fonts and one inline script, no external script. The copy presents the template for any
+`index.html` is page 00 of the report: it uses the archetypes' own tokens and nothing else (5 November
+2026; before, design A of spike 002, "Terminal Paper", a neo-brutalist wrapper with pastel sticker
+buttons, 2 px ink borders and hard offset shadows, which read as playful next to the slides). Paper
+`#F8FAFC` with a faint 24 px grid, ink `#0A2540`, accent `#0A4B9F`, slate `#64748B` / `#94A3B8`, rules
+`#E2E8F0`, cards white with radius 12 px and the archetypes' soft shadow; Montserrat for text and
+headings (the h1 pairs a light "Beautiful" with the bold rest, as the cover's title does), Fira Code for
+labels, page indicators and the footer; the hero's divider is the cover's blue-to-red rule. HTML and CSS
+with Google Fonts and one inline script, no external script. The copy presents the template for any
 report or presentation; the sample content is a fictional security assessment.
 
 The navigation band carries the wordmark with a byline beside it on its baseline, "By Manteiga
-Foundation" at 11 px in soft ink, sentence case (the wordmark is 14 px), shown at every size; the
-status read-outs follow, then GitHub.
+Foundation" at 11 px in slate, shown at every size; the read-outs "16 archetypes", "PDF 16 pp", "MIT"
+follow, then GitHub.
 
-The hero plays the archetypes as a slideshow in the window frame: the title bar shows `NN / 16`, the
-slide name and a PLAYING/PAUSED LED; slides wipe in (left to right forward, right to left back,
-0.55 s); the pagination strip has prev and next keys, 16 ticks (past ones sage, the current one
-filling over its 4.5 s) and a pause key. It holds while a mouse points at it or keyboard focus is
-inside it, does not autoplay under reduced motion, and moves with the arrow keys. It shows the
-gallery's own thumbnails, the first in the markup and each next one fetched a slide ahead; without
-script the first slide shows alone. On phones the keys are 40 px and the ticks only indicate.
-Buttons: View Full Report, Download PDF, Download HTML (`reports/medet-ink-template.zip`), GitHub,
-in a 2 x 2 block.
+The hero plays the archetypes as a slideshow in a framed card: the bar shows `NN / 16`, the slide name
+and a PLAYING/PAUSED dot; slides wipe in (left to right forward, right to left back, 0.55 s); the
+pagination strip has prev and next keys, 16 ticks (past ones accent, the current one filling over its
+4.5 s) and a pause key. It holds while a mouse points at it or keyboard focus is inside it, does not
+autoplay under reduced motion, and moves with the arrow keys. It shows the gallery's own thumbnails,
+the first in the markup and each next one fetched a slide ahead; without script the first slide shows
+alone. On phones the keys are 40 px and the ticks only indicate.
+Buttons: View Full Report (the one primary, ink), Download PDF, Download HTML
+(`reports/medet-ink-template.zip`), GitHub (quiet, white with a hairline), in a 2 x 2 block.
+`test_the_page_speaks_the_template_s_own_language` reads the computed styles: Montserrat and Fira
+Code, ink `#0A2540`, four actions with one primary in ink and one quiet style for the rest, no hard
+offset shadow, no 2 px ink border, no status LED and no mock window controls. Under 980 px the spec
+table stacks and sections tighten to 48 px.
 
 ## Print rules
 

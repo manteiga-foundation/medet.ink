@@ -20,13 +20,15 @@
     <title>Medet.ink - HTML Report and Presentation Template</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
 
+/* The landing is page 00 of the report: the archetypes' own tokens (docs/template.md), nothing else. */
 :root {
-    --paper: #F2EFE6; --paper-deep: #E8E3D5; --ink: #2B2B2B; --ink-soft: #5B5850; --grid: rgba(43, 43, 43, 0.055);
-    --sage: #8FB3A8; --peach: #D9A877; --lavender: #A99BC2; --led: #3E9B4F;
-    --shadow: 4px 4px 0 var(--ink); --head: 'Space Grotesk', sans-serif; --mono: 'IBM Plex Mono', monospace;
+    --paper: #F8FAFC; --paper-deep: #F1F5F9; --rule: #E2E8F0; --grid: rgba(10, 37, 64, 0.045);
+    --ink: #0A2540; --accent: #0A4B9F; --accent-soft: #4781C3; --brand-red: #D82018; --slate: #64748B; --slate-light: #94A3B8;
+    --card-shadow: 0 8px 30px rgba(0, 0, 0, 0.04); --lift-shadow: 0 12px 36px rgba(10, 37, 64, 0.10);
+    --head: 'Montserrat', sans-serif; --mono: 'Fira Code', monospace;
 }
 * { box-sizing: border-box; }
 html { background: var(--paper); }
@@ -36,106 +38,105 @@ body {
     background-size: 24px 24px;
 }
 a { color: inherit; }
-:focus-visible { outline: 3px solid var(--lavender); outline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .wrap { max-width: 1240px; margin: 0 auto; padding: 0 32px; }
 .mono { font-family: var(--mono); }
 
-/* Slim navigation band with status read-outs */
-.band { border-bottom: 2px solid var(--ink); background: var(--paper); position: sticky; top: 0; z-index: 10; }
-.band .wrap { display: flex; align-items: center; gap: 28px; height: 52px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
-.wordmark { font-weight: 600; font-size: 14px; letter-spacing: 0.12em; text-decoration: none; }
+/* Slim navigation band */
+.band { border-bottom: 1px solid var(--rule); background: rgba(248, 250, 252, 0.92); backdrop-filter: blur(6px); position: sticky; top: 0; z-index: 10; }
+.band .wrap { display: flex; align-items: center; gap: 28px; height: 52px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; }
+.wordmark { font-family: var(--head); font-weight: 700; font-size: 14px; letter-spacing: 0.04em; text-decoration: none; color: var(--ink); }
 .brand { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
-.band .by { color: var(--ink-soft); text-decoration: none; font-size: 11px; letter-spacing: 0.02em; text-transform: none; white-space: nowrap; }
+.band .by { color: var(--slate); text-decoration: none; font-family: var(--head); font-size: 11px; letter-spacing: 0; white-space: nowrap; }
 .band .by:hover, .band nav a:hover { text-decoration: underline; text-underline-offset: 4px; }
-.status { display: flex; gap: 18px; margin-left: auto; color: var(--ink-soft); }
+.status { display: flex; gap: 18px; margin-left: auto; color: var(--slate); }
 .status span { display: inline-flex; align-items: center; gap: 7px; }
-.led { width: 8px; height: 8px; border-radius: 50%; background: var(--led); box-shadow: 0 0 0 2px rgba(62, 155, 79, 0.2); }
-.band nav a { text-decoration: none; font-weight: 600; }
+.band nav a { text-decoration: none; font-weight: 600; color: var(--accent); }
 
 /* Hero */
-.hero { padding: 72px 0 88px; }
+.hero { padding: 72px 0 80px; }
 .hero .wrap { display: grid; grid-template-columns: 1fr 1.05fr; gap: 64px; align-items: center; }
-.label { font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft); }
+.label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
 .label b { color: var(--ink); font-weight: 600; }
-h1 { font-size: clamp(38px, 4.6vw, 60px); line-height: 1.02; letter-spacing: -0.02em; text-transform: uppercase; margin: 18px 0 22px; font-weight: 700; text-wrap: balance; }
-.lead { font-size: 18px; color: var(--ink-soft); max-width: 34em; margin: 0 0 34px; }
-.actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; max-width: 440px; }
+h1 { font-size: clamp(36px, 4vw, 52px); line-height: 1.08; letter-spacing: -0.02em; margin: 16px 0 18px; font-weight: 700; text-wrap: balance; }
+h1 .light { font-weight: 400; color: var(--slate); }
+.divider { width: 64px; height: 4px; background: linear-gradient(90deg, var(--accent) 0%, var(--accent-soft) 45%, var(--brand-red) 100%); margin: 0 0 20px; }
+.lead { font-size: 17px; color: var(--slate); max-width: 34em; margin: 0 0 30px; }
+.actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; max-width: 460px; }
 .btn {
-    display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 14px; border: 2px solid var(--ink);
-    box-shadow: var(--shadow); font-family: var(--mono); font-weight: 600; font-size: 13px; letter-spacing: 0.08em;
-    text-transform: uppercase; text-decoration: none; background: var(--paper); transition: transform 0.12s, box-shadow 0.12s;
+    display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 0 16px; border: 1px solid var(--rule); border-radius: 8px;
+    font-family: var(--head); font-weight: 600; font-size: 14px; letter-spacing: 0.01em; text-decoration: none; background: #FFFFFF; color: var(--ink);
+    box-shadow: var(--card-shadow); transition: transform 0.12s, box-shadow 0.12s, border-color 0.12s;
 }
-.btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
-.btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
-.btn.primary { background: var(--sage); }
-.btn.secondary { background: var(--peach); }
-.btn.tertiary { background: var(--lavender); }
-.window { border: 2px solid var(--ink); box-shadow: 8px 8px 0 var(--ink); background: #FFFFFF; }
-.window .bar { display: flex; align-items: center; gap: 8px; height: 34px; padding: 0 12px; border-bottom: 2px solid var(--ink); background: var(--paper-deep); font-family: var(--mono); font-size: 12px; }
-.window .bar i { width: 11px; height: 11px; border: 2px solid var(--ink); display: inline-block; }
+.btn:hover { transform: translateY(-1px); box-shadow: var(--lift-shadow); border-color: var(--slate-light); }
+.btn.primary { background: var(--ink); color: #FFFFFF; border-color: var(--ink); }
+.btn.primary:hover { background: #0F3159; border-color: #0F3159; }
+.window { border: 1px solid var(--rule); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.15); background: #FFFFFF; }
+.window .bar { display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; border-bottom: 1px solid var(--rule); background: var(--paper-deep); font-family: var(--mono); font-size: 12px; }
 
 /* Slideshow: the archetypes one at a time, with a page indicator and a pagination strip */
-.window .bar .now { margin-left: auto; display: flex; align-items: baseline; gap: 6px; min-width: 0; color: var(--ink-soft); letter-spacing: 0.06em; white-space: nowrap; }
+.window .bar .now { display: flex; align-items: baseline; gap: 6px; min-width: 0; color: var(--slate); letter-spacing: 0.04em; white-space: nowrap; }
 .window .bar .now b { color: var(--ink); font-weight: 600; }
-.window .bar .now em { font-style: normal; text-transform: uppercase; margin-left: 8px; overflow: hidden; text-overflow: ellipsis; color: var(--ink); }
-.window .bar .state { display: none; align-items: center; gap: 7px; margin-left: 12px; padding-left: 12px; border-left: 2px solid var(--ink); text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap; }
+.window .bar .now em { font-style: normal; margin-left: 8px; overflow: hidden; text-overflow: ellipsis; color: var(--ink); font-family: var(--head); font-weight: 600; font-size: 12px; }
+.window .bar .state { display: none; align-items: center; gap: 7px; margin-left: auto; color: var(--slate); letter-spacing: 0.06em; text-transform: uppercase; font-size: 11px; white-space: nowrap; }
 .slideshow.is-ready .bar .state { display: inline-flex; }
-.slideshow[data-state="paused"] .state .led { background: var(--peach); box-shadow: 0 0 0 2px rgba(217, 168, 119, 0.3); }
+.window .bar .state .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+.slideshow[data-state="paused"] .state .dot { background: var(--slate-light); }
 .stage { position: relative; aspect-ratio: 1056 / 816; overflow: hidden; background: var(--paper-deep); }
 .slide { position: absolute; inset: 0; display: block; z-index: 0; clip-path: inset(0 100% 0 0); }
 .stage[data-direction="back"] .slide { clip-path: inset(0 0 0 100%); }
 .stage .slide.is-active { clip-path: inset(0 0 0 0); z-index: 2; transition: clip-path 0.55s cubic-bezier(0.65, 0, 0.35, 1); }
 .stage .slide.is-leaving { clip-path: inset(0 0 0 0); z-index: 1; }
 .slide img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.pager { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-top: 2px solid var(--ink); background: var(--paper-deep); }
+.pager { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-top: 1px solid var(--rule); background: var(--paper-deep); }
 .pager[hidden] { display: none; }
 .key {
-    min-width: 34px; height: 30px; padding: 0 10px; border: 2px solid var(--ink); background: var(--paper); color: var(--ink);
-    box-shadow: 2px 2px 0 var(--ink); font-family: var(--mono); font-weight: 600; font-size: 12px; letter-spacing: 0.08em;
-    text-transform: uppercase; cursor: pointer;
+    min-width: 34px; height: 30px; padding: 0 10px; border: 1px solid var(--rule); border-radius: 6px; background: #FFFFFF; color: var(--ink);
+    font-family: var(--mono); font-weight: 600; font-size: 12px; letter-spacing: 0.04em; cursor: pointer;
 }
-.key:hover { background: #FFFFFF; }
-.key:active { transform: translate(2px, 2px); box-shadow: none; }
+.key:hover { border-color: var(--slate-light); }
+.key:active { background: var(--paper-deep); }
 .key.wide { min-width: 66px; }
 .ticks { flex: 1; display: flex; align-items: center; gap: 4px; min-width: 0; }
-.tick { position: relative; flex: 1; min-width: 6px; height: 12px; padding: 0; border: 2px solid var(--ink); background: var(--paper); cursor: pointer; overflow: hidden; }
-.tick::after { content: ''; position: absolute; inset: 0 auto 0 0; width: calc(var(--progress, 0) * 100%); background: var(--sage); transition: width 0.1s linear; }
+.tick { position: relative; flex: 1; min-width: 6px; height: 6px; padding: 0; border: 0; border-radius: 3px; background: #CBD5E1; cursor: pointer; overflow: hidden; }
+.tick::after { content: ''; position: absolute; inset: 0 auto 0 0; width: calc(var(--progress, 0) * 100%); background: var(--accent); transition: width 0.1s linear; }
 .tick.is-done::after { width: 100%; }
-.tick[aria-current="true"] { height: 18px; background: #FFFFFF; }
-.tick:hover { background: #FFFFFF; }
+.tick[aria-current="true"] { height: 8px; }
+.tick:hover { background: var(--slate-light); }
 
 /* Sections */
-section { padding: 72px 0; border-top: 2px solid var(--ink); }
+section { padding: 72px 0; border-top: 1px solid var(--rule); }
 .section-head { display: grid; grid-template-columns: 220px 1fr; gap: 32px; align-items: baseline; margin-bottom: 40px; }
-h2 { font-size: 34px; line-height: 1.1; text-transform: uppercase; letter-spacing: -0.01em; margin: 0; }
-.section-head p { margin: 10px 0 0; color: var(--ink-soft); }
+h2 { font-size: 30px; line-height: 1.15; letter-spacing: -0.01em; margin: 0; font-weight: 700; }
+.section-head p { margin: 10px 0 0; color: var(--slate); }
 
 /* Gallery */
-.gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px; }
-.card { display: block; border: 2px solid var(--ink); background: #FFFFFF; box-shadow: var(--shadow); text-decoration: none; transition: transform 0.12s, box-shadow 0.12s; }
-.card:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
-.card .shot { aspect-ratio: 11 / 8.5; overflow: hidden; border-bottom: 2px solid var(--ink); background: var(--paper-deep); }
+.gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+.card { display: block; border: 1px solid var(--rule); border-radius: 12px; overflow: hidden; background: #FFFFFF; box-shadow: var(--card-shadow); text-decoration: none; transition: transform 0.12s, box-shadow 0.12s; }
+.card:hover { transform: translateY(-2px); box-shadow: var(--lift-shadow); }
+.card .shot { aspect-ratio: 11 / 8.5; overflow: hidden; border-bottom: 1px solid var(--rule); background: var(--paper-deep); }
 .card img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.card .name { display: flex; gap: 10px; padding: 10px 12px; font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
-.card .name b { color: var(--ink-soft); font-weight: 500; }
+.card .name { display: flex; gap: 10px; padding: 10px 14px; font-size: 13px; font-weight: 600; }
+.card .name b { font-family: var(--mono); color: var(--slate); font-weight: 500; }
 
 /* Spec sheet */
-.spec { border: 2px solid var(--ink); background: var(--paper); }
+.spec { border: 1px solid var(--rule); border-radius: 12px; background: #FFFFFF; box-shadow: var(--card-shadow); }
 .spec-row { display: grid; grid-template-columns: 90px 260px 1fr; gap: 24px; padding: 20px 24px; align-items: baseline; }
-.spec-row + .spec-row { border-top: 1px solid var(--ink); }
-.spec-row .no { font-family: var(--mono); font-size: 12px; color: var(--ink-soft); letter-spacing: 0.1em; }
-.spec-row h3 { margin: 0; font-size: 18px; text-transform: uppercase; letter-spacing: 0.01em; }
-.spec-row p { margin: 0; color: var(--ink-soft); }
+.spec-row + .spec-row { border-top: 1px solid var(--rule); }
+.spec-row .no { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.1em; font-weight: 600; }
+.spec-row h3 { margin: 0; font-size: 17px; font-weight: 700; }
+.spec-row p { margin: 0; color: var(--slate); }
 
-footer { border-top: 2px solid var(--ink); background: var(--ink); color: var(--paper); }
-footer .wrap { display: flex; justify-content: space-between; gap: 20px; padding-top: 22px; padding-bottom: 22px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+footer { border-top: 1px solid var(--rule); background: var(--ink); color: #FFFFFF; }
+footer .wrap { display: flex; justify-content: space-between; gap: 20px; padding-top: 22px; padding-bottom: 22px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; }
 
 @media (max-width: 980px) {
+    .hero { padding-bottom: 48px; }
     .hero .wrap, .section-head { grid-template-columns: 1fr; gap: 40px; }
     .gallery { grid-template-columns: repeat(2, 1fr); }
-    .spec-row { grid-template-columns: 60px 1fr; }
-    .spec-row p { grid-column: 2; }
+    .spec-row { grid-template-columns: 1fr; gap: 4px; }
     .status { display: none; }
+    section { padding: 48px 0; }
 }
 @media (max-width: 560px) {
     .wrap { padding: 0 18px; }
@@ -160,7 +161,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 20px; padding
                 <a class="wordmark" href="#">medet.ink</a>
                 <a class="by" href="https://manteiga.org" target="_blank" rel="noopener">By Manteiga Foundation</a>
             </div>
-            <div class="status"><span><i class="led"></i>Ready</span><span>16 archetypes</span><span>PDF 16 pp</span></div>
+            <div class="status"><span>16 archetypes</span><span>PDF 16 pp</span><span>MIT</span></div>
             <nav><a href="https://github.com/manteiga-foundation/medet.ink" target="_blank" rel="noopener">GitHub</a></nav>
         </div>
     </header>
@@ -168,20 +169,21 @@ footer .wrap { display: flex; justify-content: space-between; gap: 20px; padding
         <div class="hero">
             <div class="wrap">
                 <div>
-                    <div class="label"><b>HTML report and presentation template</b> / 11 x 8.5 in landscape</div>
-                    <h1>Beautiful HTML Presentations and Reports</h1>
+                    <div class="label"><b>HTML report and presentation template</b> &middot; 11 x 8.5 in landscape</div>
+                    <h1><span class="light">Beautiful</span> HTML Presentations and Reports</h1>
+                    <div class="divider"></div>
                     <p class="lead">A highly professional, easily modifiable deliverable format for consultancies, internal teams and enterprise professionals: security assessments, audits, strategy reviews and executive briefings. Prints to a pixel-perfect 11 x 8.5 in landscape PDF.</p>
                     <div class="actions">
                         <a class="btn primary" href="reports/combined_report.html?v=e9f89ab3">View Full Report</a>
-                        <a class="btn secondary" href="reports/final_report.pdf?v=f4a320c6" download>Download PDF</a>
-                        <a class="btn tertiary" href="reports/medet-ink-template.zip?v=30e50560" download>Download HTML</a>
+                        <a class="btn" href="reports/final_report.pdf?v=f4a320c6" download>Download PDF</a>
+                        <a class="btn" href="reports/medet-ink-template.zip?v=30e50560" download>Download HTML</a>
                         <a class="btn" href="https://github.com/manteiga-foundation/medet.ink" target="_blank" rel="noopener">GitHub</a>
                     </div>
                 </div>
                 <div class="window slideshow" data-slideshow data-interval="4500" data-state="paused" role="region" aria-roledescription="carousel" aria-label="Report preview">
-                    <div class="bar"><i></i><i></i><i></i>
+                    <div class="bar">
                         <span class="now" aria-live="off"><b data-page>01</b>/<span data-total>16</span><em data-name>Cover Page</em></span>
-                        <span class="state"><i class="led"></i><span>Paused</span></span>
+                        <span class="state"><i class="dot"></i><span>Paused</span></span>
                     </div>
                     <div class="stage" data-direction="forward">
                         <a href="archetypes/01-Slide-Cover.html?v=78886b26" class="slide is-active" data-slide data-name="Cover Page"><img src="assets/slide_01.png?v=30af5575" alt="Slide 01: Cover Page" width="1056" height="816"></a>
